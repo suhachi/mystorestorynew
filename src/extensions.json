@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    // 필수 확장
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    "EditorConfig.EditorConfig",
+    
+    // 추천 확장
+    "esbenp.prettier-vscode",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "dsznajder.es7-react-js-snippets",
+    
+    // Git 관련
+    "eamodio.gitlens",
+    
+    // Firebase 관련
+    "toba.vsfire"
+  ],
+  "unwantedRecommendations": []
+}

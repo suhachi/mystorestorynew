@@ -1,0 +1,172 @@
+{
+  "// MyStoreStory - VS Code 워크스페이스 설정": "",
+  "// 인코딩 손상 방지 + 개발 효율성 향상": "",
+
+  "// ==========================================": "",
+  "// 인코딩 설정 (한글 깨짐 방지)": "",
+  "// ==========================================": "",
+  "files.encoding": "utf8",
+  "files.autoGuessEncoding": false,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+
+  "// ==========================================": "",
+  "// TypeScript/JavaScript 설정": "",
+  "// ==========================================": "",
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "files.encoding": "utf8"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "files.encoding": "utf8"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "files.encoding": "utf8"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "files.encoding": "utf8"
+  },
+
+  "// ==========================================": "",
+  "// JSON/CSS/Markdown 설정": "",
+  "// ==========================================": "",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.tabSize": 2,
+    "files.encoding": "utf8"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.tabSize": 2,
+    "files.encoding": "utf8"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features",
+    "editor.tabSize": 2,
+    "files.encoding": "utf8"
+  },
+  "[markdown]": {
+    "editor.tabSize": 2,
+    "files.encoding": "utf8",
+    "files.trimTrailingWhitespace": false
+  },
+
+  "// ==========================================": "",
+  "// 자동 저장 + 포맷팅": "",
+  "// ==========================================": "",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+
+  "// ==========================================": "",
+  "// 에디터 설정": "",
+  "// ==========================================": "",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  "// ==========================================": "",
+  "// Git 설정": "",
+  "// ==========================================": "",
+  "git.inputValidationLength": 72,
+  "git.inputValidationSubjectLength": 50,
+  "git.autoStash": true,
+  "git.confirmSync": false,
+
+  "// ==========================================": "",
+  "// 검색 제외 설정": "",
+  "// ==========================================": "",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.vscode": true,
+    "**/.git": true,
+    "**/coverage": true,
+    "**/.firebase": true
+  },
+
+  "// ==========================================": "",
+  "// 파일 감시 제외": "",
+  "// ==========================================": "",
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/.git/**": true,
+    "**/coverage/**": true,
+    "**/.firebase/**": true
+  },
+
+  "// ==========================================": "",
+  "// TypeScript 설정": "",
+  "// ==========================================": "",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.quoteStyle": "single",
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.suggest.autoImports": true,
+  "javascript.suggest.autoImports": true,
+
+  "// ==========================================": "",
+  "// ESLint 설정": "",
+  "// ==========================================": "",
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  "// ==========================================": "",
+  "// 한글 관련 설정": "",
+  "// ==========================================": "",
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+
+  "// ==========================================": "",
+  "// 미니맵 + 브레드크럼": "",
+  "// ==========================================": "",
+  "editor.minimap.enabled": true,
+  "breadcrumbs.enabled": true,
+
+  "// ==========================================": "",
+  "// 파일 아이콘 테마": "",
+  "// ==========================================": "",
+  "workbench.iconTheme": "vs-seti",
+
+  "// ==========================================": "",
+  "// 터미널 설정": "",
+  "// ==========================================": "",
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+      "args": ["-NoExit", "-Command", "[Console]::OutputEncoding = [Text.Encoding]::UTF8"]
+    }
+  },
+  "terminal.integrated.env.windows": {
+    "CHCP": "65001"
+  }
+}

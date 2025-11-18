@@ -1,0 +1,321 @@
+# ATOMIC 프롬프트 완전 계획
+
+## 🎯 목표
+MyStoreStory 프로젝트의 **모든 파일**을 재현할 수 있는 **100+ ATOMIC 프롬프트** 생성
+
+---
+
+## 📊 현재 진행 상황
+
+### ✅ 완성된 프롬프트 (15개)
+
+#### 가이드 문서 (4개)
+- 00-INDEX.md
+- PROMPT-SUMMARY.md
+- QUICK-START.md
+- README.md
+
+#### Phase 1: 기초 설정 (4개) ✅ 100%
+- 01-PROJECT-INIT.md
+- 02-DESIGN-SYSTEM.md
+- 03-LAYOUT-SYSTEM.md
+- 04-BASE-COMPONENTS.md
+
+#### Phase 2: 랜딩 & 인증 (3개) ✅ 43%
+- 05-LANDING-PAGE-HERO.md
+- 06-LANDING-PRICING.md
+- 07-AUTH-LOGIN-SIGNUP.md
+
+#### Phase 3: Admin (1개) ✅ 7%
+- 09-ADMIN-DASHBOARD-HOME.md
+
+#### Phase 6: 주문 (1개) ✅ 17%
+- 19-ORDER-CORE.md
+
+#### Phase 7: 알림 (1개) ✅ 9%
+- 25-CLOUD-FUNCTIONS.md
+
+#### Phase 9: 배포 (1개) ✅ 33%
+- 33-DEPLOYMENT.md
+
+---
+
+## 📋 완전한 프롬프트 계획 (100개)
+
+### Phase 1: 기초 설정 (4개) ✅
+1. ✅ 01-PROJECT-INIT
+2. ✅ 02-DESIGN-SYSTEM
+3. ✅ 03-LAYOUT-SYSTEM
+4. ✅ 04-BASE-COMPONENTS
+
+---
+
+### Phase 2: 랜딩 & 인증 (7개)
+5. ✅ 05-LANDING-PAGE-HERO
+6. ✅ 06-LANDING-PRICING
+7. ✅ 07-AUTH-LOGIN-SIGNUP
+8. ⬜ 08-AUTH-PASSWORD-RESET
+9. ⬜ 09-AUTH-SOCIAL-LOGIN-UI
+10. ⬜ 10-FEATURES-PAGE
+11. ⬜ 11-SUPPORT-PAGE
+
+---
+
+### Phase 3: Admin 영역 (15개)
+12. ✅ 09-ADMIN-DASHBOARD-HOME (이미 생성)
+13. ⬜ 10-ADMIN-USER-MANAGEMENT
+14. ⬜ 11-ADMIN-USER-DETAIL
+15. ⬜ 12-ADMIN-STORE-MANAGEMENT
+16. ⬜ 13-ADMIN-STORE-DETAIL
+17. ⬜ 14-ADMIN-APP-APPROVAL-LIST
+18. ⬜ 15-ADMIN-APP-APPROVAL-DETAIL
+19. ⬜ 16-ADMIN-DOWNLOAD-MANAGEMENT
+20. ⬜ 17-ADMIN-REVIEW-MANAGEMENT
+21. ⬜ 18-ADMIN-NOTICE-MANAGEMENT
+22. ⬜ 19-ADMIN-USER-ANALYTICS
+23. ⬜ 20-ADMIN-REVENUE-ANALYTICS
+24. ⬜ 21-ADMIN-SYSTEM-SETTINGS
+25. ⬜ 22-ADMIN-DATA-TABLES
+26. ⬜ 23-ADMIN-STATUS-BADGES
+
+---
+
+### Phase 4: App Builder (20개)
+27. ⬜ 24-APP-BUILDER-STEP-ONE
+28. ⬜ 25-APP-BUILDER-STEP-TWO-PLAN
+29. ⬜ 26-APP-BUILDER-STEP-THREE-ORDER
+30. ⬜ 27-APP-BUILDER-STEP-FOUR-CUSTOMER
+31. ⬜ 28-APP-BUILDER-STEP-FIVE-BRANDING
+32. ⬜ 29-APP-BUILDER-STEP-SIX-CONFIRMATION
+33. ⬜ 30-APP-BUILDER-CANVAS
+34. ⬜ 31-APP-BUILDER-FEATURE-CARD
+35. ⬜ 32-APP-BUILDER-FEATURE-LIBRARY
+36. ⬜ 33-APP-BUILDER-DRAG-DROP
+37. ⬜ 34-APP-BUILDER-DASHBOARD-CONFIG
+38. ⬜ 35-APP-BUILDER-MENU-CONFIG
+39. ⬜ 36-APP-BUILDER-ORDER-CONFIG
+40. ⬜ 37-APP-BUILDER-CUSTOMER-CONFIG
+41. ⬜ 38-APP-BUILDER-ANALYTICS-CONFIG
+42. ⬜ 39-APP-BUILDER-POINTS-CONFIG
+43. ⬜ 40-APP-BUILDER-SETTINGS-CONFIG
+44. ⬜ 41-APP-BUILDER-PREVIEW-MODAL
+45. ⬜ 42-APP-CREATION-PAGES
+46. ⬜ 43-E2E-SIMULATION-DASHBOARD
+
+---
+
+### Phase 5: Store Admin (15개)
+47. ⬜ 44-STORE-DASHBOARD
+48. ⬜ 45-STORE-KPI-CARDS
+49. ⬜ 46-STORE-RECENT-ORDERS
+50. ⬜ 47-STORE-POPULAR-MENU
+51. ⬜ 48-STORE-ORDER-LIST
+52. ⬜ 49-STORE-ORDER-DETAIL
+53. ⬜ 50-STORE-ORDER-HISTORY
+54. ⬜ 51-STORE-MENU-LIST
+55. ⬜ 52-STORE-ADD-PRODUCT-MODAL
+56. ⬜ 53-STORE-MENU-CATEGORY
+57. ⬜ 54-STORE-CUSTOMER-LIST
+58. ⬜ 55-STORE-CUSTOMER-SEGMENTATION
+59. ⬜ 56-STORE-SALES-ANALYTICS
+60. ⬜ 57-STORE-POPULAR-MENU-ANALYSIS
+61. ⬜ 58-STORE-ADVANCED-ANALYTICS
+62. ⬜ 59-STORE-SETTINGS
+63. ⬜ 60-STORE-MODALS (10개 모달 통합)
+64. ⬜ 61-STORE-CHARTS
+
+---
+
+### Phase 6: Customer App (10개)
+65. ⬜ 62-CUSTOMER-HOME-SCREEN
+66. ⬜ 63-CUSTOMER-SEARCH-SCREEN
+67. ⬜ 64-CUSTOMER-MENU-BROWSE
+68. ⬜ 65-CUSTOMER-CART
+69. ⬜ 66-CUSTOMER-CHECKOUT-PAGE
+70. ⬜ 67-CUSTOMER-PAYMENT-METHOD
+71. ⬜ 68-CUSTOMER-ORDER-TRACK
+72. ⬜ 69-CUSTOMER-ORDER-TIMELINE
+73. ⬜ 70-CUSTOMER-PROFILE
+74. ⬜ 71-CUSTOMER-NOTIFICATION-PREFS
+
+---
+
+### Phase 7: 주문 시스템 (5개)
+75. ✅ 19-ORDER-CORE (이미 생성)
+76. ⬜ 72-ORDER-STATUS-MANAGEMENT
+77. ⬜ 73-ORDER-REALTIME-UPDATES
+78. ⬜ 74-ORDER-ITEMS-LIST
+79. ⬜ 75-ORDER-STATUS-BADGE
+
+---
+
+### Phase 8: 알림 시스템 (10개)
+80. ⬜ 76-NOTIFICATION-CORE
+81. ⬜ 77-NOTIFICATION-TEMPLATES-LIST
+82. ⬜ 78-NOTIFICATION-TEMPLATE-EDITOR
+83. ⬜ 79-NOTIFICATION-TEMPLATE-PREVIEW
+84. ⬜ 80-NOTIFICATION-SETTINGS-PAGE
+85. ⬜ 81-NOTIFICATION-USER-PREFS
+86. ⬜ 82-NOTIFICATION-TEST-SEND
+87. ✅ 25-CLOUD-FUNCTIONS (이미 생성)
+88. ⬜ 83-FCM-SERVICE
+89. ⬜ 84-NOTIFICATION-OPS-PANEL
+
+---
+
+### Phase 9: 고급 기능 (15개)
+90. ⬜ 85-APP-PREVIEW-BY-PLAN
+91. ⬜ 86-APP-SIMULATOR
+92. ⬜ 87-REALTIME-DASHBOARD
+93. ⬜ 88-REALTIME-INVENTORY
+94. ⬜ 89-REALTIME-SALES
+95. ⬜ 90-REALTIME-ORDER-UPDATES
+96. ⬜ 91-API-PAYMENT-SYSTEM
+97. ⬜ 92-API-MAPS-SYSTEM
+98. ⬜ 93-API-SOCIAL-LOGIN
+99. ⬜ 94-API-MASTER-DASHBOARD
+100. ⬜ 95-FORMS-VALIDATION
+101. ⬜ 96-ENHANCED-FORM-COMPONENTS
+102. ⬜ 97-RESPONSIVE-OPTIMIZATIONS
+103. ⬜ 98-MOBILE-OPTIMIZED
+104. ⬜ 99-INTERACTIVE-COMPONENTS
+
+---
+
+### Phase 10: 테스팅 & 배포 (5개)
+105. ⬜ 100-FINAL-TEST-DASHBOARD
+106. ⬜ 101-COMPLETE-SYSTEM-CHECK
+107. ⬜ 102-FIREBASE-SETUP
+108. ⬜ 103-FIRESTORE-RULES
+109. ✅ 33-DEPLOYMENT (이미 생성)
+
+---
+
+## 📈 통계
+
+- **총 프롬프트 수**: 109개
+- **완성**: 15개 (13.7%)
+- **남은 프롬프트**: 94개 (86.3%)
+
+### Phase별 완성도
+| Phase | 총 개수 | 완성 | 비율 |
+|-------|--------|------|------|
+| Phase 1: 기초 | 4 | 4 | 100% ✅ |
+| Phase 2: 랜딩 & 인증 | 7 | 3 | 43% |
+| Phase 3: Admin | 15 | 1 | 7% |
+| Phase 4: App Builder | 20 | 0 | 0% |
+| Phase 5: Store Admin | 15 | 0 | 0% |
+| Phase 6: Customer App | 10 | 0 | 0% |
+| Phase 7: 주문 | 5 | 1 | 20% |
+| Phase 8: 알림 | 10 | 1 | 10% |
+| Phase 9: 고급 기능 | 15 | 0 | 0% |
+| Phase 10: 테스팅 & 배포 | 5 | 1 | 20% |
+
+---
+
+## 🎯 우선순위
+
+### 🔥 Critical (즉시 필요)
+1. App Builder 전체 (27-46)
+2. Store Dashboard & Orders (47-53)
+3. Customer Checkout & Tracking (69-73)
+
+### ⚡ High (주요 기능)
+1. Admin 사용자/스토어 관리 (13-17)
+2. Store Menu & Analytics (54-61)
+3. Notification Templates (81-86)
+
+### 📊 Medium (고급 기능)
+1. Admin Analytics (22-23)
+2. App Preview System (90-91)
+3. Realtime Systems (92-95)
+
+### 🔧 Low (부가 기능)
+1. API Integration Systems (96-99)
+2. Mobile Optimizations (103-104)
+3. Enhanced Forms (100-102)
+
+---
+
+## 💡 다음 생성할 프롬프트 (우선순위순)
+
+### 즉시 생성 (10개)
+1. 24-APP-BUILDER-STEP-ONE
+2. 25-APP-BUILDER-STEP-TWO-PLAN
+3. 26-APP-BUILDER-STEP-THREE-ORDER
+4. 27-APP-BUILDER-STEP-FOUR-CUSTOMER
+5. 28-APP-BUILDER-STEP-FIVE-BRANDING
+6. 29-APP-BUILDER-STEP-SIX-CONFIRMATION
+7. 30-APP-BUILDER-CANVAS
+8. 31-APP-BUILDER-FEATURE-CARD
+9. 44-STORE-DASHBOARD
+10. 45-STORE-KPI-CARDS
+
+### 다음 배치 (10개)
+11. 46-STORE-RECENT-ORDERS
+12. 47-STORE-POPULAR-MENU
+13. 48-STORE-ORDER-LIST
+14. 49-STORE-ORDER-DETAIL
+15. 51-STORE-MENU-LIST
+16. 52-STORE-ADD-PRODUCT-MODAL
+17. 69-CUSTOMER-CHECKOUT-PAGE
+18. 72-ORDER-STATUS-MANAGEMENT
+19. 81-NOTIFICATION-TEMPLATES-LIST
+20. 82-NOTIFICATION-TEMPLATE-EDITOR
+
+---
+
+## 🚀 생성 전략
+
+### 배치 1: App Builder (20개 프롬프트)
+- 6단계 프로세스 각각
+- Feature Card 시스템
+- Canvas & Drag-Drop
+- 설정 모달 7개
+- 미리보기 시스템
+
+### 배치 2: Store Admin (15개 프롬프트)
+- Dashboard & KPI
+- 주문 관리 3개
+- 메뉴 관리 3개
+- 고객 관리 2개
+- 분석 3개
+- 모달 모음
+
+### 배치 3: Customer App (10개 프롬프트)
+- 홈/검색/브라우징
+- 장바구니 & 체크아웃
+- 주문 추적
+- 프로필 & 설정
+
+### 배치 4: 나머지 (49개 프롬프트)
+- Admin 나머지
+- Notification 시스템
+- 고급 기능들
+- 테스팅
+
+---
+
+## ✅ 체크리스트
+
+완성된 프롬프트:
+- [x] Phase 1 전체 (4개)
+- [x] Landing Hero & Pricing
+- [x] Auth Login & Signup
+- [x] Admin Dashboard Home
+- [x] Order Core
+- [x] Cloud Functions
+- [x] Deployment
+
+다음 작업:
+- [ ] App Builder 20개
+- [ ] Store Admin 15개
+- [ ] Customer App 10개
+- [ ] 나머지 시스템
+
+---
+
+**Last Updated**: 2025-10-31  
+**Total Prompts Planned**: 109  
+**Completed**: 15 (13.7%)  
+**Target**: 100% ATOMIC Coverage

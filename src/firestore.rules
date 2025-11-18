@@ -1,0 +1,153 @@
+rules_version = '2';
+
+/**
+ * MyStoreStory Firestore Security Rules
+ * T14-06 ~ T14-11: Orders, Notifications, Templates
+ * 
+ * Principles:
+ * - Public orders: read-only, NO PII
+ * - Order history: read public, create staff only
+ * - User prefs/tokens: owner read/write only
+ * - Templates: owner read/write, published read-only
+ * - Ops data: admin/owner only
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // Helper Functions
+    // ============================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function hasRole(role) {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+    
+    function isStaff() {
+      return hasRole('staff') || hasRole('owner') || hasRole('admin');
+    }
+    
+    function belongsToStore(storeId) {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.storeId == storeId;
+    }
+    
+    // ============================================
+    // Public Orders (Read-Only, NO PII)
+    // ============================================
+    
+    match /stores/{storeId}/orders/{orderId} {
+      // Anyone can read public orders (for tracking)
+      // PII must be masked (customerMasked field only)
+      allow read: if true;
+      
+      // Only Cloud Functions can write
+      // Frontend uses callable functions (setOrderStatus)
+      allow create, update, delete: if false;
+    }
+    
+    // ============================================
+    // Order History (Read Public, Create Staff Only)
+    // ============================================
+    
+    match /stores/{storeId}/orders/{orderId}/history/{historyId} {
+      // Anyone can read history (for timeline tracking)
+      allow read: if true;
+      
+      // Only staff can create history entries
+      // via Cloud Functions or authenticated API
+      allow create: if isStaff() && belongsToStore(storeId);
+      
+      // No updates or deletes (append-only log)
+      allow update, delete: if false;
+    }
+    
+    // ============================================
+    // User Preferences & FCM Tokens (Owner Only)
+    // ============================================
+    
+    match /users/{userId}/prefs/{prefId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    match /users/{userId}/fcmTokens/{tokenId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // ============================================
+    // Notification Templates (Owner CRUD, Published Read)
+    // ============================================
+    
+    match /stores/{storeId}/notifyTemplates/{templateId} {
+      // Store staff can read all templates
+      allow read: if belongsToStore(storeId);
+      
+      // Only owner can create/update/delete templates
+      allow create, update, delete: if hasRole('owner') && belongsToStore(storeId);
+    }
+    
+    // Published templates can be read by anyone (for server-side rendering)
+    match /stores/{storeId}/notifyTemplates/{templateId} {
+      allow get: if resource.data.status == 'published';
+    }
+    
+    // ============================================
+    // Operations & Monitoring (Admin/Owner Only)
+    // ============================================
+    
+    match /ops/settings {
+      // Global settings (notifyPaused, etc.)
+      allow read: if isStaff();
+      allow write: if hasRole('admin') || hasRole('owner');
+    }
+    
+    match /ops/notifyFailures/{failureId} {
+      // DLQ for failed notifications
+      allow read: if isStaff();
+      allow write: if false; // Only Cloud Functions write
+    }
+    
+    match /ops/notifyLogs/{logId} {
+      // Audit log
+      allow read: if isStaff();
+      allow write: if false; // Only Cloud Functions write
+    }
+    
+    match /ops/mutations/{mutationId} {
+      // Idempotency tracking
+      allow read: if isStaff();
+      allow write: if false; // Only Cloud Functions write
+    }
+    
+    // ============================================
+    // Users & Stores (Basic Access Control)
+    // ============================================
+    
+    match /users/{userId} {
+      allow read: if isOwner(userId) || hasRole('admin');
+      allow write: if isOwner(userId);
+    }
+    
+    match /stores/{storeId} {
+      allow read: if belongsToStore(storeId) || hasRole('admin');
+      allow write: if hasRole('owner') && belongsToStore(storeId);
+    }
+    
+    // ============================================
+    // Deny All Other Paths
+    // ============================================
+    
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

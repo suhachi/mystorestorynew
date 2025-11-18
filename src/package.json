@@ -1,0 +1,92 @@
+{
+  "name": "mystorestsory",
+  "version": "1.0.0",
+  "description": "배달 수수료 없는 자체 배달앱 구축 플랫폼 - 노코드로 3분 만에 만드는 배달앱",
+  "type": "module",
+  "author": {
+    "name": "KS컴퍼니",
+    "email": "suhachi02@gmail.com",
+    "url": "https://kscompany.store"
+  },
+  "contributors": [
+    {
+      "name": "석경선",
+      "role": "대표이사 (경영, 운영)"
+    },
+    {
+      "name": "배종수",
+      "role": "공동대표 (개발, 연구)"
+    }
+  ],
+  "license": "Proprietary",
+  "homepage": "https://kscompany.store",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kscompany/mystorestsory"
+  },
+  "bugs": {
+    "url": "https://github.com/kscompany/mystorestsory/issues",
+    "email": "suhachi02@gmail.com"
+  },
+  "keywords": [
+    "delivery-app",
+    "no-code",
+    "saas",
+    "restaurant",
+    "pos",
+    "order-management",
+    "배달앱",
+    "노코드",
+    "소상공인",
+    "자체배달",
+    "주문관리"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "emulators": "firebase emulators:start",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:firestore": "firebase deploy --only firestore:rules,firestore:indexes"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "firebase": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^5.2.2",
+    "vite": "^6.0.1",
+    "vitest": "^1.0.0"
+  },
+  "private": true,
+  "company": {
+    "name": "KS컴퍼니",
+    "nameEn": "KS Company",
+    "ceo": "석경선, 배종수",
+    "registration": "553-17-00098",
+    "founded": "2015-06-10",
+    "address": "경남 양산시 물금읍 범어리 2699-9 202호",
+    "phone": "010-2068-4732",
+    "email": "suhachi02@gmail.com",
+    "website": "https://kscompany.store"
+  }
+}
