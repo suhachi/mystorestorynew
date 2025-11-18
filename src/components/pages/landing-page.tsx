@@ -2,7 +2,8 @@ import {
   Store, ShoppingCart, CreditCard, MessageSquare, Gift, 
   Star, BarChart, Menu, ArrowRight, CheckCircle, Eye,
   Play, Smartphone, Users, TrendingUp, Shield, Award,
-  Clock, Calendar, ExternalLink, Download, Heart, Info, BookOpen, Zap, Sparkles
+  Clock, Calendar, ExternalLink, Download, Heart, Info, BookOpen, Zap, Sparkles, HelpCircle,
+  ChevronDown, ChevronUp
 } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { InteractiveButton } from '../interactions/interactive-button';
@@ -386,6 +387,154 @@ export function LandingPage() {
                 <Star size={16} />
               </button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-2 bg-secondary-indigo-50 text-secondary-indigo px-4 py-2 rounded-full mb-6">
+              <Info size={16} />
+              <span className="text-sm font-semibold">회사 소개</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-6">
+              우리는 <span className="text-gradient-indigo">가게의 디지털 독립</span>을<br />
+              돕는 길을 만듭니다
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              배달 수수료 없는 자체 배달앱 구축 플랫폼
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left: About Content */}
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                모든 가게의 이야기가 하나의 스토어가 됩니다
+              </h3>
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                MyStoreStory는 노코드로 쉽고 빠르게 배달앱을 만들 수 있는 플랫폼입니다. 
+                높은 배달 수수료와 플랫폼 의존도에서 벗어나, 소상공인이 직접 고객과 
+                소통할 수 있는 자체 배달앱을 구축할 수 있도록 돕습니다.
+              </p>
+              
+              <div className="space-y-4 mb-8">
+                <div className="flex items-start gap-3">
+                  <CheckCircle size={20} className="text-success-green mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">수수료 제로</h4>
+                    <p className="text-gray-600">배달 플랫폼 수수료 없이 100% 순수익 실현</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle size={20} className="text-success-green mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">고객 데이터 소유</h4>
+                    <p className="text-gray-600">플랫폼이 아닌 사장님이 고객을 소유</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle size={20} className="text-success-green mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">노코드 플랫폼</h4>
+                    <p className="text-gray-600">코딩 지식 없이 10분 만에 앱 완성</p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigation.navigate('about')}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-all hover-lift font-semibold"
+              >
+                더 알아보기
+                <ArrowRight size={16} />
+              </button>
+            </div>
+
+            {/* Right: About Image/Stats */}
+            <div className="relative">
+              <div className="glass-card p-8 rounded-3xl">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="text-center p-6 bg-gradient-gold rounded-2xl">
+                    <div className="text-4xl font-extrabold text-gray-900 mb-2">1,000+</div>
+                    <div className="text-sm text-gray-700 font-semibold">성공 사례</div>
+                  </div>
+                  <div className="text-center p-6 bg-gradient-indigo rounded-2xl">
+                    <div className="text-4xl font-extrabold text-white mb-2">10분</div>
+                    <div className="text-sm text-white/90 font-semibold">앱 완성 시간</div>
+                  </div>
+                  <div className="text-center p-6 bg-gradient-premium rounded-2xl">
+                    <div className="text-4xl font-extrabold text-white mb-2">0원</div>
+                    <div className="text-sm text-white/90 font-semibold">배달 수수료</div>
+                  </div>
+                  <div className="text-center p-6 bg-gray-900 rounded-2xl">
+                    <div className="text-4xl font-extrabold text-white mb-2">24/7</div>
+                    <div className="text-sm text-white/90 font-semibold">고객 지원</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-24 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-warning-yellow-50 text-warning-yellow px-4 py-2 rounded-full mb-6">
+              <HelpCircle size={16} />
+              <span className="text-sm font-semibold">자주 묻는 질문</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-6">
+              궁금한 점이 있으신가요?
+            </h2>
+            <p className="text-xl text-gray-600">
+              자주 묻는 질문을 확인하세요
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                question: 'MyStoreStory는 어떤 서비스인가요?',
+                answer: 'MyStoreStory는 코딩 없이 누구나 쉽게 상점 앱을 만들 수 있는 노코드 앱빌더입니다. 주문 관리, 결제 시스템, 고객 관리 등 온라인 비즈니스에 필요한 모든 기능을 제공합니다.'
+              },
+              {
+                question: '앱을 만드는데 얼마나 걸리나요?',
+                answer: '간단한 상점 앱은 약 10-15분 정도면 완성할 수 있습니다. 복잡한 기능을 추가하더라도 대부분 1시간 이내에 완성 가능합니다.'
+              },
+              {
+                question: '배달 수수료가 정말 0원인가요?',
+                answer: '네, 맞습니다. MyStoreStory는 배달 플랫폼 수수료가 전혀 없습니다. 고객이 직접 주문하면 100% 매출을 가져가실 수 있습니다.'
+              },
+              {
+                question: '코딩 지식이 없어도 사용할 수 있나요?',
+                answer: '네, 전혀 문제없습니다. 노코드 플랫폼이므로 드래그 앤 드롭 방식으로 쉽게 앱을 만들 수 있습니다.'
+              },
+              {
+                question: '어떤 결제 수단을 지원하나요?',
+                answer: '신용카드, 계좌이체, 현금 결제 등 다양한 결제 수단을 지원합니다. 토스페이먼츠, 포트원 등 주요 PG사와 연동되어 있습니다.'
+              },
+              {
+                question: '고객 지원은 어떻게 받을 수 있나요?',
+                answer: '이메일, 전화, 채팅을 통해 24/7 고객 지원을 제공합니다. 또한 상세한 문서와 튜토리얼도 제공합니다.'
+              }
+            ].map((faq, index) => (
+              <FAQItem key={index} question={faq.question} answer={faq.answer} />
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <button
+              onClick={() => navigation.navigate('support')}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-all hover-lift font-semibold"
+            >
+              더 많은 FAQ 보기
+              <ArrowRight size={16} />
+            </button>
           </div>
         </div>
       </section>
@@ -787,6 +936,37 @@ function PremiumPricingCard({ name, price, period, popular, features }: PremiumP
       >
         선택하기
       </button>
+    </div>
+  );
+}
+
+// FAQ Item Component
+interface FAQItemProps {
+  question: string;
+  answer: string;
+}
+
+function FAQItem({ question, answer }: FAQItemProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden transition-all hover:shadow-lg">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
+      >
+        <span className="font-semibold text-gray-900 pr-4">{question}</span>
+        {isOpen ? (
+          <ChevronUp size={20} className="text-gray-500 flex-shrink-0" />
+        ) : (
+          <ChevronDown size={20} className="text-gray-500 flex-shrink-0" />
+        )}
+      </button>
+      {isOpen && (
+        <div className="px-6 pb-5 pt-0">
+          <p className="text-gray-600 leading-relaxed">{answer}</p>
+        </div>
+      )}
     </div>
   );
 }
