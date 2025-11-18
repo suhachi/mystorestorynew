@@ -75,8 +75,8 @@ pnpm-lock.yaml text eol=lf encoding=utf-8
 ```powershell
 # UTF-8 설정 후 실행
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
-pnpm install
-pnpm run dev
+npm install
+npm run dev
 ```
 
 ---
@@ -142,10 +142,10 @@ foreach ($file in $highPriorityFiles) {
 .\scripts\check-korean-content.ps1  # (별도 생성 필요)
 
 # 3. 빌드 테스트
-pnpm run build
+npm run build
 
 # 4. 배포
-pnpm run deploy
+npm run deploy
 ```
 
 ### 배포 후 확인사항
@@ -183,7 +183,7 @@ git checkout origin/main -- 문제파일.tsx
 # 4. 재배포
 git add .
 git commit -m "fix: 인코딩 손상 복구"
-pnpm run deploy
+npm run deploy
 ```
 
 ### 시나리오 2: Git에서 모든 파일이 변경된 것으로 표시
@@ -305,13 +305,13 @@ git clone https://github.com/kscompany/mystorestsory.git
 cd mystorestsory
 
 # 3. 의존성 설치
-pnpm install
+npm install
 
 # 4. 인코딩 체크
 .\encoding-check.ps1
 
 # 5. 개발 서버 시작
-pnpm run dev
+npm run dev
 
 Write-Host "설정 완료! http://localhost:5173 에서 확인하세요" -ForegroundColor Green
 ```

@@ -42,7 +42,7 @@ sleep 10
 
 # Step 4: 프론트엔드 개발 서버 시작
 echo -e "\n${GREEN}[4/5] Starting frontend dev server...${NC}"
-pnpm dev &
+npm run dev &
 DEV_PID=$!
 
 # Step 5: 브라우저 열기

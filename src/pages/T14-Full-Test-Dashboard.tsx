@@ -196,7 +196,7 @@ export function T14FullTestDashboard() {
                 </p>
                 <pre className="text-xs text-gray-600 bg-gray-50 p-3 rounded border border-gray-200 overflow-x-auto">
 {`# 1. Dependencies 설치
-pnpm install
+npm install
 cd functions && npm install && cd ..
 
 # 2. Firebase 연결
@@ -208,7 +208,7 @@ firebase functions:secrets:set SLACK_WEBHOOK_URL
 firebase emulators:start --only functions,firestore
 
 # 4. 프론트엔드 실행
-pnpm dev`}
+npm run dev`}
                 </pre>
               </div>
             </div>
