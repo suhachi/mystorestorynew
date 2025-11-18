@@ -18,7 +18,7 @@ echo -e "======================================${NC}"
 
 # Step 1: TypeScript 타입 체크
 echo -e "\n${GREEN}[1/5] Running TypeScript type check...${NC}"
-pnpm typecheck || {
+npm run typecheck || {
     echo -e "${YELLOW}Warning: Type errors found. Continue anyway? (yes/no)${NC}"
     read confirm
     [ "$confirm" != "yes" ] && exit 1
