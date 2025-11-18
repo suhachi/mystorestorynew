@@ -1,0 +1,65 @@
+# ============================================
+# 인코딩 설정 (최우선)
+# ============================================
+* text=auto eol=lf
+*.* text=auto eol=lf
+
+# ============================================
+# 텍스트 파일 명시적 UTF-8 지정
+# ============================================
+*.ts text eol=lf charset=utf-8
+*.tsx text eol=lf charset=utf-8
+*.js text eol=lf charset=utf-8
+*.jsx text eol=lf charset=utf-8
+*.json text eol=lf charset=utf-8
+*.jsonc text eol=lf charset=utf-8
+*.md text eol=lf charset=utf-8
+*.txt text eol=lf charset=utf-8
+*.yml text eol=lf charset=utf-8
+*.yaml text eol=lf charset=utf-8
+*.xml text eol=lf charset=utf-8
+*.html text eol=lf charset=utf-8
+*.css text eol=lf charset=utf-8
+*.scss text eol=lf charset=utf-8
+*.less text eol=lf charset=utf-8
+*.svg text eol=lf charset=utf-8
+
+# ============================================
+# 설정 파일
+# ============================================
+.gitattributes text eol=lf charset=utf-8
+.editorconfig text eol=lf charset=utf-8
+.gitignore text eol=lf charset=utf-8
+*.config.js text eol=lf charset=utf-8
+*.config.ts text eol=lf charset=utf-8
+
+# ============================================
+# 바이너리 파일 명시 (직렬화 방지)
+# ============================================
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+
+# ============================================
+# 소스맵 파일
+# ============================================
+*.map binary
+
+# ============================================
+# 패키지 매니저 파일
+# ============================================
+package-lock.json text eol=lf charset=utf-8
+yarn.lock text eol=lf charset=utf-8
+pnpm-lock.yaml text eol=lf charset=utf-8
+
