@@ -1,7 +1,7 @@
 /**
  * Firebase Configuration
  * MyStoreStory Firebase 초기화 및 설정
- * 
+ *
  * 환경 변수:
  * - VITE_FIREBASE_API_KEY
  * - VITE_FIREBASE_AUTH_DOMAIN
@@ -41,7 +41,7 @@ try {
   auth = getAuth(app);
   db = getFirestore(app);
   storage = getStorage(app);
-  
+
   // Analytics는 브라우저 환경에서만 초기화
   if (typeof window !== 'undefined') {
     try {

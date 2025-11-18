@@ -1,5 +1,5 @@
-import { 
-  Store, ShoppingCart, CreditCard, MessageSquare, Gift, 
+import {
+  Store, ShoppingCart, CreditCard, MessageSquare, Gift,
   Star, BarChart, Menu, ArrowRight, CheckCircle, Eye,
   Play, Smartphone, Users, TrendingUp, Shield, Award,
   Clock, Calendar, ExternalLink, Download, Heart, Info, BookOpen, Zap, Sparkles, HelpCircle,
@@ -21,7 +21,7 @@ export function LandingPage() {
         {/* Premium Background Gradient */}
         <div className="absolute inset-0 bg-gradient-hero opacity-95" />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
@@ -38,7 +38,7 @@ export function LandingPage() {
                 <span className="text-gradient-gold">프리미엄 앱</span>을<br />
                 만드세요
               </h1>
-              
+
               <p className="text-xl text-white/90 mb-10 leading-relaxed max-w-xl">
                 코딩 없이, 노코드로 누구나 쉽게 배달앱을 만들 수 있습니다.<br />
                 주문 관리부터 결제까지 모든 기능이 준비되어 있습니다.<br />
@@ -57,7 +57,7 @@ export function LandingPage() {
                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </button>
-                
+
                 <button
                   onClick={() => navigation.navigate('app-builder-demo')}
                   className="px-8 py-4 glass-card-dark rounded-xl font-semibold text-white hover-lift-premium border border-white/20"
@@ -96,12 +96,12 @@ export function LandingPage() {
             <div className="relative">
               {/* Floating Card */}
               <div className="relative glass-card rounded-3xl p-8 hover-lift-premium" style={{ boxShadow: '0 25px 50px rgba(15, 23, 42, 0.25), 0 10px 15px rgba(15, 23, 42, 0.15)' }}>
-                <ImageWithFallback 
+                <ImageWithFallback
                   src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBpbnRlcmZhY2UlMjBkZXNpZ258ZW58MXx8fHwxNzU4MTc5ODYzfDA&ixlib=rb-4.1.0&q=80&w=1080"
                   alt="앱 빌더 인터페이스"
                   className="w-full h-80 object-cover rounded-2xl"
                 />
-                
+
                 {/* Floating Badge */}
                 <div className="absolute -top-4 -right-4 bg-gradient-gold px-4 py-2 rounded-full shadow-gold">
                   <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ export function LandingPage() {
               성공적인 온라인 비즈니스를 위한 모든 기능을 제공합니다
             </p>
           </div>
-          
+
           {/* Feature Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <PremiumFeatureCard
@@ -203,7 +203,7 @@ export function LandingPage() {
               MyStoreStory의 최신 소식을 확인하세요
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <NoticeCard
               title="새로운 앱빌더 기능 출시!"
@@ -260,7 +260,7 @@ export function LandingPage() {
               이미 많은 사장님들이 MyStoreStory로 성공하고 있습니다
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <PremiumStoreCard
               name="맛있는 치킨집"
@@ -270,8 +270,8 @@ export function LandingPage() {
               users="1,250+"
               onDownload={() => {
                 console.log('맛있는 치킨집 다운로드');
-                navigation.openModal('notification', { 
-                  message: '맛있는 치킨집 앱 다운로드가 시작되었습니다!' 
+                navigation.openModal('notification', {
+                  message: '맛있는 치킨집 앱 다운로드가 시작되었습니다!'
                 });
               }}
               onFavorite={() => console.log('맛있는 치킨집 즐겨찾기')}
@@ -284,8 +284,8 @@ export function LandingPage() {
               users="2,100+"
               onDownload={() => {
                 console.log('커피향 다운로드');
-                navigation.openModal('notification', { 
-                  message: '커피향 앱 다운로드가 시작되었습니다!' 
+                navigation.openModal('notification', {
+                  message: '커피향 앱 다운로드가 시작되었습니다!'
                 });
               }}
               onFavorite={() => console.log('커피향 즐겨찾기')}
@@ -298,8 +298,8 @@ export function LandingPage() {
               users="900+"
               onDownload={() => {
                 console.log('피자마니아 다운로드');
-                navigation.openModal('notification', { 
-                  message: '피자마니아 앱 다운로드가 시작되었습니다!' 
+                navigation.openModal('notification', {
+                  message: '피자마니아 앱 다운로드가 시작되었습니다!'
                 });
               }}
               onFavorite={() => console.log('피자마니아 겨찾기')}
@@ -312,8 +312,8 @@ export function LandingPage() {
               users="1,500+"
               onDownload={() => {
                 console.log('베이커리 스토리 다운로드');
-                navigation.openModal('notification', { 
-                  message: '베이커리 스토리 앱 다운로드가 시작되었습니다!' 
+                navigation.openModal('notification', {
+                  message: '베이커리 스토리 앱 다운로드가 시작되었습니다!'
                 });
               }}
               onFavorite={() => console.log('베이커리 스토리 즐겨찾기')}
@@ -345,7 +345,7 @@ export function LandingPage() {
               실제 사용자들의 솔직한 리뷰를 확인해보세요
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <PremiumReviewCard
               rating={5}
@@ -415,11 +415,11 @@ export function LandingPage() {
                 모든 가게의 이야기가 하나의 스토어가 됩니다
               </h3>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                MyStoreStory는 노코드로 쉽고 빠르게 배달앱을 만들 수 있는 플랫폼입니다. 
-                높은 배달 수수료와 플랫폼 의존도에서 벗어나, 소상공인이 직접 고객과 
+                MyStoreStory는 노코드로 쉽고 빠르게 배달앱을 만들 수 있는 플랫폼입니다.
+                높은 배달 수수료와 플랫폼 의존도에서 벗어나, 소상공인이 직접 고객과
                 소통할 수 있는 자체 배달앱을 구축할 수 있도록 돕습니다.
               </p>
-              
+
               <div className="space-y-4 mb-8">
                 <div className="flex items-start gap-3">
                   <CheckCircle size={20} className="text-success-green mt-1 flex-shrink-0" />
@@ -543,7 +543,7 @@ export function LandingPage() {
       <section id="pricing" className="py-24 bg-gradient-hero relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6">
@@ -557,7 +557,7 @@ export function LandingPage() {
               합리적인 가격으로 최고의 서비스를 이용하세요
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <PremiumPricingCard
               name="Basic"
@@ -610,7 +610,7 @@ export function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Company Info */}
             <div className="md:col-span-2">
-              <div 
+              <div
                 className="flex items-center gap-3 mb-4 cursor-pointer group"
                 onClick={() => navigation.navigate('home')}
               >
@@ -620,23 +620,23 @@ export function LandingPage() {
                 <span className="text-2xl font-bold">MyStoreStory</span>
               </div>
               <p className="text-gray-400 mb-6 leading-relaxed">
-                누구나 쉽게 만들 수 있는 상점 앱 빌더. 
+                누구나 쉽게 만들 수 있는 상점 앱 빌더.
                 코딩 없이 10분 만에 나만의 앱을 완성하세요.
               </p>
               <div className="flex space-x-4">
-                <button 
+                <button
                   onClick={() => window.open('https://facebook.com', '_blank')}
                   className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-accent-gold hover:text-gray-900 transition-all"
                 >
                   <span className="text-sm font-bold">FB</span>
                 </button>
-                <button 
+                <button
                   onClick={() => window.open('https://twitter.com', '_blank')}
                   className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-accent-gold hover:text-gray-900 transition-all"
                 >
                   <span className="text-sm font-bold">TW</span>
                 </button>
-                <button 
+                <button
                   onClick={() => window.open('https://instagram.com', '_blank')}
                   className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-accent-gold hover:text-gray-900 transition-all"
                 >
@@ -650,7 +650,7 @@ export function LandingPage() {
               <h3 className="text-lg font-bold mb-4">서비스</h3>
               <ul className="space-y-2">
                 <li>
-                  <button 
+                  <button
                     onClick={() => navigation.navigate('app-builder')}
                     className="text-gray-400 hover:text-accent-gold transition-colors text-left"
                   >
@@ -658,7 +658,7 @@ export function LandingPage() {
                   </button>
                 </li>
                 <li>
-                  <button 
+                  <button
                     onClick={() => navigation.navigate('features')}
                     className="text-gray-400 hover:text-accent-gold transition-colors text-left"
                   >
@@ -666,7 +666,7 @@ export function LandingPage() {
                   </button>
                 </li>
                 <li>
-                  <button 
+                  <button
                     onClick={() => navigation.navigate('features')}
                     className="text-gray-400 hover:text-accent-gold transition-colors text-left"
                   >
@@ -674,7 +674,7 @@ export function LandingPage() {
                   </button>
                 </li>
                 <li>
-                  <button 
+                  <button
                     onClick={() => navigation.navigate('features')}
                     className="text-gray-400 hover:text-accent-gold transition-colors text-left"
                   >
@@ -689,7 +689,7 @@ export function LandingPage() {
               <h3 className="text-lg font-bold mb-4">지원</h3>
               <ul className="space-y-2">
                 <li>
-                  <button 
+                  <button
                     onClick={() => navigation.navigate('support')}
                     className="text-gray-400 hover:text-accent-gold transition-colors text-left"
                   >
@@ -697,7 +697,7 @@ export function LandingPage() {
                   </button>
                 </li>
                 <li>
-                  <button 
+                  <button
                     onClick={() => navigation.navigate('support')}
                     className="text-gray-400 hover:text-accent-gold transition-colors text-left"
                   >
@@ -705,7 +705,7 @@ export function LandingPage() {
                   </button>
                 </li>
                 <li>
-                  <button 
+                  <button
                     onClick={() => navigation.navigate('support')}
                     className="text-gray-400 hover:text-accent-gold transition-colors text-left"
                   >
@@ -713,7 +713,7 @@ export function LandingPage() {
                   </button>
                 </li>
                 <li>
-                  <button 
+                  <button
                     onClick={() => navigation.navigate('support')}
                     className="text-gray-400 hover:text-accent-gold transition-colors text-left"
                   >
@@ -729,19 +729,19 @@ export function LandingPage() {
               © 2024 MyStoreStory. All rights reserved.
             </div>
             <div className="flex items-center space-x-6 mt-4 md:mt-0">
-              <button 
+              <button
                 onClick={() => navigation.navigate('terms')}
                 className="text-sm text-gray-400 hover:text-accent-gold transition-colors"
               >
                 이용약관
               </button>
-              <button 
+              <button
                 onClick={() => navigation.navigate('privacy')}
                 className="text-sm text-gray-400 hover:text-accent-gold transition-colors"
               >
                 개인정보처리방침
               </button>
-              <button 
+              <button
                 onClick={() => navigation.navigate('support')}
                 className="text-sm text-gray-400 hover:text-accent-gold transition-colors"
               >
@@ -766,13 +766,13 @@ interface PremiumFeatureCardProps {
 
 function PremiumFeatureCard({ icon, title, description, gradient, onClick }: PremiumFeatureCardProps) {
   return (
-    <div 
+    <div
       onClick={onClick}
       className="group relative bg-white p-8 rounded-2xl border border-gray-200 card-premium cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-xl"
     >
       {/* Gradient Overlay on Hover */}
       <div className={`absolute inset-0 ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-      
+
       <div className="relative">
         <div className={`w-16 h-16 ${gradient} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform text-white shadow-lg`}>
           {icon}
@@ -807,11 +807,11 @@ function PremiumStoreCard({ name, category, image, rating, users, onDownload, on
         <ImageWithFallback src={image} alt={name} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
-      
+
       <div className="p-6">
         <h3 className="text-xl font-bold text-gray-900 mb-1">{name}</h3>
         <p className="text-sm text-gray-500 mb-4">{category}</p>
-        
+
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-1">
             <Star size={18} className="text-warning-yellow fill-current" />
@@ -821,15 +821,15 @@ function PremiumStoreCard({ name, category, image, rating, users, onDownload, on
         </div>
 
         <div className="flex gap-3">
-          <button 
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-all font-semibold" 
+          <button
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-all font-semibold"
             onClick={onDownload}
           >
             <Download size={18} />
             다운로드
           </button>
-          <button 
-            className="flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-accent-gold-50 hover:text-accent-gold transition-all" 
+          <button
+            className="flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-accent-gold-50 hover:text-accent-gold transition-all"
             onClick={onFavorite}
           >
             <Heart size={18} />
@@ -854,16 +854,16 @@ function PremiumReviewCard({ rating, content, author, store, helpful }: PremiumR
     <div className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-all card-premium">
       <div className="flex items-center gap-1 mb-6">
         {[...Array(5)].map((_, i) => (
-          <Star 
-            key={i} 
-            size={18} 
-            className={`${i < rating ? 'text-warning-yellow fill-current' : 'text-gray-300'}`} 
+          <Star
+            key={i}
+            size={18}
+            className={`${i < rating ? 'text-warning-yellow fill-current' : 'text-gray-300'}`}
           />
         ))}
       </div>
-      
+
       <p className="text-gray-700 mb-6 leading-relaxed">"{content}"</p>
-      
+
       <div className="border-t border-gray-100 pt-4">
         <div className="font-semibold text-gray-900">{author}</div>
         <div className="text-sm text-gray-500">{store}</div>
@@ -889,7 +889,7 @@ interface PremiumPricingCardProps {
 
 function PremiumPricingCard({ name, price, period, popular, features }: PremiumPricingCardProps) {
   const navigation = useNavigation();
-  
+
   const handleSelectPlan = () => {
     navigation.navigate('register', { selectedPlan: name });
   };
@@ -905,7 +905,7 @@ function PremiumPricingCard({ name, price, period, popular, features }: PremiumP
           </span>
         </div>
       )}
-      
+
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-4">{name}</h3>
         <div className="flex items-baseline justify-center gap-1">
@@ -914,7 +914,7 @@ function PremiumPricingCard({ name, price, period, popular, features }: PremiumP
         </div>
         <p className="text-sm text-gray-500 mt-2">(부가세 별도)</p>
       </div>
-      
+
       <ul className="space-y-4 mb-8">
         {features.map((feature, index) => (
           <li key={index} className="flex items-center gap-3">
@@ -925,12 +925,12 @@ function PremiumPricingCard({ name, price, period, popular, features }: PremiumP
           </li>
         ))}
       </ul>
-      
+
       <button
         onClick={handleSelectPlan}
         className={`w-full py-4 rounded-xl font-bold transition-all duration-300 ease-out hover:scale-105 active:scale-95 ${
-          popular 
-            ? 'bg-gradient-gold text-gray-900 shadow-gold hover-glow-gold' 
+          popular
+            ? 'bg-gradient-gold text-gray-900 shadow-gold hover-glow-gold'
             : 'bg-gray-900 text-white hover:bg-gray-800'
         }`}
       >
