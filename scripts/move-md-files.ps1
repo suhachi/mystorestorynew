@@ -12,7 +12,7 @@ if (-not (Test-Path $docsPath)) {
 }
 
 # 루트 디렉토리의 MD 파일 목록 (README.md 제외)
-$mdFiles = Get-ChildItem -Path $rootPath -Filter "*.md" -File | 
+$mdFiles = Get-ChildItem -Path $rootPath -Filter "*.md" -File |
     Where-Object { $_.Name -ne "README.md" -and $_.DirectoryName -eq $rootPath }
 
 $movedCount = 0
