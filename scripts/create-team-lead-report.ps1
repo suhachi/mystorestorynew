@@ -10,9 +10,9 @@ Write-Host "팀장님용 상세 보고서 생성 중..." -ForegroundColor Yellow
 $report = @"
 # MyStoreStory 프로젝트 상세 보고서 (팀장용)
 
-**보고일**: 2025년 11월 18일  
-**보고자**: 개발팀  
-**프로젝트명**: MY_STORE_STORY 디자인 변경 프로젝트  
+**보고일**: 2025년 11월 18일
+**보고자**: 개발팀
+**프로젝트명**: MY_STORE_STORY 디자인 변경 프로젝트
 **프로젝트 루트**: `C:\Users\a\MyStoreStory\MY_STORE_STORY\MY_STORE_STORYdesign`
 
 ---
@@ -344,7 +344,7 @@ MY_STORE_STORYdesign/
 - **성공 확률**: 95% 이상
 
 #### 방안 2: Node.js 20 LTS 사용
-- **방법**: 
+- **방법**:
   1. Node.js 20 LTS 설치 (nvm 사용)
   2. `nvm use 20`
   3. `pnpm install` 실행
@@ -498,9 +498,9 @@ MY_STORE_STORYdesign/
 
 ---
 
-**보고서 작성일**: 2025년 11월 18일  
-**작성자**: 개발팀  
-**상태**: ⚠️ 의존성 설치 문제로 인한 개발 차단  
+**보고서 작성일**: 2025년 11월 18일
+**작성자**: 개발팀
+**상태**: ⚠️ 의존성 설치 문제로 인한 개발 차단
 **다음 조치**: 팀장님의 결정 대기
 
 "@
