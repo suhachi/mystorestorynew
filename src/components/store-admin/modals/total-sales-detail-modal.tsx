@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
-import { 
-  DollarSign, CreditCard, Banknote, Smartphone, Calendar, 
-  TrendingUp, BarChart3, PieChart, Download, Filter, X
+import {
+  Banknote,
+  BarChart3,
+  Calendar,
+  CreditCard,
+  DollarSign,
+  Download, Filter,
+  Smartphone,
+  TrendingUp
 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
+import { useState } from 'react';
+import {
+  Bar,
+  CartesianGrid,
+  Cell,
+  Pie,
+  BarChart as RechartsBarChart,
+  PieChart as RechartsPieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis
+} from 'recharts';
+import { toast } from 'sonner';
 import { Button } from '../../ui/button';
 import { Card } from '../../ui/card';
-import { Badge } from '../../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { 
-  BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
-} from 'recharts';
-import { toast } from 'sonner@2.0.3';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 
 interface TotalSalesDetailModalProps {
   isOpen: boolean;
@@ -129,7 +141,7 @@ export function TotalSalesDetailModal({ isOpen, onClose }: TotalSalesDetailModal
                     </div>
                     <div className="text-caption text-gray-500">40%</div>
                   </div>
-                  
+
                   <div className="text-center p-4 bg-green-50 rounded-lg">
                     <CreditCard className="w-8 h-8 text-green-600 mx-auto mb-2" />
                     <div className="text-body-small text-gray-600">만나서 카드</div>
@@ -138,7 +150,7 @@ export function TotalSalesDetailModal({ isOpen, onClose }: TotalSalesDetailModal
                     </div>
                     <div className="text-caption text-gray-500">30%</div>
                   </div>
-                  
+
                   <div className="text-center p-4 bg-yellow-50 rounded-lg">
                     <Banknote className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
                     <div className="text-body-small text-gray-600">만나서 현금</div>
@@ -147,7 +159,7 @@ export function TotalSalesDetailModal({ isOpen, onClose }: TotalSalesDetailModal
                     </div>
                     <div className="text-caption text-gray-500">20%</div>
                   </div>
-                  
+
                   <div className="text-center p-4 bg-purple-50 rounded-lg">
                     <Smartphone className="w-8 h-8 text-purple-600 mx-auto mb-2" />
                     <div className="text-body-small text-gray-600">간편결제</div>
@@ -203,8 +215,8 @@ export function TotalSalesDetailModal({ isOpen, onClose }: TotalSalesDetailModal
                   {paymentChartData.map((item, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <div 
-                          className="w-4 h-4 rounded-full" 
+                        <div
+                          className="w-4 h-4 rounded-full"
                           style={{ backgroundColor: item.color }}
                         />
                         <span className="text-gray-700 font-medium">{item.name}</span>
@@ -235,7 +247,7 @@ export function TotalSalesDetailModal({ isOpen, onClose }: TotalSalesDetailModal
                     </div>
                     <div className="text-caption text-gray-500">현재</div>
                   </div>
-                  
+
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
                     <Calendar className="w-8 h-8 text-blue-600 mx-auto mb-2" />
                     <div className="text-body-small text-gray-600">7일 매출</div>
@@ -244,7 +256,7 @@ export function TotalSalesDetailModal({ isOpen, onClose }: TotalSalesDetailModal
                     </div>
                     <div className="text-caption text-gray-500">주간</div>
                   </div>
-                  
+
                   <div className="text-center p-4 bg-purple-50 rounded-lg">
                     <TrendingUp className="w-8 h-8 text-purple-600 mx-auto mb-2" />
                     <div className="text-body-small text-gray-600">1달 매출</div>
@@ -253,7 +265,7 @@ export function TotalSalesDetailModal({ isOpen, onClose }: TotalSalesDetailModal
                     </div>
                     <div className="text-caption text-gray-500">월간</div>
                   </div>
-                  
+
                   <div className="text-center p-4 bg-orange-50 rounded-lg">
                     <BarChart3 className="w-8 h-8 text-orange-600 mx-auto mb-2" />
                     <div className="text-body-small text-gray-600">기간 설정</div>

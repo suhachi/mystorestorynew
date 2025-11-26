@@ -3,8 +3,8 @@
  * T14-11: Server-side Mustache template rendering
  */
 
-import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
+import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import * as Mustache from 'mustache';
 
 export const renderTemplate = onCall(
@@ -32,12 +32,13 @@ export const renderTemplate = onCall(
         throw new HttpsError('failed-precondition', 'Template is not published');
       }
 
-      // Disable HTML escaping for Mustache
-      Mustache.escape = (text) => text;
+      // TODO(F-ERR-01): Mustache.escape is readonly, cannot reassign
+      // Using default HTML escaping behavior
+      // If unescaped output is needed, use {{{triple braces}}} in template
 
       // Render subject and body
-      const subject = template.subject 
-        ? Mustache.render(template.subject, data) 
+      const subject = template.subject
+        ? Mustache.render(template.subject, data)
         : '';
       const body = Mustache.render(template.body, data);
 
@@ -50,11 +51,11 @@ export const renderTemplate = onCall(
       };
     } catch (error: any) {
       console.error('[renderTemplate] Failed:', error);
-      
+
       if (error instanceof HttpsError) {
         throw error;
       }
-      
+
       throw new HttpsError('internal', error.message);
     }
   }

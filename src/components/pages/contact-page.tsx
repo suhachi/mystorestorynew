@@ -3,13 +3,13 @@
  * 문의 페이지
  */
 
+import { Building2, Clock, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, Building2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { toast } from 'sonner';
 import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import { toast } from 'sonner@2.0.3';
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,14 +22,14 @@ export function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // TODO: 실제 API 연동
     console.log('문의 내용:', formData);
-    
+
     toast.success('문의가 접수되었습니다', {
       description: '영업일 기준 1-2일 내에 답변드리겠습니다.',
     });
-    
+
     // 폼 초기화
     setFormData({
       name: '',

@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
-import { 
-  Target, TrendingUp, TrendingDown, Calendar, BarChart3, 
-  Filter, Download, DollarSign, Users, ShoppingCart, Clock
+import {
+  BarChart3,
+  Calendar,
+  Download,
+  Filter,
+  Target, TrendingUp,
+  Users
 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
+import { useState } from 'react';
+import {
+  Area,
+  AreaChart,
+  Bar,
+  CartesianGrid,
+  Line,
+  BarChart as RechartsBarChart,
+  LineChart as RechartsLineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis
+} from 'recharts';
+import { toast } from 'sonner';
 import { Button } from '../../ui/button';
 import { Card } from '../../ui/card';
-import { Badge } from '../../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { 
-  BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area
-} from 'recharts';
-import { toast } from 'sonner@2.0.3';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 
 interface AverageOrderDetailModalProps {
   isOpen: boolean;
@@ -183,7 +194,7 @@ export function AverageOrderDetailModal({ isOpen, onClose }: AverageOrderDetailM
                         <div className="text-body-small text-gray-500">현재</div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
                       <div className="flex items-center gap-3">
                         <Calendar className="w-5 h-5 text-blue-600" />
@@ -194,7 +205,7 @@ export function AverageOrderDetailModal({ isOpen, onClose }: AverageOrderDetailM
                         <div className="text-body-small text-gray-500">비교 기준</div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                       <div className="flex items-center gap-3">
                         <TrendingUp className="w-5 h-5 text-green-600" />
@@ -206,7 +217,7 @@ export function AverageOrderDetailModal({ isOpen, onClose }: AverageOrderDetailM
                       </div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-3">시간대별 평균 주문금액</h4>
                     <ResponsiveContainer width="100%" height={250}>
@@ -250,7 +261,7 @@ export function AverageOrderDetailModal({ isOpen, onClose }: AverageOrderDetailM
                     <Area type="monotone" dataKey="avgOrder" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.3} />
                   </AreaChart>
                 </ResponsiveContainer>
-                
+
                 <div className="mt-4 grid grid-cols-7 gap-2">
                   {weeklyData.map((day, index) => (
                     <div key={index} className="text-center p-3 bg-gray-50 rounded-lg">
@@ -301,7 +312,7 @@ export function AverageOrderDetailModal({ isOpen, onClose }: AverageOrderDetailM
                     <Line type="monotone" dataKey="avgOrder" stroke="#10B981" strokeWidth={3} />
                   </RechartsLineChart>
                 </ResponsiveContainer>
-                
+
                 <div className="mt-4 grid grid-cols-4 gap-4">
                   {monthlyData.map((week, index) => (
                     <div key={index} className="text-center p-4 bg-gray-50 rounded-lg">
@@ -356,7 +367,7 @@ export function AverageOrderDetailModal({ isOpen, onClose }: AverageOrderDetailM
                     <Bar dataKey="avgOrder" fill="#8B5CF6" />
                   </RechartsBarChart>
                 </ResponsiveContainer>
-                
+
                 <div className="mt-4 space-y-3">
                   {customPeriodData.map((period, index) => (
                     <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">

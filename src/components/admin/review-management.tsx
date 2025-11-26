@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
-import { 
-  Star, Eye, CheckCircle, X, MoreHorizontal, Search, Filter,
-  Building, User, Calendar, ThumbsUp, MessageSquare, Settings,
-  TrendingUp, TrendingDown, AlertCircle, Clock, Award, Zap
+import {
+  Award,
+  Building,
+  Calendar,
+  CheckCircle,
+  Eye,
+  MessageSquare,
+  MoreHorizontal, Search,
+  Settings,
+  Star,
+  ThumbsUp,
+  TrendingDown,
+  TrendingUp,
+  User,
+  X,
+  Zap
 } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { toast } from 'sonner@2.0.3';
-import { BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Pie, Cell, LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export function ReviewManagement() {
   const [appBuildReviews, setAppBuildReviews] = useState([
@@ -88,12 +94,12 @@ export function ReviewManagement() {
   };
 
   const handleReviewAction = (action: string, reviewId: string) => {
-    setAppBuildReviews(appBuildReviews.map(review => 
-      review.id === reviewId 
+    setAppBuildReviews(appBuildReviews.map(review =>
+      review.id === reviewId
         ? { ...review, status: action === 'approve' ? '승인' : action === 'reject' ? '거부' : '숨김' }
         : review
     ));
-    
+
     const actionText = action === 'approve' ? '승인' : action === 'reject' ? '거부' : '숨김';
     toast.success(`리뷰가 ${actionText} 처리되었습니다.`);
   };
@@ -109,7 +115,7 @@ export function ReviewManagement() {
       <AppBuildReviewStatsDashboard stats={reviewStats} />
 
       {/* 앱빌드 리뷰 목록 관리 */}
-      <AppBuildReviewListManagement 
+      <AppBuildReviewListManagement
         reviews={appBuildReviews}
         selectedReviews={selectedReviews}
         setSelectedReviews={setSelectedReviews}
@@ -127,7 +133,7 @@ export function ReviewManagement() {
 
       {/* 앱빌드 리뷰 상세 정보 */}
       {selectedReview && (
-        <AppBuildReviewDetail 
+        <AppBuildReviewDetail
           review={selectedReview}
           onClose={() => setSelectedReview(null)}
         />
@@ -193,9 +199,8 @@ function AppBuildReviewStatsDashboard({ stats }: { stats: any }) {
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${item.bgColor} ${item.color}`}>
                 {item.icon}
               </div>
-              <div className={`flex items-center gap-1 ${
-                item.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-              }`}>
+              <div className={`flex items-center gap-1 ${item.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+                }`}>
                 {item.changeType === 'positive' ? (
                   <TrendingUp className="w-4 h-4" />
                 ) : (
@@ -233,12 +238,12 @@ function AppBuildReviewListManagement({
 }: any) {
   const filteredReviews = reviews.filter((review: any) => {
     const matchesSearch = review.ownerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         review.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         review.content.toLowerCase().includes(searchTerm.toLowerCase());
+      review.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      review.content.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === '전체' || review.status === statusFilter;
     const matchesRating = ratingFilter === '전체' || review.appBuildRating.toString() === ratingFilter;
     const matchesExperience = experienceFilter === '전체' || review.buildExperience === experienceFilter;
-    
+
     return matchesSearch && matchesStatus && matchesRating && matchesExperience;
   });
 
@@ -266,9 +271,8 @@ function AppBuildReviewListManagement({
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
-        className={`w-4 h-4 ${
-          index < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-        }`}
+        className={`w-4 h-4 ${index < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+          }`}
       />
     ));
   };
@@ -278,15 +282,15 @@ function AppBuildReviewListManagement({
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">앱빌드 리뷰 목록</h2>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={selectedReviews.length === 0}
           >
             선택된 리뷰 승인 ({selectedReviews.length})
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={selectedReviews.length === 0}
           >
@@ -368,16 +372,16 @@ function AppBuildReviewListManagement({
                     {review.buildExperience}
                   </Badge>
                 </div>
-                
+
                 <div className="flex items-center gap-2 mb-2">
                   <div className="flex items-center gap-1">
                     {renderStars(review.appBuildRating)}
                   </div>
                   <span className="text-sm text-gray-500">앱빌드 만족도</span>
                 </div>
-                
+
                 <p className="text-gray-700 mb-3">{review.content}</p>
-                
+
                 <div className="flex items-center gap-4 text-sm text-gray-500">
                   <span>빌드일: {review.buildDate}</span>
                   <span>리뷰일: {review.reviewDate}</span>
@@ -389,10 +393,10 @@ function AppBuildReviewListManagement({
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2 ml-4">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
                   onClick={() => onReviewSelect(review)}
                 >
@@ -400,16 +404,16 @@ function AppBuildReviewListManagement({
                 </Button>
                 {review.status === '검토중' && (
                   <>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => onReviewAction('approve', review.id)}
                       className="text-green-600 hover:text-green-700"
                     >
                       <CheckCircle className="w-4 h-4" />
                     </Button>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => onReviewAction('reject', review.id)}
                       className="text-red-600 hover:text-red-700"
@@ -458,9 +462,8 @@ function AppBuildReviewDetail({ review, onClose }: { review: any; onClose: () =>
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
-        className={`w-5 h-5 ${
-          index < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-        }`}
+        className={`w-5 h-5 ${index < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+          }`}
       />
     ));
   };
@@ -482,11 +485,10 @@ function AppBuildReviewDetail({ review, onClose }: { review: any; onClose: () =>
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === tab.id
+              className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               {tab.icon}
               {tab.label}
@@ -556,7 +558,7 @@ function AppBuildReviewDetail({ review, onClose }: { review: any; onClose: () =>
             </div>
           </div>
         )}
-        
+
         {activeTab === '빌드경험' && (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">빌드 경험 상세</h3>
@@ -569,7 +571,7 @@ function AppBuildReviewDetail({ review, onClose }: { review: any; onClose: () =>
             </div>
           </div>
         )}
-        
+
         {activeTab === '기능평가' && (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">사용한 기능들</h3>
@@ -582,7 +584,7 @@ function AppBuildReviewDetail({ review, onClose }: { review: any; onClose: () =>
             </div>
           </div>
         )}
-        
+
         {activeTab === '지원평가' && (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">고객 지원 평가</h3>
@@ -629,7 +631,7 @@ function AppBuildReviewAnalysis({ reviews }: { reviews: any[] }) {
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold text-gray-900 mb-6">앱빌드 리뷰 분석</h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* 평균 평점 */}
         <div className="bg-blue-50 p-4 rounded-lg">
@@ -640,9 +642,8 @@ function AppBuildReviewAnalysis({ reviews }: { reviews: any[] }) {
               {Array.from({ length: 5 }, (_, index) => (
                 <Star
                   key={index}
-                  className={`w-5 h-5 ${
-                    index < Math.floor(analysisData.averageRating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                  }`}
+                  className={`w-5 h-5 ${index < Math.floor(analysisData.averageRating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                    }`}
                 />
               ))}
             </div>

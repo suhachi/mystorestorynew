@@ -1,12 +1,14 @@
-import React from 'react';
 import { AppRouter } from './components/system/app-router';
 import { DataProvider } from './components/system/data-context';
+import ErrorBoundary from './components/system/ErrorBoundary';
 
 function App() {
   return (
-    <DataProvider>
-      <AppRouter />
-    </DataProvider>
+    <ErrorBoundary>
+      <DataProvider>
+        <AppRouter />
+      </DataProvider>
+    </ErrorBoundary>
   );
 }
 

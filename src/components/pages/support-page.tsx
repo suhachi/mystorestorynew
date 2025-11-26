@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
-import { 
-  MessageSquare, Phone, Mail, Clock, ChevronDown, ChevronUp,
-  Search, Book, Users, Headphones, FileText, HelpCircle,
-  Send, User, Building, CheckCircle, ArrowRight
+import {
+  ArrowRight,
+  Book,
+  ChevronDown, ChevronUp,
+  Clock,
+  FileText,
+  Headphones,
+  HelpCircle,
+  Mail,
+  MessageSquare, Phone,
+  Search,
+  Send,
+  Users
 } from 'lucide-react';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { InteractiveButton } from '../interactions/interactive-button';
 import { useNavigation } from '../system/app-router';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import { toast } from 'sonner@2.0.3';
 
 export function SupportPage() {
   const { navigate } = useNavigation();
@@ -68,7 +77,7 @@ export function SupportPage() {
   const filteredFaqs = faqData.filter(faq => {
     const matchesCategory = selectedCategory === '전체' || faq.category === selectedCategory;
     const matchesSearch = faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         faq.answer.toLowerCase().includes(searchTerm.toLowerCase());
+      faq.answer.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -77,7 +86,7 @@ export function SupportPage() {
     // 실제로는 API 호출을 통해 문의를 전송
     console.log('Contact form submitted:', contactForm);
     toast.success('문의가 접수되었습니다. 24시간 내에 답변드리겠습니다.');
-    
+
     // 폼 초기화
     setContactForm({
       name: '',
@@ -100,7 +109,7 @@ export function SupportPage() {
           <p className="text-body-large text-gray-600 mb-8">
             MyStoreStory 사용에 관한 모든 궁금증을 해결해드립니다
           </p>
-          
+
           {/* 빠른 연락 옵션 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
@@ -115,7 +124,7 @@ export function SupportPage() {
                 채팅 시작하기
               </InteractiveButton>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Phone className="w-6 h-6 text-success-green" />
@@ -128,7 +137,7 @@ export function SupportPage() {
                 전화 걸기
               </InteractiveButton>
             </div>
-            
+
             <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-orange-50 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Mail className="w-6 h-6 text-warning-yellow" />
@@ -167,17 +176,16 @@ export function SupportPage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
+
             <div className="flex flex-wrap gap-2">
               {faqCategories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    selectedCategory === category
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${selectedCategory === category
                       ? 'bg-primary-blue text-white'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   {category}
                 </button>
@@ -205,7 +213,7 @@ export function SupportPage() {
                     <ChevronDown className="w-5 h-5 text-gray-400" />
                   )}
                 </button>
-                
+
                 {expandedFaq === faq.id && (
                   <div className="px-6 pb-4 border-t border-gray-100">
                     <p className="text-body text-gray-600 pt-4">{faq.answer}</p>
@@ -247,11 +255,11 @@ export function SupportPage() {
                   type="text"
                   required
                   value={contactForm.name}
-                  onChange={(e) => setContactForm({...contactForm, name: e.target.value})}
+                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                   placeholder="홍길동"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   이메일 *
@@ -260,7 +268,7 @@ export function SupportPage() {
                   type="email"
                   required
                   value={contactForm.email}
-                  onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
+                  onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                   placeholder="example@email.com"
                 />
               </div>
@@ -274,11 +282,11 @@ export function SupportPage() {
                 <Input
                   type="text"
                   value={contactForm.company}
-                  onChange={(e) => setContactForm({...contactForm, company: e.target.value})}
+                  onChange={(e) => setContactForm({ ...contactForm, company: e.target.value })}
                   placeholder="회사명을 입력해주세요"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   문의 유형 *
@@ -286,7 +294,7 @@ export function SupportPage() {
                 <select
                   required
                   value={contactForm.category}
-                  onChange={(e) => setContactForm({...contactForm, category: e.target.value})}
+                  onChange={(e) => setContactForm({ ...contactForm, category: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
                 >
                   <option value="일반 문의">일반 문의</option>
@@ -306,7 +314,7 @@ export function SupportPage() {
                 type="text"
                 required
                 value={contactForm.subject}
-                onChange={(e) => setContactForm({...contactForm, subject: e.target.value})}
+                onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
                 placeholder="문의 제목을 입력해주세요"
               />
             </div>
@@ -319,7 +327,7 @@ export function SupportPage() {
                 required
                 rows={6}
                 value={contactForm.message}
-                onChange={(e) => setContactForm({...contactForm, message: e.target.value})}
+                onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                 placeholder="문의 내용을 자세히 입력해주세요"
                 className="resize-none"
               />
@@ -335,7 +343,7 @@ export function SupportPage() {
                 <Send className="w-4 h-4" />
                 문의 보내기
               </InteractiveButton>
-              
+
               <InteractiveButton
                 type="button"
                 variant="outline"

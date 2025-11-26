@@ -3,15 +3,16 @@
  * T14-09: Retry failed notifications from DLQ
  */
 
-import { onCall, HttpsError } from 'firebase-functions/v2/https';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
+import { HttpsError, onCall } from 'firebase-functions/v2/https';
+// TODO(F-ERR-01): Removed unused FieldValue import
 import { requireRole } from '../auth';
+import { SLACK_WEBHOOK_URL } from '../secrets';
 import { sendFCMMessage } from '../services/fcm';
 import { sendSlackMessage } from '../services/slack';
-import { SLACK_WEBHOOK_URL } from '../secrets';
 
 export const retryNotify = onCall(
-  { 
+  {
     region: 'asia-northeast3',
     secrets: [SLACK_WEBHOOK_URL]
   },

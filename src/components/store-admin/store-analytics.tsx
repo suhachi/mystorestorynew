@@ -1,27 +1,40 @@
-import React, { useState } from 'react';
-import { 
-  TrendingUp, TrendingDown, DollarSign, ShoppingCart, Users, Clock,
-  Calendar, Download, Filter, BarChart3, PieChart, LineChart,
-  Target, Award, Zap, Eye
+import {
+  Award,
+  DollarSign,
+  Download,
+  ShoppingCart,
+  Target,
+  TrendingUp,
+  Users,
+  Zap
 } from 'lucide-react';
-import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { 
-  LineChart as RechartsLineChart, Line, BarChart as RechartsBarChart, Bar,
-  PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, 
-  Tooltip, Legend, ResponsiveContainer, AreaChart, Area
+import { useState } from 'react';
+import {
+  Area,
+  AreaChart,
+  Bar,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  BarChart as RechartsBarChart,
+  PieChart as RechartsPieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis
 } from 'recharts';
-import { EnhancedPlanAccessControl, UsageAlert } from './common/plan-access-control';
+import { toast } from 'sonner';
+import { useFeatureAccess } from '../../hooks/usePlanLimits';
 import { useNavigation } from '../system/app-router';
-import { toast } from 'sonner@2.0.3';
-import { usePlanLimits, useFeatureAccess } from '../../hooks/usePlanLimits';
+import { Button } from '../ui/button';
+import { Card } from '../ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { EnhancedPlanAccessControl } from './common/plan-access-control';
 
 // 모달 import 추가
-import { TotalSalesDetailModal } from './modals/total-sales-detail-modal';
-import { TotalOrderDetailModal } from './modals/total-order-detail-modal';
 import { AverageOrderDetailModal } from './modals/average-order-detail-modal';
+import { TotalOrderDetailModal } from './modals/total-order-detail-modal';
+import { TotalSalesDetailModal } from './modals/total-sales-detail-modal';
 
 // Mock 분석 데이터
 const salesData = [
@@ -154,7 +167,7 @@ export function StoreAnalytics() {
               <SelectItem value="year">연간</SelectItem>
             </SelectContent>
           </Select>
-          <Button 
+          <Button
             variant="outline"
             onClick={() => {
               if (!customReportsAllowed) {
@@ -180,7 +193,7 @@ export function StoreAnalytics() {
         {/* 주요 KPI */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* 1. 총 매출 카드 */}
-          <Card 
+          <Card
             className="p-6 cursor-pointer hover:shadow-lg transition-shadow"
             onClick={handleTotalSalesClick}
           >
@@ -199,7 +212,7 @@ export function StoreAnalytics() {
           </Card>
 
           {/* 2. 총 주문 카드 */}
-          <Card 
+          <Card
             className="p-6 cursor-pointer hover:shadow-lg transition-shadow"
             onClick={handleTotalOrderClick}
           >
@@ -218,7 +231,7 @@ export function StoreAnalytics() {
           </Card>
 
           {/* 3. 평균 주문액 카드 */}
-          <Card 
+          <Card
             className="p-6 cursor-pointer hover:shadow-lg transition-shadow"
             onClick={handleAvgOrderClick}
           >
@@ -237,7 +250,7 @@ export function StoreAnalytics() {
           </Card>
 
           {/* 4. 순 고객수 카드 */}
-          <Card 
+          <Card
             className="p-6 cursor-pointer hover:shadow-lg transition-shadow"
             onClick={handleCustomerClick}
           >
@@ -283,7 +296,7 @@ export function StoreAnalytics() {
               </Button>
             </div>
           </div>
-          
+
           <ResponsiveContainer width="100%" height={400}>
             <AreaChart data={salesData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -369,7 +382,7 @@ export function StoreAnalytics() {
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
                         <div className="w-16 h-2 bg-gray-200 rounded-full">
-                          <div 
+                          <div
                             className="h-full bg-primary-blue rounded-full"
                             style={{ width: `${product.percentage}%` }}
                           ></div>
@@ -488,19 +501,19 @@ export function StoreAnalytics() {
 
       {/* 모달들 */}
       {showTotalSalesModal && (
-        <TotalSalesDetailModal 
+        <TotalSalesDetailModal
           isOpen={showTotalSalesModal}
           onClose={() => setShowTotalSalesModal(false)}
         />
       )}
       {showTotalOrderModal && (
-        <TotalOrderDetailModal 
+        <TotalOrderDetailModal
           isOpen={showTotalOrderModal}
           onClose={() => setShowTotalOrderModal(false)}
         />
       )}
       {showAvgOrderModal && (
-        <AverageOrderDetailModal 
+        <AverageOrderDetailModal
           isOpen={showAvgOrderModal}
           onClose={() => setShowAvgOrderModal(false)}
         />

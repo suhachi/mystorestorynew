@@ -22,9 +22,9 @@ export async function renderTemplateServer(params: {
       const defaultDoc = await defaultTemplateRef.get();
 
       if (!defaultDoc.exists) {
-        return { 
-          success: false, 
-          error: 'Template not found and no default template available' 
+        return {
+          success: false,
+          error: 'Template not found and no default template available'
         };
       }
 
@@ -50,11 +50,12 @@ function renderTemplate(
   data: Record<string, any>
 ): { success: boolean; subject?: string; body?: string; error?: string } {
   try {
-    // Disable HTML escaping
-    Mustache.escape = (text) => text;
+    // TODO(F-ERR-01): Mustache.escape is readonly, cannot reassign
+    // Using default HTML escaping behavior
+    // If unescaped output is needed, use {{{triple braces}}} in template
 
-    const subject = template.subject 
-      ? Mustache.render(template.subject, data) 
+    const subject = template.subject
+      ? Mustache.render(template.subject, data)
       : '';
     const body = Mustache.render(template.body, data);
 

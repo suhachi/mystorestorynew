@@ -1,7 +1,7 @@
 /**
  * Order Tracking Page
  * T14-07: Real-time order tracking with enhanced accessibility
- * 
+ *
  * Accessibility features:
  * - Live region for status updates (polite/atomic/busy)
  * - Region role with aria-label
@@ -10,19 +10,20 @@
  * - Display-only totals (recalculated from items)
  */
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Card } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Separator } from '../../components/ui/separator';
-import { Package, AlertCircle, WifiOff, ArrowLeft } from 'lucide-react';
-import { Order, OrderHistoryEntry } from '../../types/order';
-import { OrderStatusBadge } from '../../components/order/OrderStatusBadge';
+import { httpsCallable } from 'firebase/functions';
+import { AlertCircle, ArrowLeft, Package, WifiOff } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { OrderItemsList } from '../../components/order/OrderItemsList';
+import { OrderStatusBadge } from '../../components/order/OrderStatusBadge';
 import { OrderTimeline } from '../../components/order/OrderTimeline';
-import { calculateOrderTotals } from '../../services/orders.public';
+import { Alert, AlertDescription } from '../../components/ui/alert';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
+import { Separator } from '../../components/ui/separator';
+import { functions } from '../../firebase/config';
 import { getStatusDisplayName } from '../../services/orders.status';
+import { GetOrderRequest, Order, OrderHistoryEntry, PublicOrder } from '../../types/order';
 
 interface OrderTrackPageProps {
   orderId?: string;
@@ -34,7 +35,7 @@ function getRelativeTime(timestamp: number): string {
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
-  
+
   if (minutes < 1) return '방금 전';
   if (minutes < 60) return `${minutes}분 전`;
   if (hours < 24) return `${hours}시간 전`;
@@ -49,7 +50,7 @@ export default function OrderTrackPage({ orderId = 'ORD-DEMO-001' }: OrderTrackP
   const [error, setError] = useState<string | null>(null);
   const [offline, setOffline] = useState(false);
   const [lastStatusText, setLastStatusText] = useState('');
-  
+
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
   // Mock order data for demonstration
@@ -111,43 +112,56 @@ export default function OrderTrackPage({ orderId = 'ORD-DEMO-001' }: OrderTrackP
     }
   ];
 
+  // ...
+
   useEffect(() => {
-    // Simulate Firestore real-time subscription
-    // In production, this would be:
-    // const unsubscribe = onSnapshot(
-    //   doc(db, 'stores', storeId, 'orders', orderId),
-    //   (snapshot) => { ... }
-    // );
-
+    let isMounted = true;
     setLoading(true);
-    
-    const timeoutId = setTimeout(() => {
-      // Simulate data fetch
-      const fetchedOrder = { ...mockOrder };
-      // Recalculate totals from items (display-only)
-      fetchedOrder.totals = calculateOrderTotals(fetchedOrder.items);
-      
-      setOrder(fetchedOrder);
-      setHistory(mockHistory);
-      setLoading(false);
 
-      // Update live region text with relative time
-      const relativeTime = getRelativeTime(fetchedOrder.updatedAt);
-      const statusText = `주문 상태: ${getStatusDisplayName(fetchedOrder.status)} (최근 업데이트 ${relativeTime})`;
-      setLastStatusText(statusText);
-    }, 800);
+    const fetchOrder = async () => {
+      try {
+        const getOrder = httpsCallable<GetOrderRequest, PublicOrder>(functions, 'getOrder');
+        // TODO: Get storeId dynamically. For now using 'store_demo_001' as in CheckoutPage
+        const result = await getOrder({
+          storeId: 'store_demo_001',
+          orderId
+        });
 
-    // Cleanup function (would call unsubscribe in production)
-    unsubscribeRef.current = () => {
-      clearTimeout(timeoutId);
-      console.log('[OrderTrack] Unsubscribed from order updates');
+        if (!isMounted) return;
+
+        const fetchedOrder = result.data;
+
+        // Adapt PublicOrder to Order type (add dummy customer)
+        const orderWithDummyCustomer = {
+          ...fetchedOrder,
+          customer: { name: 'Hidden', phone: 'Hidden' }
+        } as Order;
+
+        setOrder(orderWithDummyCustomer);
+        // History is not yet available in PublicOrder
+        setHistory([]);
+        setLoading(false);
+
+        const relativeTime = getRelativeTime(fetchedOrder.updatedAt);
+        const statusText = `주문 상태: ${getStatusDisplayName(fetchedOrder.status)} (최근 업데이트 ${relativeTime})`;
+        setLastStatusText(statusText);
+      } catch (err) {
+        console.error('Failed to fetch order:', err);
+        if (isMounted) {
+          setError('주문을 찾을 수 없습니다.');
+          setLoading(false);
+        }
+      }
     };
 
+    fetchOrder();
+
+    // Poll every 15 seconds
+    const intervalId = setInterval(fetchOrder, 15000);
+
     return () => {
-      if (unsubscribeRef.current) {
-        unsubscribeRef.current();
-        unsubscribeRef.current = null;
-      }
+      isMounted = false;
+      clearInterval(intervalId);
     };
   }, [orderId]);
 
@@ -174,7 +188,7 @@ export default function OrderTrackPage({ orderId = 'ORD-DEMO-001' }: OrderTrackP
 
   if (loading) {
     return (
-      <div 
+      <div
         className="max-w-4xl mx-auto p-6"
         role="region"
         aria-label={`주문 추적 정보 (${orderId})`}
@@ -199,9 +213,9 @@ export default function OrderTrackPage({ orderId = 'ORD-DEMO-001' }: OrderTrackP
             {error || '주문을 찾을 수 없습니다.'}
           </AlertDescription>
         </Alert>
-        <Button 
-          className="mt-4" 
-          variant="outline" 
+        <Button
+          className="mt-4"
+          variant="outline"
           onClick={() => window.history.back()}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -212,14 +226,14 @@ export default function OrderTrackPage({ orderId = 'ORD-DEMO-001' }: OrderTrackP
   }
 
   return (
-    <div 
+    <div
       className="max-w-4xl mx-auto p-6"
       role="region"
       aria-label={`주문 추적 정보 (${orderId})`}
       aria-busy="false"
     >
       {/* Live Region for status updates - screen reader only */}
-      <p 
+      <p
         id="order-status-live"
         className="sr-only"
         aria-live="polite"
@@ -239,6 +253,14 @@ export default function OrderTrackPage({ orderId = 'ORD-DEMO-001' }: OrderTrackP
           </AlertDescription>
         </Alert>
       )}
+
+      {/* Success message */}
+      <Alert className="mb-6 bg-success-green-50 border-success-green">
+        <Check className="h-4 w-4 text-success-green" />
+        <AlertDescription className="text-success-green-dark">
+          주문이 완료되었습니다! 주문번호: {order.orderNumber}
+        </AlertDescription>
+      </Alert>
 
       {/* Header */}
       <div className="mb-6">
@@ -289,7 +311,7 @@ export default function OrderTrackPage({ orderId = 'ORD-DEMO-001' }: OrderTrackP
             <div className="space-y-2 text-sm mb-4">
               <div className="flex justify-between">
                 <span className="text-secondary-gray">주문일시</span>
-                <time 
+                <time
                   dateTime={new Date(order.createdAt).toISOString()}
                   className="text-gray-700"
                 >

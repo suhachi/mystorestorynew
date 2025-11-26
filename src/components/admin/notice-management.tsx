@@ -1,20 +1,28 @@
-import React, { useState } from 'react';
-import { 
-  Bell, Users, Store, User, Send, Eye, Edit, Trash2, Plus, Search,
-  Calendar, Clock, Target, Mail, MessageSquare, Smartphone, X, Save,
-  CheckCircle, AlertCircle, Filter, MoreHorizontal
+import {
+  Bell,
+  CheckCircle,
+  Clock,
+  Edit,
+  Eye,
+  Mail, MessageSquare,
+  MoreHorizontal,
+  Plus,
+  Save,
+  Search,
+  Smartphone, X
 } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Checkbox } from '../ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Switch } from '../ui/switch';
-import { Checkbox } from '../ui/checkbox';
-import { toast } from 'sonner@2.0.3';
+import { Textarea } from '../ui/textarea';
 
 export function NoticeManagement() {
   const [notices, setNotices] = useState([
@@ -45,7 +53,7 @@ export function NoticeManagement() {
       channels: ['email', 'sms']
     }
   ]);
-  
+
   const [selectedNotice, setSelectedNotice] = useState<any>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -63,7 +71,7 @@ export function NoticeManagement() {
       <NoticeStatsDashboard notices={notices} />
 
       {/* 공지사항 목록 */}
-      <NoticeListManagement 
+      <NoticeListManagement
         notices={notices}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -76,7 +84,7 @@ export function NoticeManagement() {
       />
 
       {/* 공지사항 작성/편집 다이얼로그 */}
-      <NoticeCreateDialog 
+      <NoticeCreateDialog
         isOpen={isCreateDialogOpen}
         onClose={() => setIsCreateDialogOpen(false)}
         onSave={(notice) => {
@@ -88,7 +96,7 @@ export function NoticeManagement() {
 
       {/* 공지사항 상세 정보 */}
       {selectedNotice && (
-        <NoticeDetailView 
+        <NoticeDetailView
           notice={selectedNotice}
           onClose={() => setSelectedNotice(null)}
           onEdit={() => {
@@ -165,10 +173,10 @@ function NoticeListManagement({
 }: any) {
   const filteredNotices = notices.filter((notice: any) => {
     const matchesSearch = notice.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         notice.content.toLowerCase().includes(searchTerm.toLowerCase());
+      notice.content.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === '전체' || notice.status === statusFilter;
     const matchesTarget = targetFilter === '전체' || notice.target === targetFilter;
-    
+
     return matchesSearch && matchesStatus && matchesTarget;
   });
 
@@ -257,8 +265,8 @@ function NoticeListManagement({
                   </Badge>
                   <Badge className={getTypeBadge(notice.type)}>
                     {notice.type === 'system' ? '시스템' :
-                     notice.type === 'policy' ? '정책' :
-                     notice.type === 'event' ? '이벤트' : '점검'}
+                      notice.type === 'policy' ? '정책' :
+                        notice.type === 'event' ? '이벤트' : '점검'}
                   </Badge>
                 </div>
                 <p className="text-sm text-gray-600 mb-3 line-clamp-2">{notice.content}</p>
@@ -330,7 +338,7 @@ function NoticeCreateDialog({ isOpen, onClose, onSave }: {
         <DialogHeader>
           <DialogTitle>새 공지사항 작성</DialogTitle>
         </DialogHeader>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 메인 입력 영역 */}
           <div className="lg:col-span-2 space-y-6">
@@ -395,9 +403,9 @@ function NoticeCreateDialog({ isOpen, onClose, onSave }: {
                   <Checkbox
                     id="email"
                     checked={formData.channels.email}
-                    onCheckedChange={(checked) => 
-                      setFormData({ 
-                        ...formData, 
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
                         channels: { ...formData.channels, email: checked as boolean }
                       })
                     }
@@ -411,9 +419,9 @@ function NoticeCreateDialog({ isOpen, onClose, onSave }: {
                   <Checkbox
                     id="sms"
                     checked={formData.channels.sms}
-                    onCheckedChange={(checked) => 
-                      setFormData({ 
-                        ...formData, 
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
                         channels: { ...formData.channels, sms: checked as boolean }
                       })
                     }
@@ -427,9 +435,9 @@ function NoticeCreateDialog({ isOpen, onClose, onSave }: {
                   <Checkbox
                     id="push"
                     checked={formData.channels.push}
-                    onCheckedChange={(checked) => 
-                      setFormData({ 
-                        ...formData, 
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
                         channels: { ...formData.channels, push: checked as boolean }
                       })
                     }
@@ -502,8 +510,8 @@ function NoticeDetailView({ notice, onClose, onEdit }: {
           <div className="flex items-center gap-2 mb-4">
             <Badge className={
               notice.status === '발송완료' ? 'bg-green-100 text-green-800' :
-              notice.status === '예약발송' ? 'bg-orange-100 text-orange-800' :
-              'bg-gray-100 text-gray-800'
+                notice.status === '예약발송' ? 'bg-orange-100 text-orange-800' :
+                  'bg-gray-100 text-gray-800'
             }>
               {notice.status}
             </Badge>

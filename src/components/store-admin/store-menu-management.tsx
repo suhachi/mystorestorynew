@@ -1,20 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Plus, Search, Filter, Edit3, Trash2, Eye, MoreVertical,
-  Package, DollarSign, TrendingUp, Clock, Star, Camera, Upload,
-  AlertCircle, Crown, Zap
+import {
+  AlertCircle,
+  Camera,
+  Clock,
+  Crown,
+  DollarSign,
+  Edit3,
+  Filter,
+  Package,
+  Plus, Search,
+  Star,
+  Trash2,
+  TrendingUp,
+  Upload
 } from 'lucide-react';
-import { Card } from '../ui/card';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { usePlanLimits } from '../../hooks/usePlanLimits';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Card } from '../ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Input } from '../ui/input';
 import { Progress } from '../ui/progress';
-import { usePlanLimits } from '../../hooks/usePlanLimits';
-import { EnhancedPlanAccessControl, PlanAccessControl } from './common/plan-access-control';
-import { toast } from 'sonner@2.0.3';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Textarea } from '../ui/textarea';
+import { EnhancedPlanAccessControl } from './common/plan-access-control';
 
 // Mock 상품 데이터
 const mockMenuItems = [
@@ -126,7 +136,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
   // 메뉴 추가 시 제한 체크
   const handleAddMenu = () => {
     const menuCheck = checkMenuLimit('menuItems', mockMenuItems.length + 1);
-    
+
     if (menuCheck.allowed) {
       setIsAddModalOpen(true);
       console.log('✅ 메뉴 추가 허용');
@@ -142,7 +152,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
   const handleAddOption = (menuItem: any) => {
     const currentOptionCount = menuItem.options?.length || 0;
     const optionCheck = checkMenuLimit('menuOptions', currentOptionCount + 1);
-    
+
     if (optionCheck.allowed) {
       console.log('✅ 옵션 추가 허용');
       toast.success('옵션이 추가되었습니다.');
@@ -158,7 +168,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
   const handleAddCategory = () => {
     const currentCategoryCount = new Set(mockMenuItems.map(item => item.category)).size;
     const categoryCheck = checkMenuLimit('categories', currentCategoryCount + 1);
-    
+
     if (categoryCheck.allowed) {
       console.log('✅ 카테고리 추가 허용');
       toast.success('카테고리가 추가되었습니다.');
@@ -187,8 +197,8 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
           <div className="text-lg font-semibold text-gray-900">
             {mockMenuItems.length} / {menuLimit.limit === -1 ? '∞' : menuLimit.limit}
           </div>
-          <Progress 
-            value={planLimits.getUsageProgress('menuItems')} 
+          <Progress
+            value={planLimits.getUsageProgress('menuItems')}
             className="h-2 mt-2"
           />
           <div className="text-xs text-gray-500 mt-1">
@@ -205,8 +215,8 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
           <div className="text-lg font-semibold text-gray-900">
             {Math.max(...mockMenuItems.map(item => item.options?.length || 0))} / {optionLimit.limit === -1 ? '∞' : optionLimit.limit}
           </div>
-          <Progress 
-            value={planLimits.getUsageProgress('menuOptions')} 
+          <Progress
+            value={planLimits.getUsageProgress('menuOptions')}
             className="h-2 mt-2"
           />
           <div className="text-xs text-gray-500 mt-1">
@@ -223,8 +233,8 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
           <div className="text-lg font-semibold text-gray-900">
             {new Set(mockMenuItems.map(item => item.category)).size} / {categoryLimit.limit === -1 ? '∞' : categoryLimit.limit}
           </div>
-          <Progress 
-            value={planLimits.getUsageProgress('categories')} 
+          <Progress
+            value={planLimits.getUsageProgress('categories')}
             className="h-2 mt-2"
           />
           <div className="text-xs text-gray-500 mt-1">
@@ -248,10 +258,10 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
   // 필터링된 메뉴 아이템
   const filteredItems = mockMenuItems.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+      item.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
     const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-    
+
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -311,7 +321,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
           <p className="text-body text-gray-600 mt-1">메뉴를 등록하고 관리하세요</p>
         </div>
         <div className="flex gap-2">
-          <Button 
+          <Button
             onClick={handleAddMenu}
             className="bg-primary-blue hover:bg-primary-blue-dark"
             disabled={!checkMenuLimit('menuItems', mockMenuItems.length + 1).allowed}
@@ -339,7 +349,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
             <Package className="w-8 h-8 text-blue-600" />
           </div>
         </Card>
-        
+
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -351,7 +361,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
             <TrendingUp className="w-8 h-8 text-success-green" />
           </div>
         </Card>
-        
+
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -363,7 +373,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
             <Clock className="w-8 h-8 text-error-red" />
           </div>
         </Card>
-        
+
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -389,7 +399,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
+
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
             <SelectTrigger>
               <SelectValue placeholder="카테고리" />
@@ -402,7 +412,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
               <SelectItem value="food">음식</SelectItem>
             </SelectContent>
           </Select>
-          
+
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger>
               <SelectValue placeholder="상태" />
@@ -414,7 +424,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
               <SelectItem value="inactive">판매중지</SelectItem>
             </SelectContent>
           </Select>
-          
+
           <Button variant="outline" onClick={handleFilterReset}>
             <Filter className="w-4 h-4 mr-2" />
             필터 초기화
@@ -430,7 +440,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
               <Badge className={getStatusColor(item.status)}>
                 {getStatusLabel(item.status)}
               </Badge>
-              
+
               <div className="flex gap-2">
                 <Button variant="ghost" size="sm" onClick={() => handleEdit(item)}>
                   <Edit3 className="w-4 h-4" />
@@ -440,10 +450,10 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                 </Button>
               </div>
             </div>
-            
+
             <div className="mb-4">
-              <img 
-                src={item.image} 
+              <img
+                src={item.image}
                 alt={item.name}
                 className="w-full h-32 object-cover rounded-lg mb-3"
               />
@@ -454,7 +464,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                 <span className="text-body-small text-gray-500">• {getCategoryLabel(item.category)}</span>
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex justify-between text-body-small">
                 <span className="text-gray-600">재고:</span>
@@ -473,14 +483,14 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                   <span className="text-gray-900">{item.rating}</span>
                 </div>
               </div>
-              
+
               {/* 옵션 정보 및 추가 버튼 */}
               <div className="flex justify-between items-center pt-2 border-t">
                 <span className="text-body-small text-gray-600">
                   옵션: {item.options?.length || 0}개
                 </span>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
                   onClick={() => handleAddOption(item)}
                   disabled={!checkMenuLimit('menuOptions', item.options?.length || 0 + 1).allowed}
@@ -505,7 +515,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
               {editingItem ? '상품 편집' : '새 상품 추가'}
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-6">
             {/* 상품 이미지 */}
             <div>
@@ -519,14 +529,14 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                 </Button>
               </div>
             </div>
-            
+
             {/* 기본 정보 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-label text-gray-900 mb-2 block">상품명 *</label>
                 <Input placeholder="상품명을 입력하세요" defaultValue={editingItem?.name} />
               </div>
-              
+
               <div>
                 <label className="text-label text-gray-900 mb-2 block">카테고리 *</label>
                 <Select defaultValue={editingItem?.category || "coffee"}>
@@ -542,35 +552,35 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                 </Select>
               </div>
             </div>
-            
+
             <div>
               <label className="text-label text-gray-900 mb-2 block">상품 설명</label>
-              <Textarea 
+              <Textarea
                 placeholder="상품에 대한 설명을 입력하세요"
                 defaultValue={editingItem?.description}
                 rows={3}
               />
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="text-label text-gray-900 mb-2 block">가격 *</label>
-                <Input 
-                  type="number" 
-                  placeholder="0" 
+                <Input
+                  type="number"
+                  placeholder="0"
                   defaultValue={editingItem?.price}
                 />
               </div>
-              
+
               <div>
                 <label className="text-label text-gray-900 mb-2 block">재고 수량</label>
-                <Input 
-                  type="number" 
-                  placeholder="0" 
+                <Input
+                  type="number"
+                  placeholder="0"
                   defaultValue={editingItem?.stock}
                 />
               </div>
-              
+
               <div>
                 <label className="text-label text-gray-900 mb-2 block">상태</label>
                 <Select defaultValue={editingItem?.status || "active"}>
@@ -585,7 +595,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                 </Select>
               </div>
             </div>
-            
+
             {/* 옵션 설정 - 플랜별 제한 적용 */}
             <EnhancedPlanAccessControl
               currentPlan={currentPlan}
@@ -598,8 +608,8 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                 <div className="border border-gray-200 rounded-lg p-4 space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-body-small text-gray-700">옵션을 추가하여 다양한 선택지를 제공하세요</span>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => handleAddOption(editingItem)}
                       disabled={!checkMenuLimit('menuOptions', editingItem?.options?.length || 0 + 1).allowed}
@@ -608,7 +618,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                       옵션 추가
                     </Button>
                   </div>
-                  
+
                   {editingItem?.options?.map((option: any, index: number) => (
                     <div key={index} className="border border-gray-100 rounded p-3">
                       <div className="flex justify-between items-center mb-2">
@@ -630,7 +640,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                 </div>
               </div>
             </EnhancedPlanAccessControl>
-            
+
             {/* 액션 버튼 */}
             <div className="flex gap-3 pt-4">
               <Button variant="outline" onClick={() => setIsAddModalOpen(false)} className="flex-1">
@@ -653,7 +663,7 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
               플랜 업그레이드 필요
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div className="text-center">
               <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
@@ -662,16 +672,16 @@ export function StoreMenuManagement({ currentPlan = 'basic' }: StoreMenuManageme
                 {getUpgradeMessage(upgradeFeature)}
               </p>
             </div>
-            
+
             <div className="flex gap-2 pt-2">
-              <Button 
-                onClick={() => setShowUpgradeModal(false)} 
-                variant="outline" 
+              <Button
+                onClick={() => setShowUpgradeModal(false)}
+                variant="outline"
                 className="flex-1"
               >
                 나중에
               </Button>
-              <Button 
+              <Button
                 onClick={() => {
                   console.log('업그레이드 페이지로 이동');
                   setShowUpgradeModal(false);

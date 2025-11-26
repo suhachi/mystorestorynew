@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  User, X, Eye, EyeOff, ShoppingCart, Star, Heart, Gift, 
+import {
+  User, X, Eye, EyeOff, ShoppingCart, Star, Heart, Gift,
   MapPin, Phone, Mail, Calendar, Shield, Activity, TrendingUp,
-  Award, Clock, Target, BarChart3, PieChart, Package, DollarSign,
+  Award, Clock, Target, BarChart3, Package, DollarSign,
   Filter, Download, RefreshCw, AlertCircle, CheckCircle, Settings
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
@@ -50,8 +50,8 @@ export function CustomerAccountDetail({ user, onClose }: CustomerAccountDetailPr
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <PrivacyControlPanel 
-                settings={privacySettings} 
+              <PrivacyControlPanel
+                settings={privacySettings}
                 onSettingsChange={setPrivacySettings}
                 showSensitiveInfo={showSensitiveInfo}
                 onToggleSensitiveInfo={setShowSensitiveInfo}
@@ -92,43 +92,43 @@ export function CustomerAccountDetail({ user, onClose }: CustomerAccountDetailPr
           </TabsList>
 
           <TabsContent value="profile" className="space-y-6">
-            <CustomerProfileInfo 
-              user={user} 
+            <CustomerProfileInfo
+              user={user}
               showSensitiveInfo={showSensitiveInfo}
               canViewPersonalInfo={privacySettings.viewPersonalInfo}
             />
           </TabsContent>
 
           <TabsContent value="orders" className="space-y-6">
-            <OrderHistoryAnalysis 
+            <OrderHistoryAnalysis
               user={user}
               canViewOrderHistory={privacySettings.viewOrderHistory}
             />
           </TabsContent>
 
           <TabsContent value="preferences" className="space-y-6">
-            <PreferredStoresAnalysis 
+            <PreferredStoresAnalysis
               user={user}
               canViewPreferences={privacySettings.viewPreferences}
             />
           </TabsContent>
 
           <TabsContent value="rewards" className="space-y-6">
-            <RewardsManagement 
+            <RewardsManagement
               user={user}
               canViewRewards={privacySettings.viewPreferences}
             />
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
-            <BehaviorAnalytics 
+            <BehaviorAnalytics
               user={user}
               canViewAnalytics={privacySettings.viewAnalytics}
             />
           </TabsContent>
 
           <TabsContent value="insights" className="space-y-6">
-            <CustomerInsights 
+            <CustomerInsights
               user={user}
               canViewAnalytics={privacySettings.viewAnalytics}
             />
@@ -139,11 +139,11 @@ export function CustomerAccountDetail({ user, onClose }: CustomerAccountDetailPr
   );
 }
 
-function PrivacyControlPanel({ 
-  settings, 
-  onSettingsChange, 
-  showSensitiveInfo, 
-  onToggleSensitiveInfo 
+function PrivacyControlPanel({
+  settings,
+  onSettingsChange,
+  showSensitiveInfo,
+  onToggleSensitiveInfo
 }: {
   settings: any;
   onSettingsChange: (settings: any) => void;
@@ -156,7 +156,7 @@ function PrivacyControlPanel({
         <Shield className="w-4 h-4 text-orange-600" />
         <span className="text-sm font-medium text-orange-800">개인정보 보호 설정</span>
       </div>
-      
+
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-xs text-orange-700">민감정보 표시</span>
@@ -166,7 +166,7 @@ function PrivacyControlPanel({
             size="sm"
           />
         </div>
-        
+
         <div className="flex items-center justify-between">
           <span className="text-xs text-orange-700">개인정보 접근</span>
           <Switch
@@ -190,12 +190,12 @@ function PrivacyControlPanel({
   );
 }
 
-function CustomerProfileInfo({ 
-  user, 
-  showSensitiveInfo, 
-  canViewPersonalInfo 
-}: { 
-  user: any; 
+function CustomerProfileInfo({
+  user,
+  showSensitiveInfo,
+  canViewPersonalInfo
+}: {
+  user: any;
   showSensitiveInfo: boolean;
   canViewPersonalInfo: boolean;
 }) {
@@ -214,7 +214,7 @@ function CustomerProfileInfo({
     activityLevel: '높음',
     totalOrders: 47,
     totalSpent: 892000,
-    
+
     // 비공개 정보 (개인정보 보호)
     name: showSensitiveInfo && canViewPersonalInfo ? '김민수' : '김**',
     email: maskInfo('minsu.kim@email.com', 2),
@@ -222,7 +222,7 @@ function CustomerProfileInfo({
     address: maskInfo('서울시 강남구 테헤란로 123', 4),
     birthYear: showSensitiveInfo && canViewPersonalInfo ? '1990' : '19**',
     gender: showSensitiveInfo && canViewPersonalInfo ? '남성' : '*성',
-    
+
     // 선호도 정보
     preferences: {
       allergies: ['견과류', '유제품'],
@@ -240,7 +240,7 @@ function CustomerProfileInfo({
           <User className="w-5 h-5 text-green-600" />
           <h3 className="font-semibold text-gray-900">기본 정보</h3>
         </div>
-        
+
         <div className="space-y-3">
           <div className="flex justify-between">
             <span className="text-sm text-gray-600">아이디</span>
@@ -271,7 +271,7 @@ function CustomerProfileInfo({
           <Activity className="w-5 h-5 text-blue-600" />
           <h3 className="font-semibold text-gray-900">계정 현황</h3>
         </div>
-        
+
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">계정 상태</span>
@@ -306,7 +306,7 @@ function CustomerProfileInfo({
           <Star className="w-5 h-5 text-yellow-600" />
           <h3 className="font-semibold text-gray-900">선호도 정보</h3>
         </div>
-        
+
         <div className="space-y-4">
           <div>
             <p className="text-sm text-gray-600 mb-2">선호 음식</p>
@@ -318,7 +318,7 @@ function CustomerProfileInfo({
               ))}
             </div>
           </div>
-          
+
           <div>
             <p className="text-sm text-gray-600 mb-2">알레르기</p>
             <div className="flex flex-wrap gap-1">
@@ -494,7 +494,7 @@ function OrderHistoryAnalysis({ user, canViewOrderHistory }: { user: any; canVie
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium text-gray-900">₩{order.amount.toLocaleString()}</p>
-                  <Badge 
+                  <Badge
                     className={order.status === '완료' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
                   >
                     {order.status}
@@ -520,47 +520,47 @@ function PreferredStoresAnalysis({ user, canViewPreferences }: { user: any; canV
   }
 
   const preferredStores = [
-    { 
-      name: '김치찌개 전문점', 
-      category: '한식', 
-      orderCount: 12, 
-      averageAmount: 15000, 
+    {
+      name: '김치찌개 전문점',
+      category: '한식',
+      orderCount: 12,
+      averageAmount: 15000,
       lastOrder: '2024.01.15',
       rating: 4.8,
       favoriteMenu: '김치찌개'
     },
-    { 
-      name: '피자나라', 
-      category: '양식', 
-      orderCount: 8, 
-      averageAmount: 23000, 
+    {
+      name: '피자나라',
+      category: '양식',
+      orderCount: 8,
+      averageAmount: 23000,
       lastOrder: '2024.01.12',
       rating: 4.6,
       favoriteMenu: '불고기피자'
     },
-    { 
-      name: '치킨매니아', 
-      category: '치킨', 
-      orderCount: 7, 
-      averageAmount: 18000, 
+    {
+      name: '치킨매니아',
+      category: '치킨',
+      orderCount: 7,
+      averageAmount: 18000,
       lastOrder: '2024.01.10',
       rating: 4.7,
       favoriteMenu: '양념치킨'
     },
-    { 
-      name: '분식왕', 
-      category: '분식', 
-      orderCount: 6, 
-      averageAmount: 12000, 
+    {
+      name: '분식왕',
+      category: '분식',
+      orderCount: 6,
+      averageAmount: 12000,
       lastOrder: '2024.01.08',
       rating: 4.5,
       favoriteMenu: '떡볶이 세트'
     },
-    { 
-      name: '중국반점', 
-      category: '중식', 
-      orderCount: 5, 
-      averageAmount: 16000, 
+    {
+      name: '중국반점',
+      category: '중식',
+      orderCount: 5,
+      averageAmount: 16000,
       lastOrder: '2024.01.05',
       rating: 4.4,
       favoriteMenu: '짜장면'
@@ -716,26 +716,26 @@ function RewardsManagement({ user, canViewRewards }: { user: any; canViewRewards
   ];
 
   const activeCoupons = [
-    { 
-      id: 'COUP001', 
-      title: '전 메뉴 20% 할인', 
-      description: '최대 5,000원 할인', 
+    {
+      id: 'COUP001',
+      title: '전 메뉴 20% 할인',
+      description: '최대 5,000원 할인',
       expiry: '2024.02.15',
       minOrder: 20000,
       discount: '20%'
     },
-    { 
-      id: 'COUP002', 
-      title: '배달비 무료', 
-      description: '배달비 무료 (3,000원 할인)', 
+    {
+      id: 'COUP002',
+      title: '배달비 무료',
+      description: '배달비 무료 (3,000원 할인)',
       expiry: '2024.02.20',
       minOrder: 15000,
       discount: '3,000원'
     },
-    { 
-      id: 'COUP003', 
-      title: '신규 가입 축하', 
-      description: '첫 주문 15% 할인', 
+    {
+      id: 'COUP003',
+      title: '신규 가입 축하',
+      description: '첫 주문 15% 할인',
       expiry: '2024.03.01',
       minOrder: 10000,
       discount: '15%'
@@ -1120,7 +1120,7 @@ function CustomerInsights({ user, canViewAnalytics }: { user: any; canViewAnalyt
                   <p className="text-sm text-gray-600">{customerSegment.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-600">고객 점수</p>
@@ -1144,7 +1144,7 @@ function CustomerInsights({ user, canViewAnalytics }: { user: any; canViewAnalyt
                 </div>
                 <Progress value={customerSegment.churnProbability} className="h-2" />
               </div>
-              
+
               <div className="flex justify-between">
                 <span className="text-sm text-gray-600">다음 주문 예상</span>
                 <span className="text-sm font-medium text-blue-600">{customerSegment.nextOrderPrediction}</span>
@@ -1170,13 +1170,13 @@ function CustomerInsights({ user, canViewAnalytics }: { user: any; canViewAnalyt
                   신뢰도 {insight.confidence}%
                 </Badge>
               </div>
-              
+
               <p className="text-sm text-gray-600 mb-3">{insight.description}</p>
-              
+
               <div className="bg-blue-50 p-3 rounded-md mb-3">
                 <p className="text-sm text-blue-800">{insight.recommendation}</p>
               </div>
-              
+
               <Button size="sm" variant="outline" className="w-full">
                 {insight.action}
               </Button>
@@ -1215,7 +1215,7 @@ function CustomerInsights({ user, canViewAnalytics }: { user: any; canViewAnalyt
                   <span>노력도: {action.effort === 'low' ? '낮음' : action.effort === 'medium' ? '보통' : '높음'}</span>
                 </div>
               </div>
-              
+
               <Button size="sm">
                 실행하기
               </Button>

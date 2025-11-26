@@ -1,20 +1,35 @@
-import React, { useState } from 'react';
-import { 
-  ShoppingCart, BarChart3, PieChart, TrendingUp, Calendar, 
-  Filter, Download, Eye, Package, Clock, CheckCircle, AlertCircle
+import {
+  AlertCircle,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Download, Eye,
+  Filter,
+  ShoppingCart
 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
+import { useState } from 'react';
+import {
+  Bar,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  BarChart as RechartsBarChart,
+  PieChart as RechartsPieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis
+} from 'recharts';
+import { toast } from 'sonner';
+import { Badge } from '../../ui/badge';
 import { Button } from '../../ui/button';
 import { Card } from '../../ui/card';
-import { Badge } from '../../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { Input } from '../../ui/input';
-import { 
-  BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line
-} from 'recharts';
-import { toast } from 'sonner@2.0.3';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 
 interface TotalOrderDetailModalProps {
   isOpen: boolean;
@@ -69,7 +84,7 @@ export function TotalOrderDetailModal({ isOpen, onClose }: TotalOrderDetailModal
   const totalRevenue = menuOrderData.reduce((sum, item) => sum + item.revenue, 0);
 
   // 검색 필터링
-  const filteredMenuData = menuOrderData.filter(menu => 
+  const filteredMenuData = menuOrderData.filter(menu =>
     menu.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -206,8 +221,8 @@ export function TotalOrderDetailModal({ isOpen, onClose }: TotalOrderDetailModal
                           <div className="font-semibold text-gray-900">₩{menu.revenue.toLocaleString()}</div>
                           <div className="text-body-small text-gray-500">매출</div>
                         </div>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => handleMenuDetail(menu)}
                         >
@@ -276,7 +291,7 @@ export function TotalOrderDetailModal({ isOpen, onClose }: TotalOrderDetailModal
                     </div>
                   ))}
                 </div>
-                
+
                 <ResponsiveContainer width="100%" height={300}>
                   <RechartsBarChart data={orderStatusData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -295,8 +310,8 @@ export function TotalOrderDetailModal({ isOpen, onClose }: TotalOrderDetailModal
                   {orderStatusData.map((status, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <div 
-                          className="w-4 h-4 rounded-full" 
+                        <div
+                          className="w-4 h-4 rounded-full"
                           style={{ backgroundColor: status.color }}
                         />
                         <span className="text-gray-700 font-medium">{status.status}</span>

@@ -1,16 +1,16 @@
+import { ImageIcon, Package, Plus, Save, Upload, X } from 'lucide-react';
 import React, { useState } from 'react';
-import { Package, Upload, ImageIcon, Plus, Save, X } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
+import { toast } from 'sonner';
+import { Badge } from '../../ui/badge';
 import { Button } from '../../ui/button';
+import { Card } from '../../ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { Card } from '../../ui/card';
-import { Badge } from '../../ui/badge';
 import { Separator } from '../../ui/separator';
-import { Textarea } from '../../ui/textarea';
 import { Switch } from '../../ui/switch';
-import { toast } from 'sonner@2.0.3';
+import { Textarea } from '../../ui/textarea';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -102,11 +102,11 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
     try {
       // 상품 생성 API 호출 시뮬레이션
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       toast.success(`${productData.name} 상품이 성공적으로 등록되었습니다! 🎉`);
-      
+
       console.log('📦 새 상품 생성:', productData);
-      
+
       // 폼 리셋
       setProductData({
         name: '',
@@ -126,7 +126,7 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
           carbs: ''
         }
       });
-      
+
       onClose();
     } catch (error) {
       toast.error('상품 등록 중 오류가 발생했습니다.');
@@ -178,8 +178,8 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
                 <Label htmlFor="category" className="text-body-small font-medium text-gray-700 mb-2 block">
                   카테고리 *
                 </Label>
-                <Select 
-                  value={productData.category} 
+                <Select
+                  value={productData.category}
                   onValueChange={(value) => handleInputChange('category', value)}
                 >
                   <SelectTrigger>
@@ -220,7 +220,7 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
                 />
               </div>
             </div>
-            
+
             <div className="mt-4">
               <Label htmlFor="description" className="text-body-small font-medium text-gray-700 mb-2 block">
                 상품 설명
@@ -248,8 +248,8 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
                     <span className="text-2xl">🖼️</span>
                   </div>
                   <p className="text-body-small text-gray-600">{productData.image.name}</p>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => setProductData(prev => ({ ...prev, image: null }))}
                   >
@@ -292,33 +292,33 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
                   <Label className="text-body-small font-medium text-gray-700">판매 상태</Label>
                   <p className="text-caption text-gray-500">고객에게 상품을 노출할지 설정</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={productData.isAvailable}
                   onCheckedChange={(checked) => handleInputChange('isAvailable', checked)}
                 />
               </div>
-              
+
               <Separator />
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-body-small font-medium text-gray-700">추천 상품</Label>
                   <p className="text-caption text-gray-500">메인 화면에 추천 상품으로 표시</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={productData.isFeatured}
                   onCheckedChange={(checked) => handleInputChange('isFeatured', checked)}
                 />
               </div>
-              
+
               <Separator />
-              
+
               <div>
                 <Label htmlFor="preparation_time" className="text-body-small font-medium text-gray-700 mb-2 block">
                   제조 시간 (분)
                 </Label>
-                <Select 
-                  value={productData.preparation_time} 
+                <Select
+                  value={productData.preparation_time}
                   onValueChange={(value) => handleInputChange('preparation_time', value)}
                 >
                   <SelectTrigger className="w-40">
@@ -342,8 +342,8 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
             <div className="space-y-4">
               <div className="flex flex-wrap gap-2">
                 {productData.tags.map((tag) => (
-                  <Badge 
-                    key={tag} 
+                  <Badge
+                    key={tag}
                     variant="outline"
                     className="px-3 py-1 cursor-pointer hover:bg-gray-100"
                     onClick={() => handleRemoveTag(tag)}
@@ -353,7 +353,7 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
                   </Badge>
                 ))}
               </div>
-              
+
               <div>
                 <Label className="text-body-small font-medium text-gray-700 mb-2 block">
                   인기 태그 (클릭하여 추가)
@@ -364,11 +364,10 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
                       key={tag}
                       type="button"
                       onClick={() => handleAddTag(tag)}
-                      className={`px-3 py-1 text-body-small rounded-lg border transition-colors ${
-                        productData.tags.includes(tag)
+                      className={`px-3 py-1 text-body-small rounded-lg border transition-colors ${productData.tags.includes(tag)
                           ? 'bg-primary-blue text-white border-primary-blue'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                      }`}
+                        }`}
                     >
                       {tag}
                     </button>
@@ -489,7 +488,7 @@ export function AddProductModal({ isOpen, onClose, children }: AddProductModalPr
             <Button variant="outline" onClick={() => onClose()} disabled={isCreating}>
               취소
             </Button>
-            <Button 
+            <Button
               onClick={handleCreateProduct}
               className="bg-primary-blue hover:bg-primary-blue-dark"
               disabled={isCreating}

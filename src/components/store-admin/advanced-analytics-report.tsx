@@ -1,23 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  TrendingUp, TrendingDown, BarChart3, PieChart, LineChart,
-  Download, Filter, Calendar, Target, Award, Zap,
-  FileText, Settings, RefreshCw, Eye, Share2
+import {
+  Award,
+  BarChart3,
+  Download,
+  Eye,
+  FileText,
+  RefreshCw,
+  Settings,
+  Share2,
+  Target,
+  TrendingUp,
+  Zap
 } from 'lucide-react';
-import { Card } from '../ui/card';
+import { useState } from 'react';
+import {
+  Area,
+  AreaChart,
+  Bar,
+  CartesianGrid,
+  Legend,
+  Line,
+  BarChart as RechartsBarChart,
+  LineChart as RechartsLineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis
+} from 'recharts';
+import { toast } from 'sonner';
+import { useFeatureAccess } from '../../hooks/usePlanLimits';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { Card } from '../ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
-import { Progress } from '../ui/progress';
-import { 
-  BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Pie, Cell,
-  LineChart as RechartsLineChart, Line, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
-} from 'recharts';
-import { usePlanLimits, useFeatureAccess } from '../../hooks/usePlanLimits';
 import { EnhancedPlanAccessControl } from './common/plan-access-control';
-import { toast } from 'sonner@2.0.3';
 
 interface AdvancedAnalyticsReportProps {
   currentPlan?: 'basic' | 'pro' | 'enterprise';
@@ -41,11 +56,11 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
     const baseData = [];
     const startDate = new Date();
     const days = dateRange === '7days' ? 7 : dateRange === '30days' ? 30 : 90;
-    
+
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date(startDate);
       date.setDate(date.getDate() - i);
-      
+
       baseData.push({
         date: date.toISOString().split('T')[0],
         sales: Math.floor(Math.random() * 200000) + 100000,
@@ -54,7 +69,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
         profit: Math.floor(Math.random() * 80000) + 40000
       });
     }
-    
+
     return baseData;
   };
 
@@ -68,11 +83,11 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
     }
 
     setIsGeneratingReport(true);
-    
+
     try {
       // 리포트 생성 시뮬레이션
       await new Promise(resolve => setTimeout(resolve, 3000));
-      
+
       toast.success('리포트가 성공적으로 생성되었습니다!');
       console.log('🔄 고급 분석 리포트 생성 완료');
     } catch (error) {
@@ -103,7 +118,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
       toast.error('커스텀 리포트는 Enterprise 플랜에서만 사용할 수 있습니다.');
       return;
     }
-    
+
     setCustomReportSettings(true);
   };
 
@@ -125,7 +140,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
           <p className="text-body text-gray-600 mt-1">상세한 비즈니스 분석과 인사이트를 제공합니다</p>
         </div>
         <div className="flex gap-2">
-          <Button 
+          <Button
             variant="outline"
             onClick={handleCustomReportSettings}
             disabled={!customReportsAllowed}
@@ -134,7 +149,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
             커스텀 설정
             {!customReportsAllowed && <Award className="w-4 h-4 ml-2 text-yellow-600" />}
           </Button>
-          <Button 
+          <Button
             onClick={handleGenerateReport}
             disabled={!advancedAnalyticsAllowed || isGeneratingReport}
           >
@@ -161,7 +176,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
               </SelectContent>
             </Select>
           </div>
-          
+
           <div>
             <label className="text-label text-gray-900 mb-2 block">기간</label>
             <Select value={dateRange} onValueChange={setDateRange}>
@@ -175,7 +190,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
               </SelectContent>
             </Select>
           </div>
-          
+
           <div>
             <label className="text-label text-gray-900 mb-2 block">비교 모드</label>
             <Button
@@ -189,7 +204,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
               {!comparisonAnalysisAllowed && <Award className="w-4 h-4 ml-2 text-yellow-600" />}
             </Button>
           </div>
-          
+
           <div>
             <label className="text-label text-gray-900 mb-2 block">다운로드</label>
             <div className="flex gap-2">
@@ -302,22 +317,22 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
             <h2 className="text-heading-3 text-gray-900">매출 트렌드 분석</h2>
             <div className="flex gap-2">
               <Badge variant="outline">
-                {reportType === 'sales' ? '매출 분석' : 
-                 reportType === 'orders' ? '주문 분석' : 
-                 reportType === 'customers' ? '고객 분석' : '상품 분석'}
+                {reportType === 'sales' ? '매출 분석' :
+                  reportType === 'orders' ? '주문 분석' :
+                    reportType === 'customers' ? '고객 분석' : '상품 분석'}
               </Badge>
               <Badge variant="outline">
-                {dateRange === '7days' ? '최근 7일' : 
-                 dateRange === '30days' ? '최근 30일' : '최근 90일'}
+                {dateRange === '7days' ? '최근 7일' :
+                  dateRange === '30days' ? '최근 30일' : '최근 90일'}
               </Badge>
             </div>
           </div>
-          
+
           <ResponsiveContainer width="100%" height={400}>
             <AreaChart data={reportData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="date" 
+              <XAxis
+                dataKey="date"
                 tickFormatter={(value) => new Date(value).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
               />
               <YAxis />
@@ -504,8 +519,8 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
                 <Share2 className="w-4 h-4 mr-2" />
                 공유
               </Button>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 className="bg-primary-blue hover:bg-primary-blue-dark"
                 onClick={() => handleDownloadReport('pdf')}
               >
@@ -529,7 +544,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
               Enterprise 플랜에서만 사용할 수 있는 고급 리포트 설정입니다.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
               <Settings className="w-8 h-8 text-blue-600 mx-auto mb-2" />
@@ -550,7 +565,7 @@ export function AdvancedAnalyticsReport({ currentPlan = 'basic' }: AdvancedAnaly
                 ))}
               </div>
             </div>
-            
+
             <div className="flex gap-2 pt-2">
               <Button variant="outline" onClick={() => setCustomReportSettings(false)} className="flex-1">
                 취소

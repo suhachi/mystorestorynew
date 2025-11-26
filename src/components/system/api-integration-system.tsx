@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner@2.0.3';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 // 피그마 디자인 기반 API 설정 및 통합 관련 타입 정의
 export interface ApiConfig {

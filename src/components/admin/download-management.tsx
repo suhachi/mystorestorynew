@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
-import { 
-  Download, Smartphone, Apple, Play, QrCode, Globe, BarChart3,
-  TrendingUp, TrendingDown, MapPin, Calendar, Share, Eye, Copy,
-  Settings, RefreshCw, ExternalLink, Users, Package
+import {
+  Apple,
+  BarChart3,
+  Calendar,
+  Copy,
+  Download,
+  ExternalLink,
+  Eye,
+  Globe,
+  MapPin,
+  Package,
+  Play, QrCode,
+  Settings,
+  Share,
+  TrendingDown,
+  TrendingUp
 } from 'lucide-react';
+import { useState } from 'react';
+import { Bar, CartesianGrid, BarChart as RechartsBarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { toast } from 'sonner';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Switch } from '../ui/switch';
-import { toast } from 'sonner@2.0.3';
-import { BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Pie, Cell, LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export function DownloadManagement() {
   const [downloadStats, setDownloadStats] = useState({
@@ -101,9 +112,8 @@ function DownloadStatsDashboard({ stats }: { stats: any }) {
             <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${item.bgColor} ${item.color}`}>
               {item.icon}
             </div>
-            <div className={`flex items-center gap-1 ${
-              item.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-            }`}>
+            <div className={`flex items-center gap-1 ${item.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+              }`}>
               {item.changeType === 'positive' ? (
                 <TrendingUp className="w-4 h-4" />
               ) : (
@@ -142,11 +152,10 @@ function DownloadTabs({ activeTab, setActiveTab }: {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === tab.id
+              className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
                   ? 'border-blue-500 text-blue-600 bg-blue-50'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
+                }`}
             >
               {tab.icon}
               {tab.label}
@@ -197,11 +206,11 @@ function DownloadOverview() {
                   </div>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="h-2 rounded-full" 
-                    style={{ 
-                      width: `${platform.percentage}%`, 
-                      backgroundColor: platform.color 
+                  <div
+                    className="h-2 rounded-full"
+                    style={{
+                      width: `${platform.percentage}%`,
+                      backgroundColor: platform.color
                     }}
                   />
                 </div>
@@ -227,7 +236,7 @@ function DownloadOverview() {
                 바로가기
               </Button>
             </div>
-            
+
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <Play className="w-8 h-8 text-green-600" />
@@ -370,7 +379,7 @@ function QRCodeManagement() {
               <DialogHeader>
                 <DialogTitle>새 QR 코드 생성</DialogTitle>
               </DialogHeader>
-              <QRCodeCreateForm 
+              <QRCodeCreateForm
                 onSave={handleCreateQR}
                 onCancel={() => setIsCreateDialogOpen(false)}
               />
@@ -387,7 +396,7 @@ function QRCodeManagement() {
                   <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
                     <QrCode className="w-8 h-8 text-gray-600" />
                   </div>
-                  
+
                   <div>
                     <h4 className="font-medium text-gray-900">{qr.name}</h4>
                     <p className="text-sm text-gray-500">{qr.url}</p>

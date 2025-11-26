@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { Target, Calendar, Percent, DollarSign, Users, Clock, Gift, Tag, Zap } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
+import { Calendar, Clock, DollarSign, Gift, Percent, Tag, Target, Users, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '../../ui/button';
+import { Card } from '../../ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import { Card } from '../../ui/card';
-import { Badge } from '../../ui/badge';
 import { Separator } from '../../ui/separator';
-import { toast } from 'sonner@2.0.3';
 
 interface PromotionModalProps {
   isOpen: boolean;
@@ -54,17 +53,17 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
     try {
       // 프로모션 생성 API 호출 시뮬레이션
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       const promotionType = promotionData.type === 'discount' ? '할인' :
-                          promotionData.type === 'bogo' ? '1+1' : '세트 할인';
-      
+        promotionData.type === 'bogo' ? '1+1' : '세트 할인';
+
       toast.success(`${menu.name} ${promotionType} 프로모션이 성공적으로 생성되었습니다! 🎉`);
-      
+
       console.log('🎯 프로모션 생성:', {
         menu: menu.name,
         ...promotionData
       });
-      
+
       onClose();
     } catch (error) {
       toast.error('프로모션 생성 중 오류가 발생했습니다.');
@@ -75,10 +74,10 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
 
   const getPromotionPreview = () => {
     if (promotionData.type === 'discount') {
-      const discountText = promotionData.discountType === 'percentage' 
+      const discountText = promotionData.discountType === 'percentage'
         ? `${promotionData.discountValue}% 할인`
         : `₩${parseInt(promotionData.discountValue || '0').toLocaleString()} 할인`;
-      
+
       return `${menu.name} ${discountText}`;
     } else if (promotionData.type === 'bogo') {
       return `${menu.name} 1+1 이벤트`;
@@ -129,11 +128,10 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
               <button
                 type="button"
                 onClick={() => handleInputChange('type', 'discount')}
-                className={`p-4 border rounded-lg text-center transition-all ${
-                  promotionData.type === 'discount' 
-                    ? 'border-purple-500 bg-purple-50 shadow-sm' 
+                className={`p-4 border rounded-lg text-center transition-all ${promotionData.type === 'discount'
+                    ? 'border-purple-500 bg-purple-50 shadow-sm'
                     : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <Percent className="w-6 h-6 mx-auto mb-2 text-purple-600" />
                 <div className="text-body-small font-medium text-gray-900">할인</div>
@@ -142,11 +140,10 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
               <button
                 type="button"
                 onClick={() => handleInputChange('type', 'bogo')}
-                className={`p-4 border rounded-lg text-center transition-all ${
-                  promotionData.type === 'bogo' 
-                    ? 'border-green-500 bg-green-50 shadow-sm' 
+                className={`p-4 border rounded-lg text-center transition-all ${promotionData.type === 'bogo'
+                    ? 'border-green-500 bg-green-50 shadow-sm'
                     : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <Gift className="w-6 h-6 mx-auto mb-2 text-green-600" />
                 <div className="text-body-small font-medium text-gray-900">1+1</div>
@@ -155,11 +152,10 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
               <button
                 type="button"
                 onClick={() => handleInputChange('type', 'combo')}
-                className={`p-4 border rounded-lg text-center transition-all ${
-                  promotionData.type === 'combo' 
-                    ? 'border-blue-500 bg-blue-50 shadow-sm' 
+                className={`p-4 border rounded-lg text-center transition-all ${promotionData.type === 'combo'
+                    ? 'border-blue-500 bg-blue-50 shadow-sm'
                     : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <Tag className="w-6 h-6 mx-auto mb-2 text-blue-600" />
                 <div className="text-body-small font-medium text-gray-900">세트</div>
@@ -177,8 +173,8 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
                   <Label htmlFor="discountType" className="text-body-small text-gray-700 mb-2 block">
                     할인 유형
                   </Label>
-                  <Select 
-                    value={promotionData.discountType} 
+                  <Select
+                    value={promotionData.discountType}
                     onValueChange={(value) => handleInputChange('discountType', value)}
                   >
                     <SelectTrigger>
@@ -260,8 +256,8 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
                 <Label htmlFor="targetCustomers" className="text-body-small text-gray-700 mb-2 block">
                   대상 고객
                 </Label>
-                <Select 
-                  value={promotionData.targetCustomers} 
+                <Select
+                  value={promotionData.targetCustomers}
                   onValueChange={(value) => handleInputChange('targetCustomers', value)}
                 >
                   <SelectTrigger>
@@ -274,7 +270,7 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="minOrderAmount" className="text-body-small text-gray-700 mb-2 block">
                   최소 주문 금액 (원)
@@ -288,7 +284,7 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
                 />
                 <p className="text-caption text-gray-500 mt-1">0원 입력 시 제한 없음</p>
               </div>
-              
+
               <div>
                 <Label htmlFor="maxUses" className="text-body-small text-gray-700 mb-2 block">
                   최대 사용 횟수 (고객당)
@@ -333,15 +329,15 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
               <div className="p-3 bg-white rounded-lg border">
                 <p className="text-body-small text-gray-600 mb-1">예상 주문 증가</p>
                 <p className="text-heading-4 text-success-green">
-                  {promotionData.type === 'discount' ? '+25%' : 
-                   promotionData.type === 'bogo' ? '+40%' : '+35%'}
+                  {promotionData.type === 'discount' ? '+25%' :
+                    promotionData.type === 'bogo' ? '+40%' : '+35%'}
                 </p>
               </div>
               <div className="p-3 bg-white rounded-lg border">
                 <p className="text-body-small text-gray-600 mb-1">예상 신규 고객</p>
                 <p className="text-heading-4 text-blue-600">
-                  {promotionData.type === 'discount' ? '+15명' : 
-                   promotionData.type === 'bogo' ? '+20명' : '+18명'}
+                  {promotionData.type === 'discount' ? '+15명' :
+                    promotionData.type === 'bogo' ? '+20명' : '+18명'}
                 </p>
               </div>
             </div>
@@ -361,7 +357,7 @@ export function PromotionModal({ isOpen, onClose, menu }: PromotionModalProps) {
             <Button variant="outline" onClick={onClose} disabled={isCreating}>
               취소
             </Button>
-            <Button 
+            <Button
               onClick={handleCreatePromotion}
               className="bg-purple-600 hover:bg-purple-700"
               disabled={isCreating}

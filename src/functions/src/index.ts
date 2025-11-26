@@ -9,9 +9,12 @@ import * as admin from 'firebase-admin';
 admin.initializeApp();
 
 // Export all functions
-export { setOrderStatus } from './callables/setOrderStatus';
+export { confirmPayment } from './callables/confirmPayment';
+export { createOrder } from './callables/createOrder';
+export { getOrder } from './callables/getOrder';
 export { renderTemplate } from './callables/renderTemplate';
 export { retryNotify } from './callables/retryNotify';
-export { onOrderHistoryCreated } from './triggers/historyNotify';
-export { cleanupInactiveTokens } from './triggers/tokenCleanup';
 export { processDelayedNotify } from './queues/delayedNotify';
+export { onOrderHistoryCreated } from './triggers/historyNotify';
+export { paymentWebhook } from './triggers/paymentWebhook';
+export { cleanupInactiveTokens } from './triggers/tokenCleanup';

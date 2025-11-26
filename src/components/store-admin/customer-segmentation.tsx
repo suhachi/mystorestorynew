@@ -1,25 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Users, Crown, Star, TrendingUp, Heart, Target, Zap,
-  Filter, Search, BarChart3, PieChart, LineChart, Calendar,
-  Gift, MessageSquare, Mail, Phone, MapPin, Award,
-  UserPlus, Eye, Edit3, Trash2, Settings, Download
+import {
+  Crown,
+  Download,
+  Eye,
+  Gift,
+  Heart,
+  Mail,
+  MessageSquare,
+  Search,
+  Settings,
+  Star,
+  Target,
+  TrendingUp,
+  Users,
+  Zap
 } from 'lucide-react';
-import { Card } from '../ui/card';
+import { useState } from 'react';
+import {
+  Bar,
+  CartesianGrid,
+  Cell,
+  Pie,
+  BarChart as RechartsBarChart,
+  PieChart as RechartsPieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis
+} from 'recharts';
+import { toast } from 'sonner';
+import { useFeatureAccess } from '../../hooks/usePlanLimits';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { Card } from '../ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
-import { Progress } from '../ui/progress';
-import { 
-  BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Pie, Cell,
-  LineChart as RechartsLineChart, Line, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
-} from 'recharts';
-import { usePlanLimits, useFeatureAccess } from '../../hooks/usePlanLimits';
 import { EnhancedPlanAccessControl } from './common/plan-access-control';
-import { toast } from 'sonner@2.0.3';
 
 interface CustomerSegmentationProps {
   currentPlan?: 'basic' | 'pro' | 'enterprise';
@@ -146,10 +161,10 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
   const generateCustomersInSegment = (segmentId: string) => {
     return mockCustomers.filter(customer => {
       const matchesSegment = segmentId === 'all' || customer.tier === segmentId;
-      const matchesSearch = searchTerm === '' || 
+      const matchesSearch = searchTerm === '' ||
         customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.email.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       return matchesSegment && matchesSearch;
     });
   };
@@ -175,7 +190,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
     }
 
     setIsGeneratingReport(true);
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
       toast.success('고객 세분화 리포트가 생성되었습니다!');
@@ -189,8 +204,8 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
 
   // 고객 선택 핸들러
   const handleCustomerSelect = (customerId: string) => {
-    setSelectedCustomers(prev => 
-      prev.includes(customerId) 
+    setSelectedCustomers(prev =>
+      prev.includes(customerId)
         ? prev.filter(id => id !== customerId)
         : [...prev, customerId]
     );
@@ -202,12 +217,12 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
       toast.error('고객을 먼저 선택해주세요.');
       return;
     }
-    
+
     if (!advancedMarketingAllowed) {
       toast.error('이메일 마케팅은 Pro 플랜 이상에서 사용할 수 있습니다.');
       return;
     }
-    
+
     toast.success(`${selectedCustomers.length}명의 고객에게 이메일을 발송합니다.`);
     console.log('📧 대량 이메일 발송:', selectedCustomers);
   };
@@ -217,12 +232,12 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
       toast.error('고객을 먼저 선택해주세요.');
       return;
     }
-    
+
     if (!advancedMarketingAllowed) {
       toast.error('SMS 마케팅은 Pro 플랜 이상에서 사용할 수 있습니다.');
       return;
     }
-    
+
     toast.success(`${selectedCustomers.length}명의 고객에게 SMS를 발송합니다.`);
     console.log('📱 대량 SMS 발송:', selectedCustomers);
   };
@@ -232,7 +247,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
       toast.error('고객을 먼저 선택해주세요.');
       return;
     }
-    
+
     toast.success(`${selectedCustomers.length}명의 고객에게 쿠폰을 발송합니다.`);
     console.log('🎁 대량 쿠폰 발송:', selectedCustomers);
   };
@@ -266,7 +281,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
           <p className="text-body text-gray-600 mt-1">고객을 세분화하여 맞춤형 마케팅과 서비스를 제공하세요</p>
         </div>
         <div className="flex gap-2">
-          <Button 
+          <Button
             variant="outline"
             onClick={handleGenerateSegmentReport}
             disabled={!customerSegmentationAllowed || isGeneratingReport}
@@ -275,7 +290,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
             {isGeneratingReport ? '생성 중...' : '리포트 생성'}
             {!customerSegmentationAllowed && <Crown className="w-4 h-4 ml-2 text-yellow-600" />}
           </Button>
-          <Button 
+          <Button
             onClick={handleCreateMarketingCampaign}
             disabled={!advancedMarketingAllowed}
             className="bg-primary-blue hover:bg-primary-blue-dark"
@@ -306,7 +321,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
               </SelectContent>
             </Select>
           </div>
-          
+
           <div>
             <label className="text-label text-gray-900 mb-2 block">기간</label>
             <Select value={timeRange} onValueChange={setTimeRange}>
@@ -320,7 +335,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
               </SelectContent>
             </Select>
           </div>
-          
+
           <div>
             <label className="text-label text-gray-900 mb-2 block">고객 검색</label>
             <div className="relative">
@@ -333,9 +348,9 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
               />
             </div>
           </div>
-          
+
           <div className="flex items-end">
-            <Button 
+            <Button
               variant="outline"
               onClick={() => {
                 if (!customSegmentsAllowed) {
@@ -366,18 +381,17 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {customerSegments.map((segment, index) => {
             const SegmentIcon = segment.icon;
-            
+
             return (
-              <Card 
-                key={segment.id} 
-                className={`p-6 cursor-pointer hover:shadow-lg transition-shadow ${
-                  selectedSegment === segment.id ? 'ring-2 ring-primary-blue bg-primary-blue-50' : ''
-                }`}
+              <Card
+                key={segment.id}
+                className={`p-6 cursor-pointer hover:shadow-lg transition-shadow ${selectedSegment === segment.id ? 'ring-2 ring-primary-blue bg-primary-blue-50' : ''
+                  }`}
                 onClick={() => setSelectedSegment(segment.id)}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div 
+                    <div
                       className="w-10 h-10 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: `${segment.color}20`, border: `2px solid ${segment.color}` }}
                     >
@@ -389,7 +403,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between text-body-small">
                     <span className="text-gray-600">고객 수:</span>
@@ -404,9 +418,9 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                     <span className="font-medium">₩{segment.avgOrderValue.toLocaleString()}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-                    <div 
+                    <div
                       className="h-2 rounded-full"
-                      style={{ 
+                      style={{
                         backgroundColor: segment.color,
                         width: `${(segment.count / totalCustomers) * 100}%`
                       }}
@@ -559,8 +573,8 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
               )}
             </div>
             <div className="flex gap-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={handleBulkEmail}
                 disabled={!advancedMarketingAllowed || selectedCustomers.length === 0}
@@ -568,8 +582,8 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                 <Mail className="w-4 h-4 mr-2" />
                 이메일 발송
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={handleBulkSMS}
                 disabled={!advancedMarketingAllowed || selectedCustomers.length === 0}
@@ -577,8 +591,8 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                 <MessageSquare className="w-4 h-4 mr-2" />
                 SMS 발송
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={handleBulkCoupon}
                 disabled={selectedCustomers.length === 0}
@@ -588,18 +602,17 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
               </Button>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {customersInSegment.map((customer, index) => {
               const TierIcon = getTierIcon(customer.tier);
               const isSelected = selectedCustomers.includes(customer.id);
-              
+
               return (
-                <div 
-                  key={customer.id} 
-                  className={`border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer ${
-                    isSelected ? 'border-primary-blue bg-primary-blue-50' : 'border-gray-200'
-                  }`}
+                <div
+                  key={customer.id}
+                  className={`border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer ${isSelected ? 'border-primary-blue bg-primary-blue-50' : 'border-gray-200'
+                    }`}
                   onClick={() => handleCustomerSelect(customer.id)}
                 >
                   <div className="flex items-center justify-between mb-3">
@@ -613,9 +626,9 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge 
+                      <Badge
                         className="border"
-                        style={{ 
+                        style={{
                           backgroundColor: `${getTierColor(customer.tier)}20`,
                           color: getTierColor(customer.tier),
                           borderColor: getTierColor(customer.tier)
@@ -631,7 +644,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between text-body-small">
                       <span className="text-gray-600">총 구매액:</span>
@@ -646,7 +659,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                       <span className="text-gray-900">{customer.lastOrder}</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" className="flex-1">
                       <Eye className="w-4 h-4 mr-1" />
@@ -685,7 +698,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
               Enterprise 플랜에서만 사용할 수 있는 커스텀 세그먼트 설정입니다.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
               <Settings className="w-8 h-8 text-purple-600 mx-auto mb-2" />
@@ -712,7 +725,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                 </div>
               </div>
             </div>
-            
+
             <div className="flex gap-2 pt-2">
               <Button variant="outline" onClick={() => setShowSegmentModal(false)} className="flex-1">
                 닫기
@@ -738,7 +751,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
               선택한 고객 세그먼트에 맞춤형 마케팅 캠페인을 생성합니다.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
               <Target className="w-8 h-8 text-blue-600 mx-auto mb-2" />
@@ -768,7 +781,7 @@ export function CustomerSegmentation({ currentPlan = 'basic' }: CustomerSegmenta
                 ))}
               </div>
             </div>
-            
+
             <div className="flex gap-2 pt-2">
               <Button variant="outline" onClick={() => setShowMarketingModal(false)} className="flex-1">
                 닫기

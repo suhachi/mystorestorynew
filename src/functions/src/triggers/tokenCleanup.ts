@@ -1,13 +1,13 @@
 /**
  * cleanupInactiveTokens Scheduled Function
  * T14-10: Clean up FCM tokens older than 90 days
- * 
+ *
  * Run daily via Cloud Scheduler:
  * firebase deploy --only functions:cleanupInactiveTokens
  */
 
-import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { getFirestore } from 'firebase-admin/firestore';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 
 export const cleanupInactiveTokens = onSchedule(
   {
@@ -38,7 +38,9 @@ export const cleanupInactiveTokens = onSchedule(
           deletedCount++;
         });
 
-        if (!batch.isEmpty) {
+        // TODO(F-ERR-01): WriteBatch doesn't have isEmpty property
+        // Check if there are docs to commit instead
+        if (tokensSnapshot.docs.length > 0) {
           await batch.commit();
         }
       }

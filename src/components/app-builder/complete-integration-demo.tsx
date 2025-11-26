@@ -1,39 +1,28 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Alert, AlertDescription } from '../ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { 
-  Rocket, 
-  Settings, 
-  Smartphone,
-  TestTube,
+import {
   CheckCircle,
-  ArrowRight,
-  Play,
-  Eye,
-  Crown,
-  Zap,
-  Target,
-  Users,
-  BarChart3,
-  Trophy,
-  Star,
-  ExternalLink,
-  Globe,
-  Store,
-  ShoppingCart,
-  TrendingUp,
-  Clock,
-  Shield,
   Cpu,
+  Crown,
   Database,
-  Wifi
+  ExternalLink,
+  Eye,
+  Play,
+  Rocket,
+  Settings,
+  Star,
+  TestTube,
+  TrendingUp,
+  Users,
+  Wifi,
+  Zap
 } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { DataProvider } from '../system/data-context';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { AppPreviewModal } from './app-preview-modal';
-import { useAppBuilder, DataProvider } from '../system/data-context';
-import { toast } from 'sonner@2.0.3';
 
 interface DemoStore {
   storeId: string;
@@ -186,7 +175,7 @@ const E2ESimulationDashboard = () => {
 
   const runE2ETest = () => {
     setIsRunning(true);
-    
+
     // Simulate test execution
     setTimeout(() => {
       setTestResults([
@@ -215,8 +204,8 @@ const E2ESimulationDashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <Button 
-              onClick={runE2ETest} 
+            <Button
+              onClick={runE2ETest}
               disabled={isRunning}
               className="flex items-center gap-2"
             >
@@ -276,8 +265,8 @@ const AppApprovalDashboard = () => {
   ]);
 
   const handleApproval = (id: number, status: 'approved' | 'rejected') => {
-    setApprovals(prev => 
-      prev.map(app => 
+    setApprovals(prev =>
+      prev.map(app =>
         app.id === id ? { ...app, status } : app
       )
     );
@@ -308,26 +297,26 @@ const AppApprovalDashboard = () => {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge 
+                    <Badge
                       variant={
-                        app.status === 'approved' ? 'default' : 
-                        app.status === 'rejected' ? 'destructive' : 'secondary'
+                        app.status === 'approved' ? 'default' :
+                          app.status === 'rejected' ? 'destructive' : 'secondary'
                       }
                     >
-                      {app.status === 'approved' ? '승인됨' : 
-                       app.status === 'rejected' ? '거절됨' : '대기중'}
+                      {app.status === 'approved' ? '승인됨' :
+                        app.status === 'rejected' ? '거절됨' : '대기중'}
                     </Badge>
                     {app.status === 'pending' && (
                       <div className="flex gap-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           onClick={() => handleApproval(app.id, 'approved')}
                         >
                           승인
                         </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => handleApproval(app.id, 'rejected')}
                         >
                           거절
@@ -373,8 +362,8 @@ export function CompleteIntegrationDemo() {
             <h1 className="text-4xl font-bold text-gray-900">완전 통합 데모</h1>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            MyStoreStory의 모든 기능을 체험해보세요. 플랜별 데모 스토어를 통해 
-            실제 앱이 어떻게 작동하는지 확인하고, E2E 테스트와 관리자 승인 프로세스까지 
+            MyStoreStory의 모든 기능을 체험해보세요. 플랜별 데모 스토어를 통해
+            실제 앱이 어떻게 작동하는지 확인하고, E2E 테스트와 관리자 승인 프로세스까지
             전체 플로우를 경험할 수 있습니다.
           </p>
         </div>
@@ -405,7 +394,7 @@ export function CompleteIntegrationDemo() {
                   <Card key={store.storeId} className="relative overflow-hidden hover:shadow-lg transition-shadow">
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <Badge 
+                        <Badge
                           variant={store.plan === 'Basic' ? 'secondary' : store.plan === 'Pro' ? 'default' : 'destructive'}
                           className="mb-2"
                         >
@@ -414,7 +403,7 @@ export function CompleteIntegrationDemo() {
                           {store.plan === 'Enterprise' && <Star className="w-3 h-3 mr-1" />}
                           {store.plan} 플랜
                         </Badge>
-                        <div 
+                        <div
                           className="w-4 h-4 rounded-full"
                           style={{ backgroundColor: store.branding.primaryColor }}
                         />
@@ -425,7 +414,7 @@ export function CompleteIntegrationDemo() {
                     <CardContent>
                       <div className="space-y-4">
                         <p className="text-sm text-gray-600">{store.branding.storeDescription}</p>
-                        
+
                         <div>
                           <h4 className="font-medium text-sm mb-2">주요 기능:</h4>
                           <div className="flex flex-wrap gap-1">
@@ -438,7 +427,7 @@ export function CompleteIntegrationDemo() {
                         </div>
 
                         <div className="flex gap-2">
-                          <Button 
+                          <Button
                             onClick={() => handleStoreSelect(store)}
                             className="flex-1"
                             size="sm"
@@ -446,8 +435,8 @@ export function CompleteIntegrationDemo() {
                             <Eye className="w-4 h-4 mr-2" />
                             앱 체험하기
                           </Button>
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             size="sm"
                             onClick={() => {
                               toast.success(`${store.generated.domain}으로 이동합니다`);
@@ -477,7 +466,7 @@ export function CompleteIntegrationDemo() {
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3">
@@ -491,7 +480,7 @@ export function CompleteIntegrationDemo() {
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3">
@@ -505,7 +494,7 @@ export function CompleteIntegrationDemo() {
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3">

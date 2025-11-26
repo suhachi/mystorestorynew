@@ -1,42 +1,28 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Slider } from '../ui/slider';
-import { Switch } from '../ui/switch';
-import { Alert, AlertDescription } from '../ui/alert';
-import { 
-  Crown, 
-  Zap, 
-  Star,
-  Settings,
-  Target,
-  BarChart3,
-  Users,
-  ShoppingCart,
-  MessageSquare,
-  Gift,
-  CreditCard,
-  Bell,
-  MapPin,
-  Clock,
-  TrendingUp,
-  Shield,
-  Smartphone,
-  CheckCircle,
+import {
   AlertTriangle,
-  Info,
-  Database,
-  Cpu,
-  Globe,
-  Search,
-  Filter,
   ArrowUp,
+  BarChart3,
+  CheckCircle,
+  Crown,
+  Database,
+  Filter,
+  Gift,
+  Info,
   Lock,
-  Unlock
+  Settings,
+  Shield,
+  Star,
+  Target,
+  Users,
+  Zap
 } from 'lucide-react';
-import { useAppBuilder, DataProvider } from '../system/data-context';
-import { toast } from 'sonner@2.0.3';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Slider } from '../ui/slider';
 
 interface FeatureLevel {
   id: string;
@@ -74,10 +60,10 @@ interface FeatureLevelSelectorProps {
   onPlanUpgrade?: (newPlan: 'Pro' | 'Enterprise') => void;
 }
 
-export function FeatureLevelSelector({ 
-  currentPlan, 
-  onLevelChange, 
-  onPlanUpgrade 
+export function FeatureLevelSelector({
+  currentPlan,
+  onLevelChange,
+  onPlanUpgrade
 }: FeatureLevelSelectorProps) {
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -263,7 +249,7 @@ export function FeatureLevelSelector({
         onLevelChange: (level) => handleFeatureLevelChange('inventory', level)
       }
     ];
-    
+
     setFeatureLevels(initialFeatureLevels);
   }, [currentPlan]);
 
@@ -281,9 +267,9 @@ export function FeatureLevelSelector({
     }
 
     // 기능 레벨 업데이트
-    setFeatureLevels(prev => 
-      prev.map(feature => 
-        feature.id === featureId 
+    setFeatureLevels(prev =>
+      prev.map(feature =>
+        feature.id === featureId
           ? { ...feature, currentLevel: level }
           : feature
       )
@@ -339,8 +325,8 @@ export function FeatureLevelSelector({
   };
 
   const categories = Array.from(new Set(featureLevels.map(f => f.category)));
-  const filteredFeatures = selectedCategory === 'all' 
-    ? featureLevels 
+  const filteredFeatures = selectedCategory === 'all'
+    ? featureLevels
     : featureLevels.filter(f => f.category === selectedCategory);
 
   return (
@@ -373,8 +359,8 @@ export function FeatureLevelSelector({
                 </p>
               </div>
               {currentPlan !== 'Enterprise' && (
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setShowUpgradeModal(true)}
                   className="flex items-center gap-2"
                   size="sm"
@@ -480,20 +466,20 @@ export function FeatureLevelSelector({
                       </div>
                     ))}
                   </div>
-                  
+
                   {/* 제한 사항 표시 */}
-                  {feature.levels[feature.currentLevel].limitations && 
-                   feature.levels[feature.currentLevel].limitations!.length > 0 && (
-                    <div className="space-y-1 mt-2">
-                      <h5 className="text-xs font-medium text-gray-600">제한 사항:</h5>
-                      {feature.levels[feature.currentLevel].limitations!.map((limitation, index) => (
-                        <div key={index} className="flex items-center gap-2 text-xs text-gray-500">
-                          <AlertTriangle className="w-3 h-3 text-orange-500 flex-shrink-0" />
-                          {limitation}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {feature.levels[feature.currentLevel].limitations &&
+                    feature.levels[feature.currentLevel].limitations!.length > 0 && (
+                      <div className="space-y-1 mt-2">
+                        <h5 className="text-xs font-medium text-gray-600">제한 사항:</h5>
+                        {feature.levels[feature.currentLevel].limitations!.map((limitation, index) => (
+                          <div key={index} className="flex items-center gap-2 text-xs text-gray-500">
+                            <AlertTriangle className="w-3 h-3 text-orange-500 flex-shrink-0" />
+                            {limitation}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                 </div>
 
                 {/* 플랜 제한 알림 */}
@@ -502,8 +488,8 @@ export function FeatureLevelSelector({
                     <Lock className="h-4 w-4" />
                     <AlertDescription>
                       이 레벨을 사용하려면 플랜 업그레이드가 필요합니다.
-                      <Button 
-                        variant="link" 
+                      <Button
+                        variant="link"
                         className="h-auto p-0 ml-2"
                         onClick={() => setShowUpgradeModal(true)}
                       >
@@ -567,7 +553,7 @@ export function FeatureLevelSelector({
               <div className="space-y-4">
                 <div className="grid gap-3">
                   {currentPlan === 'Basic' && (
-                    <Button 
+                    <Button
                       onClick={() => handlePlanUpgrade('Pro')}
                       className="flex items-center gap-2"
                     >
@@ -575,7 +561,7 @@ export function FeatureLevelSelector({
                       Pro 플랜으로 업그레이드
                     </Button>
                   )}
-                  <Button 
+                  <Button
                     onClick={() => handlePlanUpgrade('Enterprise')}
                     variant={currentPlan === 'Basic' ? 'outline' : 'default'}
                     className="flex items-center gap-2"
@@ -584,7 +570,7 @@ export function FeatureLevelSelector({
                     Enterprise 플랜으로 업그레이드
                   </Button>
                 </div>
-                
+
                 {pendingUpgrade && (
                   <Alert>
                     <Info className="h-4 w-4" />
@@ -593,9 +579,9 @@ export function FeatureLevelSelector({
                     </AlertDescription>
                   </Alert>
                 )}
-                
-                <Button 
-                  variant="ghost" 
+
+                <Button
+                  variant="ghost"
                   onClick={() => {
                     setShowUpgradeModal(false);
                     setPendingUpgrade(null);

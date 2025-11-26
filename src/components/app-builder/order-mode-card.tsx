@@ -1,38 +1,27 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Switch } from '../ui/switch';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
-import { Label } from '../ui/label';
-import { Alert, AlertDescription } from '../ui/alert';
-import { 
-  ShoppingCart, 
-  Clock, 
-  MapPin, 
-  CreditCard, 
-  Bell, 
-  Settings,
-  CheckCircle,
+import {
   AlertTriangle,
-  Info,
-  Zap,
+  Bell,
+  CheckCircle,
+  CreditCard,
   Crown,
-  Star,
-  Truck,
-  Store,
-  Smartphone,
-  Monitor,
   DollarSign,
-  Package,
-  Navigation,
-  Timer,
-  Phone,
+  Info,
+  QrCode,
+  Settings,
+  Smartphone,
+  Star,
+  Store,
+  Truck,
   Wallet,
-  QrCode
+  Zap
 } from 'lucide-react';
-import { useAppBuilder } from '../system/data-context';
-import { toast } from 'sonner@2.0.3';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Label } from '../ui/label';
+import { Switch } from '../ui/switch';
 
 interface OrderMode {
   id: string;
@@ -85,10 +74,10 @@ interface OrderSettings {
   };
 }
 
-export function OrderModeCard({ 
-  currentPlan, 
-  onModeChange, 
-  onSettingsChange 
+export function OrderModeCard({
+  currentPlan,
+  onModeChange,
+  onSettingsChange
 }: OrderModeCardProps) {
   const [orderSettings, setOrderSettings] = useState<OrderSettings>({
     deliveryMode: 'both',
@@ -143,7 +132,7 @@ export function OrderModeCard({
       requiredPlan: 'Basic',
       isEnabled: orderSettings.deliveryMode === 'delivery' || orderSettings.deliveryMode === 'both',
       onToggle: (enabled) => {
-        const newMode = enabled 
+        const newMode = enabled
           ? (orderSettings.deliveryMode === 'pickup' ? 'both' : 'delivery')
           : 'pickup';
         handleSettingsChange({ deliveryMode: newMode });
@@ -166,7 +155,7 @@ export function OrderModeCard({
       requiredPlan: 'Basic',
       isEnabled: orderSettings.deliveryMode === 'pickup' || orderSettings.deliveryMode === 'both',
       onToggle: (enabled) => {
-        const newMode = enabled 
+        const newMode = enabled
           ? (orderSettings.deliveryMode === 'delivery' ? 'both' : 'pickup')
           : 'delivery';
         handleSettingsChange({ deliveryMode: newMode });
@@ -194,7 +183,7 @@ export function OrderModeCard({
   const handlePaymentMethodToggle = (methodId: string, enabled: boolean) => {
     const requiredPlan = paymentOptions.find(p => p.id === methodId)?.plan || 'Basic';
     const planOrder = { 'Basic': 1, 'Pro': 2, 'Enterprise': 3 };
-    
+
     if (planOrder[currentPlan] < planOrder[requiredPlan]) {
       toast.error(`${requiredPlan} 플랜에서 사용 가능한 기능입니다.`);
       return;
@@ -203,12 +192,12 @@ export function OrderModeCard({
     const methods = enabled
       ? [...orderSettings.paymentMethods, methodId]
       : orderSettings.paymentMethods.filter(m => m !== methodId);
-    
+
     if (methods.length === 0) {
       toast.error('최소 1개의 결제 방법을 선택해야 합니다.');
       return;
     }
-    
+
     handleSettingsChange({ paymentMethods: methods });
     const methodName = paymentOptions.find(p => p.id === methodId)?.name;
     toast.success(`${methodName} ${enabled ? '추가' : '제거'}되었습니다.`);
@@ -238,7 +227,7 @@ export function OrderModeCard({
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">주문 모드 설정</h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          고객이 주문할 수 있는 방식을 설정하세요. 배달, 포장, 또는 둘 다 선택할 수 있으며, 
+          고객이 주문할 수 있는 방식을 설정하세요. 배달, 포장, 또는 둘 다 선택할 수 있으며,
           각 모드에 맞는 세부 설정을 구성할 수 있습니다.
         </p>
       </div>
@@ -248,31 +237,28 @@ export function OrderModeCard({
         <div className="flex bg-gray-100 rounded-lg p-1">
           <button
             onClick={() => setSelectedTab('modes')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              selectedTab === 'modes' 
-                ? 'bg-white text-gray-900 shadow-sm' 
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedTab === 'modes'
+                ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
           >
             주문 모드
           </button>
           <button
             onClick={() => setSelectedTab('settings')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              selectedTab === 'settings' 
-                ? 'bg-white text-gray-900 shadow-sm' 
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedTab === 'settings'
+                ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
           >
             상세 설정
           </button>
           <button
             onClick={() => setSelectedTab('payments')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              selectedTab === 'payments' 
-                ? 'bg-white text-gray-900 shadow-sm' 
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedTab === 'payments'
+                ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
           >
             결제 방법
           </button>
@@ -361,7 +347,7 @@ export function OrderModeCard({
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-600">
                     {orderSettings.deliveryMode === 'delivery' ? '배달만' :
-                     orderSettings.deliveryMode === 'pickup' ? '포장만' : '둘 다'}
+                      orderSettings.deliveryMode === 'pickup' ? '포장만' : '둘 다'}
                   </div>
                   <div className="text-sm text-gray-600">주문 모드</div>
                 </div>
@@ -600,7 +586,7 @@ export function OrderModeCard({
                     })}
                   />
                 </div>
-                
+
                 {/* Pro/Enterprise 전용 알림 */}
                 {currentPlan !== 'Basic' && (
                   <>
@@ -661,15 +647,14 @@ export function OrderModeCard({
                   const isEnabled = orderSettings.paymentMethods.includes(option.id);
                   const planOrder = { 'Basic': 1, 'Pro': 2, 'Enterprise': 3 };
                   const isAvailable = planOrder[currentPlan] >= planOrder[option.plan];
-                  
+
                   return (
                     <div
                       key={option.id}
-                      className={`p-4 border rounded-lg transition-all ${
-                        isEnabled 
-                          ? 'border-primary-blue bg-primary-blue-50' 
+                      className={`p-4 border rounded-lg transition-all ${isEnabled
+                          ? 'border-primary-blue bg-primary-blue-50'
                           : 'border-gray-200 hover:border-gray-300'
-                      } ${!isAvailable ? 'opacity-50' : ''}`}
+                        } ${!isAvailable ? 'opacity-50' : ''}`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -701,7 +686,7 @@ export function OrderModeCard({
                   );
                 })}
               </div>
-              
+
               {orderSettings.paymentMethods.length === 0 && (
                 <Alert className="mt-4">
                   <AlertTriangle className="h-4 w-4" />

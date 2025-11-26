@@ -1,37 +1,43 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { 
-  Search, Eye, MessageSquare, FileText, Download, 
-  Star, Smartphone, Apple, Heart, QrCode, ArrowRight
+import {
+  Apple,
+  ArrowRight,
+  Eye,
+  FileText,
+  Heart,
+  MessageSquare,
+  QrCode,
+  Search,
+  Smartphone,
+  Star
 } from 'lucide-react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { StepOneForm } from '../app-builder/step-one-form';
 import { GlobalHeader } from '../layout/GlobalHeader';
 import { AdminMasterLayout } from '../layouts/admin-master-layout';
-import { StoreAdminLayout } from '../layouts/store-admin-layout';
-import { AppBuilderLayout } from '../layouts/app-builder-layout';
 import { CustomerAppLayout } from '../layouts/customer-app-layout';
-import { AdminDashboard } from '../pages/admin-dashboard';
-import { AuthPages } from '../pages/auth-pages';
-import { LandingPage } from '../pages/landing-page';
-import { FeaturesPage } from '../pages/features-page';
-import { SupportPage } from '../pages/support-page';
+import { StoreAdminLayout } from '../layouts/store-admin-layout';
 import { AboutPage } from '../pages/about-page';
-import { ContactPage } from '../pages/contact-page';
-import { BusinessInfoPage } from '../pages/business-info-page';
-import { AppBuilderPage } from '../pages/app-builder-page';
+import { AdminDashboard } from '../pages/admin-dashboard';
 import { AppBuilderLegacyPage } from '../pages/app-builder-legacy-page';
-import { StepOneForm } from '../app-builder/step-one-form';
+import { AppCreationCompletedPage } from '../pages/app-creation-completed';
 import { AppCreationPendingPage } from '../pages/app-creation-pending';
 import { AppCreationProcessPage } from '../pages/app-creation-process';
-import { AppCreationCompletedPage } from '../pages/app-creation-completed';
 import { AppCreationSuccessPage } from '../pages/app-creation-success';
 import { AppDeploymentPage } from '../pages/app-deployment';
 import { AppFinalNotificationPage } from '../pages/app-final-notification';
+import { AuthPages } from '../pages/auth-pages';
+import { BusinessInfoPage } from '../pages/business-info-page';
+import { ContactPage } from '../pages/contact-page';
+import { FeaturesPage } from '../pages/features-page';
+import { LandingPage } from '../pages/landing-page';
+import { SupportPage } from '../pages/support-page';
 
 // 상점관리자 컴포넌트 import 추가
+import { StoreAnalytics } from '../store-admin/store-analytics';
+import { StoreCustomerManagement } from '../store-admin/store-customer-management';
 import { StoreDashboard } from '../store-admin/store-dashboard';
 import { StoreMenuManagement } from '../store-admin/store-menu-management';
 import { StoreOrderManagement } from '../store-admin/store-order-management';
-import { StoreCustomerManagement } from '../store-admin/store-customer-management';
-import { StoreAnalytics } from '../store-admin/store-analytics';
 import { StoreSettings } from '../store-admin/store-settings';
 
 // 새로운 페이지들 import 추가
@@ -39,20 +45,21 @@ import { OrderHistoryPage } from '../store-admin/pages/order-history';
 import { PopularMenuAnalysisPage } from '../store-admin/pages/popular-menu-analysis';
 
 // 테스트 시스템 import 추가
-import { FinalTestDashboard } from '../examples/final-test-dashboard';
-import { SystemTestDashboard } from '../system/system-test-dashboard';
-import { EnterpriseDeliveryAppSample } from '../examples/enterprise-delivery-app-sample';
-import { ApiDetailPage } from './master-api-dashboard';
 import { AppApprovalDetail } from '../admin/app-approval-detail';
+import { EnterpriseDeliveryAppSample } from '../examples/enterprise-delivery-app-sample';
+import { FinalTestDashboard } from '../examples/final-test-dashboard';
 import { PlanUsageDemo } from '../examples/plan-usage-demo';
+import { SystemTestDashboard } from '../system/system-test-dashboard';
+import { ApiDetailPage } from './master-api-dashboard';
 
 // T14-06~T14-10: 주문 & 알림 시스템 페이지들
 import CheckoutPage from '../../pages/customer/CheckoutPage';
-import OrderTrackPage from '../../pages/customer/OrderTrackPage';
+import CustomerOrderTrackPage from '../../pages/customer/CustomerOrderTrackPage';
 import NotificationPrefsPage from '../../pages/customer/NotificationPrefsPage';
-import OrdersManagePage from '../../pages/owner/OrdersManagePage';
+import OrderTrackPage from '../../pages/customer/OrderTrackPage';
 import NotifyOpsPanel from '../../pages/owner/NotifyOpsPanel';
 import NotifyTemplatesPage from '../../pages/owner/NotifyTemplatesPage';
+import { OwnerOrdersManagePage } from '../../pages/owner/OwnerOrdersManagePage';
 import { RequireRole } from '../auth/RequireRole';
 
 // Design System 페이지 import 추가
@@ -63,9 +70,9 @@ import { AppPreviewByPlan } from '../../pages/app-preview-by-plan';
 import { AppPreviewQuickAccess } from '../examples/app-preview-quick-access';
 
 // 라우터 타입 정의
-export type Route = 
+export type Route =
   | 'home'
-  | 'login' 
+  | 'login'
   | 'register'
   | 'forgot-password'
   | 'waiting-approval'
@@ -144,6 +151,7 @@ export type Route =
   | 'plan-usage-demo'
   | 'customer-checkout'
   | 'customer-order-track'
+  | 'customer-order-track-old'
   | 'customer-notification-prefs'
   | 'owner-orders-manage'
   | 'owner-notify-ops'
@@ -191,10 +199,51 @@ export function useNavigation() {
   return context;
 }
 
+// URL 해시에서 라우트 파싱
+type ParsedRoute = {
+  route: Route;
+  params: URLSearchParams;
+};
+
+// URL 해시에서 라우트 파싱
+function parseRouteFromHash(): ParsedRoute {
+  // ex) "#/customer-order-track?orderId=TEST-123"
+  const rawHash = decodeURIComponent(window.location.hash || '#/');
+  const withoutHash = rawHash.replace(/^#\/?/, ''); // "customer-order-track?orderId=TEST-123"
+
+  const [pathPart, queryPart = ''] = withoutHash.split('?'); // "customer-order-track", "orderId=TEST-123"
+
+  const routeKey = (pathPart || 'home') as Route;
+  const params = new URLSearchParams(queryPart);
+
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(
+      '[ROUTER] Parsing hash:',
+      rawHash,
+      '→',
+      routeKey,
+      queryPart ? `?${queryPart}` : ''
+    );
+  }
+
+  return { route: routeKey, params };
+}
+
 // 라우터 컴포넌트
 export function AppRouter() {
-  const [currentRoute, setCurrentRoute] = useState<Route>('home');
-  const [routeParams, setRouteParams] = useState<Record<string, any>>({});
+  // 초기 라우트 파싱
+  const initialParsed = parseRouteFromHash();
+  const [currentRoute, setCurrentRoute] = useState<Route>(initialParsed.route);
+
+  console.log(`[ROUTER DEBUG] AppRouter Render: currentRoute="${currentRoute}"`);
+
+  // 초기 파라미터 설정 (URL 쿼리 파라미터 포함)
+  const initialParams: Record<string, any> = {};
+  initialParsed.params.forEach((value, key) => {
+    initialParams[key] = value;
+  });
+
+  const [routeParams, setRouteParams] = useState<Record<string, any>>(initialParams);
   const [routeHistory, setRouteHistory] = useState<Route[]>(['home']);
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -205,7 +254,7 @@ export function AppRouter() {
   const navigate = useCallback((route: Route, params?: Record<string, any>) => {
     setCurrentRoute(route);
     setRouteParams(params || {});
-    
+
     // 히스토리 업데이트 (같은 페이지 중복 방지)
     setRouteHistory(prev => {
       const newHistory = [...prev];
@@ -214,10 +263,10 @@ export function AppRouter() {
       }
       return newHistory;
     });
-    
+
     // 페이지 상단으로 스크롤
     window.scrollTo(0, 0);
-    
+
     console.log(`📍 네비게이션: ${route}`, params);
   }, []);
 
@@ -226,11 +275,11 @@ export function AppRouter() {
       const newHistory = [...routeHistory];
       newHistory.pop(); // 현재 페이지 제거
       const previousRoute = newHistory[newHistory.length - 1];
-      
+
       setCurrentRoute(previousRoute);
       setRouteHistory(newHistory);
       setRouteParams({});
-      
+
       console.log(`⬅️ 뒤로 가기: ${previousRoute}`);
     }
   }, [routeHistory]);
@@ -261,6 +310,30 @@ export function AppRouter() {
     console.log('🔒 모달 닫기');
   }, []);
 
+  // URL 해시 변경 감지
+  useEffect(() => {
+    const handleHashChange = () => {
+      const { route, params } = parseRouteFromHash();
+      setCurrentRoute(route);
+
+      // URL 쿼리 파라미터를 routeParams에 반영
+      const paramsObject: Record<string, any> = {};
+      params.forEach((value, key) => {
+        paramsObject[key] = value;
+      });
+
+      // 기존 routeParams와 병합하지 않고 교체 (URL이 source of truth)
+      setRouteParams(paramsObject);
+    };
+
+    // hashchange 이벤트 리스너 등록
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+
   const navigationValue: NavigationContextType = {
     currentRoute,
     navigate,
@@ -279,7 +352,7 @@ export function AppRouter() {
       <div className="min-h-screen bg-white">
         {/* 전역 헤더 추가 */}
         <GlobalHeader />
-        
+
         {/* 메인 콘텐츠 - 헤더 높이만큼 패딩 */}
         <main className="pt-16">
           {renderRoute(currentRoute, routeParams)}
@@ -292,11 +365,14 @@ export function AppRouter() {
 
 // 현재 페이지 렌더링
 function renderRoute(route: Route, params: Record<string, any>) {
-  switch (route) {
+  // 안전장치: 쿼리 스트링이 포함되어 있다면 제거
+  const cleanRoute = (typeof route === 'string' ? route.split('?')[0] : route) as Route;
+
+  switch (cleanRoute) {
     // 홈 페이지
     case 'home':
       return <LandingPage />;
-    
+
     // 인증 페이지들
     case 'login':
       return <AuthPages type="login" />;
@@ -306,7 +382,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
       return <AuthPages type="forgot-password" />;
     case 'waiting-approval':
       return <AuthPages type="waiting-approval" />;
-    
+
     // 통합관리자 페이지들
     case 'admin-dashboard':
       return (
@@ -374,7 +450,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
           <AdminDashboard type="api-management" />
         </AdminMasterLayout>
       );
-    
+
     // API 상세 관리 페이지들
     case 'admin-api-detail-payment-api':
       return (
@@ -418,7 +494,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
           <AppApprovalDetail requestId={routeParams?.requestId} />
         </AdminMasterLayout>
       );
-    
+
     // 상점관리자 페이지들
     case 'store-dashboard':
       return (
@@ -474,7 +550,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
           <StoreSettings />
         </StoreAdminLayout>
       );
-    
+
     // 앱빌더 페이지들
     case 'app-builder':
       return <AppBuilderLegacyPage />;
@@ -494,7 +570,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
       return <AppBuilderStepFivePage />;
     case 'app-builder-step-6':
       return <AppBuilderStepSixPage />;
-    
+
     // 고객용 앱 페이지들
     case 'customer-home':
       return (
@@ -532,7 +608,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
           <CustomerPage type="profile" />
         </CustomerAppLayout>
       );
-    
+
     // 기타 페이지들
     case 'terms':
       return <TermsPage />;
@@ -556,7 +632,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
       return <PaymentSuccessPage />;
     case 'payment-failed':
       return <PaymentFailedPage />;
-    
+
     // 앱 생성 관련 페이지들
     case 'app-creation-pending':
       return <AppCreationPendingPage />;
@@ -572,7 +648,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
       return <AppFinalNotificationPage />;
     case 'final-completion':
       return <AppCreationSuccessPage />;
-    
+
     // 테스트 시스템
     case 'final-test-dashboard':
       return (
@@ -590,70 +666,85 @@ function renderRoute(route: Route, params: Record<string, any>) {
       return (
         <PlanUsageDemo />
       );
-    
+
     // 기능 소개 페이지
     case 'features':
       return <FeaturesPage />;
-    
+
     // 지원 페이지
     case 'support':
       return <SupportPage />;
-    
+
     // 회사 소개 페이지
     case 'about':
       return <AboutPage />;
-    
+
     // 연락처 페이지
     case 'contact':
       return <ContactPage />;
-    
+
     // 사업자 정보 페이지
     case 'business-info':
       return <BusinessInfoPage />;
-    
+
     // T14-06~T14-10: 주문 & 알림 시스템 페이지들
     case 'customer-checkout':
       return <CheckoutPage />;
-    
+
     case 'customer-order-track':
-      return <OrderTrackPage orderId={params.orderId} />;
-    
+      // ✅ 새로운 간단한 주문완료 페이지 사용
+      return <CustomerOrderTrackPage />;
+
+    case 'customer-order-track-old':
+      // 기존 복잡한 OrderTrackPage (Firebase Functions 필요)
+      const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+      const orderId = urlParams.get('orderId') || params.orderId;
+      return <OrderTrackPage orderId={orderId} />;
+
     case 'customer-notification-prefs':
       return <NotificationPrefsPage />;
-    
-    case 'owner-orders-manage':
+
+    case 'owner-orders-manage': {
+      // Test mode bypass for E2E tests
+      const TEST_MODE = import.meta.env.VITE_TEST_MODE === 'true';
+
+      if (TEST_MODE) {
+        return <OwnerOrdersManagePage />;
+      }
+
       return (
-        <RequireRole roles={['owner', 'staff']}>
-          <OrdersManagePage />
+        <RequireRole roles={['owner', 'admin']}>
+          <OwnerOrdersManagePage />
         </RequireRole>
       );
-    
+    }
+
     case 'owner-notify-ops':
       return (
         <RequireRole roles="owner">
           <NotifyOpsPanel />
         </RequireRole>
       );
-    
+
     case 'owner-notify-templates':
       return (
         <RequireRole roles="owner">
           <NotifyTemplatesPage />
         </RequireRole>
       );
-    
+
     // Design System
     case 'design-system':
       return <DesignSystemPage />;
-    
+
     // App Preview by Plan
     case 'app-preview-by-plan':
       return <AppPreviewByPlan />;
-    
+
     // App Preview Quick Access
     case 'app-preview-quick':
       return <AppPreviewQuickAccess />;
-    
+
     default:
       console.warn(`Route not found: ${route}`);
       return <div>Page not found</div>;
@@ -897,10 +988,10 @@ function NoticesPage() {
   // 필터링된 공지사항
   const filteredNotices = mockNotices.filter(notice => {
     const matchesSearch = notice.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         notice.content.toLowerCase().includes(searchTerm.toLowerCase());
+      notice.content.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === '전체' || notice.category === categoryFilter;
     const matchesImportance = importanceFilter === '전체' || notice.importance === importanceFilter;
-    
+
     return matchesSearch && matchesCategory && matchesImportance;
   });
 
@@ -989,7 +1080,7 @@ function NoticesPage() {
           <div className="space-y-4">
             {paginatedNotices.map((notice) => (
               <div key={notice.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
-                   onClick={() => navigate('notice-detail', { noticeId: notice.id })}>
+                onClick={() => navigate('notice-detail', { noticeId: notice.id })}>
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImportanceColor(notice.importance)}`}>
@@ -1007,14 +1098,14 @@ function NoticesPage() {
                     <span>{notice.createdAt}</span>
                   </div>
                 </div>
-                
+
                 <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-primary-blue transition-colors">
                   {notice.title}
                 </h3>
                 <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                   {notice.content}
                 </p>
-                
+
                 <div className="flex items-center justify-between text-sm text-gray-500">
                   <span>작성자: {notice.author}</span>
                   {notice.attachments.length > 0 && (
@@ -1049,24 +1140,23 @@ function NoticesPage() {
               >
                 이전
               </button>
-              
+
               {[...Array(totalPages)].map((_, index) => {
                 const pageNumber = index + 1;
                 return (
                   <button
                     key={pageNumber}
                     onClick={() => setCurrentPage(pageNumber)}
-                    className={`px-3 py-2 rounded-lg text-sm ${
-                      currentPage === pageNumber
-                        ? 'bg-primary-blue text-white'
-                        : 'border border-gray-300 hover:bg-gray-50'
-                    }`}
+                    className={`px-3 py-2 rounded-lg text-sm ${currentPage === pageNumber
+                      ? 'bg-primary-blue text-white'
+                      : 'border border-gray-300 hover:bg-gray-50'
+                      }`}
                   >
                     {pageNumber}
                   </button>
                 );
               })}
-              
+
               <button
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
@@ -1192,7 +1282,7 @@ function DownloadsPage() {
   const filteredApps = mockApps.filter(app => {
     const matchesCategory = categoryFilter === '전체' || app.category === categoryFilter;
     const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         app.description.toLowerCase().includes(searchTerm.toLowerCase());
+      app.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -1209,13 +1299,13 @@ function DownloadsPage() {
   const handleDownload = (platform: 'ios' | 'android', app: any) => {
     const url = platform === 'ios' ? app.iosUrl : app.androidUrl;
     console.log(`${platform.toUpperCase()} 다운로드:`, url);
-    openModal('notification', { 
-      message: `${app.name} 앱 다운로드가 시작됩니다!` 
+    openModal('notification', {
+      message: `${app.name} 앱 다운로드가 시작됩니다!`
     });
   };
 
   const handleQRCode = (app: any) => {
-    openModal('qr-code', { 
+    openModal('qr-code', {
       appName: app.name,
       qrCode: app.qrCode,
       iosUrl: app.iosUrl,
@@ -1233,7 +1323,7 @@ function DownloadsPage() {
             <p className="text-body-large text-gray-600 mb-8">
               MyStoreStory로 제작된 상점 앱들을 다운로드하세요
             </p>
-            
+
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
               <div className="text-center">
@@ -1303,8 +1393,8 @@ function DownloadsPage() {
                 {/* App Header */}
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-                    <img 
-                      src={app.icon} 
+                    <img
+                      src={app.icon}
                       alt={`${app.name} 아이콘`}
                       className="w-full h-full object-cover"
                     />
@@ -1368,7 +1458,7 @@ function DownloadsPage() {
                       <span>Android</span>
                     </button>
                   </div>
-                  
+
                   <button
                     onClick={() => handleQRCode(app)}
                     className="w-full flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
@@ -1476,7 +1566,7 @@ function StoreInfoModal({ isOpen, onClose, data }: any) {
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <h2 className="text-heading-3 mb-4">상점 정보</h2>
         <p className="text-body text-gray-600 mb-4">상점 정보가 여기에 표시됩니다.</p>
-        <button 
+        <button
           onClick={onClose}
           className="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-primary-blue-dark"
         >
@@ -1494,7 +1584,7 @@ function MenuDetailModal({ isOpen, onClose, data }: any) {
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <h2 className="text-heading-3 mb-4">메뉴 상세</h2>
         <p className="text-body text-gray-600 mb-4">메뉴 상세 정보가 여기에 표시됩니다.</p>
-        <button 
+        <button
           onClick={onClose}
           className="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-primary-blue-dark"
         >
@@ -1512,7 +1602,7 @@ function OrderDetailModal({ isOpen, onClose, data }: any) {
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <h2 className="text-heading-3 mb-4">주문 상세</h2>
         <p className="text-body text-gray-600 mb-4">주문 상세 정보가 여기에 표시됩니다.</p>
-        <button 
+        <button
           onClick={onClose}
           className="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-primary-blue-dark"
         >
@@ -1530,7 +1620,7 @@ function NotificationModal({ isOpen, onClose, data }: any) {
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <h2 className="text-heading-3 mb-4">알림</h2>
         <p className="text-body text-gray-600 mb-4">{data?.message || '알림 내용'}</p>
-        <button 
+        <button
           onClick={onClose}
           className="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-primary-blue-dark"
         >
@@ -1549,13 +1639,13 @@ function ConfirmModal({ isOpen, onClose, data }: any) {
         <h2 className="text-heading-3 mb-4">확인</h2>
         <p className="text-body text-gray-600 mb-4">{data?.message || '확인하시겠습니까?'}</p>
         <div className="flex gap-3 justify-end">
-          <button 
+          <button
             onClick={onClose}
             className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
           >
             취소
           </button>
-          <button 
+          <button
             onClick={() => {
               data?.onConfirm?.();
               onClose();
@@ -1817,7 +1907,7 @@ function ReviewsPage() {
                     <Star className="w-4 h-4 text-warning-yellow fill-current" />
                   </div>
                   <div className="flex-1 bg-gray-200 rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-warning-yellow h-2 rounded-full transition-all duration-300"
                       style={{ width: `${item.percentage}%` }}
                     />
@@ -1892,8 +1982,8 @@ function ReviewsPage() {
                 {/* Review Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
-                    <img 
-                      src={review.profileImage} 
+                    <img
+                      src={review.profileImage}
                       alt={review.ownerName}
                       className="w-12 h-12 rounded-full object-cover"
                     />
@@ -1907,9 +1997,9 @@ function ReviewsPage() {
                       <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1">
                           {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={`w-4 h-4 ${i < review.appBuildRating ? 'text-warning-yellow fill-current' : 'text-gray-300'}`} 
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${i < review.appBuildRating ? 'text-warning-yellow fill-current' : 'text-gray-300'}`}
                             />
                           ))}
                         </div>

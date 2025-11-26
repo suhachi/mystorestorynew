@@ -1,29 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Alert, AlertDescription } from '../ui/alert';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { 
-  Eye, 
-  Smartphone, 
-  Monitor, 
-  Tablet,
-  Zap,
-  CheckCircle,
+import {
   AlertTriangle,
-  ExternalLink,
-  RefreshCw,
-  Store,
-  ShoppingBag,
-  Settings,
   BarChart3,
-  Users,
-  Crown
+  CheckCircle,
+  Eye,
+  Monitor,
+  RefreshCw,
+  ShoppingBag,
+  Smartphone,
+  Store,
+  Tablet,
+  Zap
 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { useAppBuilder } from '../system/data-context';
-import { toast } from 'sonner@2.0.3';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 
 interface AppPreviewModalProps {
   isOpen: boolean;
@@ -52,27 +48,27 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
   // Validate store configuration
   const validateStoreConfig = () => {
     const errors: string[] = [];
-    
+
     if (!data.subdomain) {
       errors.push('서브도메인이 설정되지 않았습니다');
     }
-    
+
     if (!data.storeInfo?.name) {
       errors.push('상점명이 입력되지 않았습니다');
     }
-    
+
     if (!data.storeInfo?.ownerInfo?.name) {
       errors.push('사장님 이름이 입력되지 않았습니다');
     }
-    
+
     if (!data.storeInfo?.ownerInfo?.email) {
       errors.push('사장님 이메일이 입력되지 않았습니다');
     }
-    
+
     if (!data.selectedPlan) {
       errors.push('플랜이 선택되지 않았습니다');
     }
-    
+
     return errors;
   };
 
@@ -83,19 +79,19 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
     }
 
     setIsGenerating(true);
-    
+
     try {
       // Simulate app generation process
       toast.success('앱 생성을 시작합니다...');
-      
+
       // Simulate generation time
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Call the onGenerate callback
       if (onGenerate) {
         await onGenerate();
       }
-      
+
       toast.success('앱이 성공적으로 생성되었습니다!');
       onClose();
     } catch (error) {
@@ -126,25 +122,25 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
   // Get enabled features based on current configuration
   const getEnabledFeatures = () => {
     const features: string[] = [];
-    
+
     if (data.storeInfo?.name) features.push('기본 정보');
     if (data.selectedPlan) features.push(`${data.selectedPlan} 플랜`);
     if (data.features?.length) features.push('선택된 기능들');
     if (data.branding?.primaryColor) features.push('브랜딩');
     if (data.storeInfo?.operatingHours) features.push('운영시간');
-    
+
     return features;
   };
 
   // Get disabled features
   const getDisabledFeatures = () => {
     const features: string[] = [];
-    
+
     if (!data.branding?.logo) features.push('로고');
     if (!data.branding?.coverImage) features.push('커버 이미지');
     if (!data.storeInfo?.businessNumber) features.push('사업자번호');
     if (!data.storeInfo?.address) features.push('주소');
-    
+
     return features;
   };
 
@@ -194,7 +190,7 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
                     {/* Mock App Preview */}
                     <div className="w-full h-full bg-white">
                       {/* App Header */}
-                      <div 
+                      <div
                         className="p-4 text-white"
                         style={{ backgroundColor: data.branding?.primaryColor || '#2563eb' }}
                       >
@@ -208,7 +204,7 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* App Content */}
                       <div className="p-4 space-y-4">
                         {/* Navigation Cards */}
@@ -222,14 +218,14 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
                             <p className="text-sm font-medium">주문현황</p>
                           </div>
                         </div>
-                        
+
                         {/* Sample Menu Item */}
                         <div className="border rounded-lg p-3">
                           <div className="flex justify-between items-start">
                             <div>
                               <h4 className="font-medium">인기 메뉴</h4>
                               <p className="text-sm text-gray-600">맛있는 메뉴 설명</p>
-                              <p 
+                              <p
                                 className="font-semibold mt-1"
                                 style={{ color: data.branding?.primaryColor || '#2563eb' }}
                               >
@@ -239,7 +235,7 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
                             <div className="w-16 h-16 bg-gray-200 rounded-lg"></div>
                           </div>
                         </div>
-                        
+
                         {/* Status Info */}
                         <div className="bg-blue-50 p-3 rounded-lg">
                           <p className="text-sm text-blue-800">
@@ -333,7 +329,7 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
                 <div>
                   <h3 className="text-sm font-medium text-green-900 mb-1">앱 생성 준비 완료</h3>
                   <p className="text-xs text-green-800">
-                    설정이 완료되면 실제 작동하는 앱이 생성됩니다. 생성된 앱은 즉시 사용할 수 있으며, 
+                    설정이 완료되면 실제 작동하는 앱이 생성됩니다. 생성된 앱은 즉시 사용할 수 있으며,
                     언제든지 설정을 변경할 수 있습니다.
                   </p>
                 </div>
@@ -346,7 +342,7 @@ export const AppPreviewModal: React.FC<AppPreviewModalProps> = ({
             <Button variant="outline" onClick={onClose}>
               닫기
             </Button>
-            <Button 
+            <Button
               onClick={handleGenerateApp}
               disabled={validationErrors.length > 0 || isGenerating}
               className="flex items-center gap-2"

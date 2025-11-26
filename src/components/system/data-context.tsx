@@ -1,173 +1,13 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
+import {
+  AppBuilderData,
+  Order,
+  Store,
+  User
+} from '../../types/domain';
 
-// 데이터 타입 정의
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  plan: 'basic' | 'pro' | 'enterprise';
-  status: 'active' | 'inactive' | 'pending' | 'suspended';
-  createdAt: string;
-  lastLogin?: string;
-}
-
-export interface Store {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  address: string;
-  phone: string;
-  email: string;
-  businessNumber?: string;
-  ownerId: string;
-  status: 'active' | 'inactive' | 'pending' | 'suspended';
-  createdAt: string;
-  logo?: string;
-  coverImage?: string;
-  theme: {
-    primaryColor: string;
-    secondaryColor: string;
-    fontFamily: string;
-  };
-  operatingHours: {
-    [key: string]: { open: string; close: string; closed: boolean };
-  };
-}
-
-export interface AppBuilderData {
-  step: number;
-  subdomain: string;
-  subdomainError: string;
-  storeInfo: {
-    name: string;
-    description: string;
-    category: string; // 업종 선택
-    address: string;
-    phone: string;
-    operatingHours: any;
-    ownerInfo: {
-      name: string;
-      phone: string;
-      email: string;
-      businessNumber: string;
-    };
-  };
-  
-  // 2단계: 플랜 선택 & 핵심 기능
-  planSelection: {
-    selectedPlan: 'basic' | 'pro' | 'enterprise';
-    selectedFeatures: {
-      dashboard: 'basic' | 'pro' | 'enterprise';
-      menu: 'basic' | 'pro' | 'enterprise';
-    };
-  };
-  
-  // 3단계: 주문 & 결제 설정
-  orderPayment: {
-    orderModes: {
-      pickup: boolean;
-      delivery: boolean;
-      reservation: boolean;
-    };
-    paymentSettings: {
-      methods: string[];
-      minOrderAmount: number;
-      deliveryFee: number;
-      freeDeliveryThreshold: number;
-    };
-  };
-  
-  // 4단계: 고객 관리 & 마케팅
-  customerMarketing: {
-    customerManagement: {
-      enabled: boolean;
-      level: 'basic' | 'pro' | 'enterprise';
-    };
-    marketingTools: {
-      coupons: boolean;
-      points: boolean;
-      level: 'basic' | 'pro' | 'enterprise';
-    };
-    analytics: {
-      enabled: boolean;
-      level: 'basic' | 'pro' | 'enterprise';
-    };
-  };
-  
-  // 5단계: 브랜딩 (기존 확장)
-  branding: {
-    logo?: string;
-    coverImage?: string;
-    primaryColor: string;
-    secondaryColor: string;
-    fontFamily: string;
-  };
-  
-  // 기존 필드들 유지 (하위 호환성)
-  features: string[];
-  theme: {
-    templateId: string;
-    customizations: any;
-  };
-  menu: {
-    categories: MenuCategory[];
-    items: MenuItem[];
-  };
-  payment: {
-    methods: string[];
-    minOrderAmount: number;
-    maxOrderAmount: number;
-    deliveryFee: number;
-    freeDeliveryThreshold: number;
-    deliveryAreas: string[];
-  };
-  notifications: {
-    push: boolean;
-    email: boolean;
-    sms: boolean;
-    templates: any;
-  };
-  finalSettings: {
-    appName: string;
-    description: string;
-    icon?: string;
-    splashScreen?: string;
-    domain?: string;
-  };
-}
-
-export interface MenuCategory {
-  id: string;
-  name: string;
-  order: number;
-  active: boolean;
-}
-
-export interface MenuItem {
-  id: string;
-  categoryId: string;
-  name: string;
-  description: string;
-  price: number;
-  image?: string;
-  options: MenuOption[];
-  popular: boolean;
-  available: boolean;
-  inventory?: number;
-}
-
-export interface MenuOption {
-  id: string;
-  name: string;
-  type: 'size' | 'extra' | 'choice';
-  choices: {
-    name: string;
-    price: number;
-  }[];
-  required: boolean;
-}
+// Re-export constants if they are not moved yet, or keep them here if they are UI specific.
+// For now, let's keep constants here but use the imported types.
 
 // 업종별 기본 설정 추가
 export const CATEGORY_DEFAULTS = {
@@ -355,33 +195,6 @@ export const PLAN_LIMITS = {
   }
 };
 
-export interface Order {
-  id: string;
-  storeId: string;
-  customerId: string;
-  items: OrderItem[];
-  totalAmount: number;
-  deliveryAddress: string;
-  customerPhone: string;
-  paymentMethod: string;
-  status: 'pending' | 'confirmed' | 'preparing' | 'delivering' | 'delivered' | 'cancelled';
-  createdAt: string;
-  deliveryTime?: string;
-  specialRequests?: string;
-}
-
-export interface OrderItem {
-  menuItemId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  options: {
-    name: string;
-    choice: string;
-    price: number;
-  }[];
-}
-
 // 액션 타입 정의
 type DataAction =
   | { type: 'SET_CURRENT_USER'; payload: User | null }
@@ -440,16 +253,16 @@ const initialAppBuilderData: AppBuilderData = {
       businessNumber: ''
     }
   },
-  
+
   // 2단계: 플랜 선택 & 핵심 기능
   planSelection: {
-    selectedPlan: 'Basic',
+    selectedPlan: 'basic', // Fixed case to match type
     selectedFeatures: {
       dashboard: 'basic',
       menu: 'basic'
     }
   },
-  
+
   // 3단계: 주문 & 결제 설정
   orderPayment: {
     orderModes: {
@@ -464,7 +277,7 @@ const initialAppBuilderData: AppBuilderData = {
       freeDeliveryThreshold: 20000
     }
   },
-  
+
   // 4단계: 고객 관리 & 마케팅
   customerMarketing: {
     customerManagement: {
@@ -481,14 +294,14 @@ const initialAppBuilderData: AppBuilderData = {
       level: 'basic'
     }
   },
-  
+
   // 5단계: 브랜딩
   branding: {
     primaryColor: '#2563eb',
     secondaryColor: '#64748b',
     fontFamily: 'Inter'
   },
-  
+
   // 기존 필드들 유지 (하위 호환성)
   features: [],
   theme: {
@@ -534,13 +347,13 @@ function dataReducer(state: DataState, action: DataAction): DataState {
   switch (action.type) {
     case 'SET_CURRENT_USER':
       return { ...state, currentUser: action.payload };
-    
+
     case 'SET_USERS':
       return { ...state, users: action.payload };
-    
+
     case 'ADD_USER':
       return { ...state, users: [...state.users, action.payload] };
-    
+
     case 'UPDATE_USER':
       return {
         ...state,
@@ -548,19 +361,19 @@ function dataReducer(state: DataState, action: DataAction): DataState {
           user.id === action.payload.id ? { ...user, ...action.payload.updates } : user
         )
       };
-    
+
     case 'DELETE_USER':
       return {
         ...state,
         users: state.users.filter(user => user.id !== action.payload)
       };
-    
+
     case 'SET_STORES':
       return { ...state, stores: action.payload };
-    
+
     case 'ADD_STORE':
       return { ...state, stores: [...state.stores, action.payload] };
-    
+
     case 'UPDATE_STORE':
       return {
         ...state,
@@ -568,37 +381,37 @@ function dataReducer(state: DataState, action: DataAction): DataState {
           store.id === action.payload.id ? { ...store, ...action.payload.updates } : store
         )
       };
-    
+
     case 'DELETE_STORE':
       return {
         ...state,
         stores: state.stores.filter(store => store.id !== action.payload)
       };
-    
+
     case 'SET_APP_BUILDER_DATA':
       return {
         ...state,
         appBuilderData: { ...state.appBuilderData, ...action.payload }
       };
-    
+
     case 'UPDATE_APP_BUILDER_STEP':
       return {
         ...state,
         appBuilderData: { ...state.appBuilderData, step: action.payload }
       };
-    
+
     case 'RESET_APP_BUILDER_DATA':
       return {
         ...state,
         appBuilderData: initialAppBuilderData
       };
-    
+
     case 'SET_ORDERS':
       return { ...state, orders: action.payload };
-    
+
     case 'ADD_ORDER':
       return { ...state, orders: [...state.orders, action.payload] };
-    
+
     case 'UPDATE_ORDER':
       return {
         ...state,
@@ -606,19 +419,19 @@ function dataReducer(state: DataState, action: DataAction): DataState {
           order.id === action.payload.id ? { ...order, ...action.payload.updates } : order
         )
       };
-    
+
     case 'SET_LOADING':
       return {
         ...state,
         loading: { ...state.loading, [action.payload.key]: action.payload.loading }
       };
-    
+
     case 'SET_ERROR':
       return {
         ...state,
         errors: { ...state.errors, [action.payload.key]: action.payload.error }
       };
-    
+
     default:
       return state;
   }
@@ -692,10 +505,10 @@ export function useUser() {
     try {
       // 임시 로그인 로직
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // 테스트 사용자 데이터 - 이메일별로 역할 구분
       let user: User;
-      
+
       if (email === 'admin@mystory.kr') {
         user = {
           id: 'admin_001',
@@ -713,7 +526,7 @@ export function useUser() {
           name: '매장 관리자',
           email,
           phone: '010-0000-0002',
-          plan: 'Pro',
+          plan: 'pro',
           status: 'active',
           createdAt: new Date().toISOString(),
           lastLogin: new Date().toISOString()
@@ -724,7 +537,7 @@ export function useUser() {
           name: '앱 개발자',
           email,
           phone: '010-0000-0003',
-          plan: 'Pro',
+          plan: 'pro',
           status: 'active',
           createdAt: new Date().toISOString(),
           lastLogin: new Date().toISOString()
@@ -735,7 +548,7 @@ export function useUser() {
           name: '고객 사용자',
           email,
           phone: '010-0000-0004',
-          plan: 'Basic',
+          plan: 'basic',
           status: 'active',
           createdAt: new Date().toISOString(),
           lastLogin: new Date().toISOString()
@@ -778,7 +591,7 @@ export function useUser() {
     try {
       // 임시 회원가입 로직
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       const user: User = {
         id: Date.now().toString(),
         name: userData.name,
@@ -852,14 +665,16 @@ export function useAppBuilder() {
 
   const handleSubdomainChange = (value: string) => {
     const cleanValue = value.toLowerCase().replace(/[^a-z0-9-]/g, '');
-    
+
     if (validateSubdomain(cleanValue)) {
       dispatch({ type: 'SET_APP_BUILDER_DATA', payload: { subdomain: cleanValue, subdomainError: '' } });
     } else if (cleanValue.length > 0) {
-      dispatch({ type: 'SET_APP_BUILDER_DATA', payload: { 
-        subdomain: cleanValue, 
-        subdomainError: '영문자, 숫자, 하이픈만 사용 가능합니다 (3-20자)' 
-      } });
+      dispatch({
+        type: 'SET_APP_BUILDER_DATA', payload: {
+          subdomain: cleanValue,
+          subdomainError: '영문자, 숫자, 하이픈만 사용 가능합니다 (3-20자)'
+        }
+      });
     } else {
       dispatch({ type: 'SET_APP_BUILDER_DATA', payload: { subdomain: '', subdomainError: '' } });
     }
@@ -869,37 +684,41 @@ export function useAppBuilder() {
   const checkSubdomainAvailability = async () => {
     const subdomain = state.appBuilderData.subdomain;
     if (!subdomain) return;
-    
+
     try {
       // 임시 중복 확인 로직 (실제로는 API 호출)
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       // 테스트를 위한 금지된 서브도메인 목록
       const reservedSubdomains = ['admin', 'api', 'www', 'app', 'test', 'demo'];
-      
+
       if (reservedSubdomains.includes(subdomain)) {
-        dispatch({ type: 'SET_APP_BUILDER_DATA', payload: { 
-          subdomainError: '이미 사용 중인 서브도메인입니다' 
-        } });
+        dispatch({
+          type: 'SET_APP_BUILDER_DATA', payload: {
+            subdomainError: '이미 사용 중인 서브도메인입니다'
+          }
+        });
       } else {
         dispatch({ type: 'SET_APP_BUILDER_DATA', payload: { subdomainError: '' } });
       }
     } catch (error) {
       console.error('서브도메인 확인 중 오류:', error);
-      dispatch({ type: 'SET_APP_BUILDER_DATA', payload: { 
-        subdomainError: '서브도메인 확인 중 오류가 발생했습니다' 
-      } });
+      dispatch({
+        type: 'SET_APP_BUILDER_DATA', payload: {
+          subdomainError: '서브도메인 확인 중 오류가 발생했습니다'
+        }
+      });
     }
   };
 
   // 폼 유효성 검사
   const isFormValid = () => {
     const { subdomain, subdomainError, storeInfo } = state.appBuilderData;
-    return subdomain && 
-           !subdomainError && 
-           storeInfo.name && 
-           storeInfo.ownerInfo.name &&
-           storeInfo.ownerInfo.email;
+    return subdomain &&
+      !subdomainError &&
+      storeInfo.name &&
+      storeInfo.ownerInfo.name &&
+      storeInfo.ownerInfo.email;
   };
 
   const saveStep = (stepData: any) => {
@@ -953,7 +772,7 @@ export function useAppBuilder() {
     try {
       // 최종 데이터 검증
       const { subdomain, subdomainError, storeInfo, planSelection, orderPayment, customerMarketing, branding } = state.appBuilderData;
-      
+
       if (!subdomain || subdomainError || !storeInfo.name || !storeInfo.ownerInfo.name || !storeInfo.ownerInfo.email) {
         throw new Error('필수 정보가 누락되었습니다.');
       }
@@ -972,16 +791,18 @@ export function useAppBuilder() {
 
       // 실제로는 API 호출
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // 앱 생성 요청 완료 상태로 업데이트
-      dispatch({ type: 'SET_APP_BUILDER_DATA', payload: { 
-        finalSettings: {
-          ...state.appBuilderData.finalSettings,
-          appRequestId: Date.now().toString(),
-          status: 'pending',
-          requestDate: new Date().toISOString()
+      dispatch({
+        type: 'SET_APP_BUILDER_DATA', payload: {
+          finalSettings: {
+            ...state.appBuilderData.finalSettings,
+            appRequestId: Date.now().toString(),
+            status: 'pending',
+            requestDate: new Date().toISOString()
+          }
         }
-      }});
+      });
 
       return appRequestData;
     } catch (error) {
@@ -1011,17 +832,19 @@ export function useAppBuilder() {
 export function useOrders() {
   const { state, dispatch } = useData();
 
-  const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'status'>) => {
+  const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt' | 'status'>) => {
     dispatch({ type: 'SET_LOADING', payload: { key: 'createOrder', loading: true } });
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
+      const now = Date.now();
       const order: Order = {
         ...orderData,
-        id: Date.now().toString(),
-        status: 'pending',
-        createdAt: new Date().toISOString()
+        id: now.toString(),
+        status: 'NEW',
+        createdAt: now,
+        updatedAt: now
       };
 
       dispatch({ type: 'ADD_ORDER', payload: order });

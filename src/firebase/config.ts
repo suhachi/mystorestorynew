@@ -12,11 +12,12 @@
  * - VITE_GA_MEASUREMENT_ID
  */
 
+import { getAnalytics, type Analytics } from 'firebase/analytics';
 import { initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getFunctions, type Functions } from 'firebase/functions';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
-import { getAnalytics, type Analytics } from 'firebase/analytics';
 
 // Firebase 설정
 const firebaseConfig = {
@@ -29,11 +30,28 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_GA_MEASUREMENT_ID || '',
 };
 
+// Debug: 환경 변수 확인
+console.debug('[ENV-DEBUG]', {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? '✅ SET' : '❌ MISSING',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storeId: import.meta.env.VITE_STORE_ID,
+  useFirebase: import.meta.env.VITE_USE_FIREBASE,
+  mode: import.meta.env.MODE
+});
+
+// API 키 검증
+if (!import.meta.env.VITE_FIREBASE_API_KEY) {
+  console.error('❌ Firebase API KEY is missing from .env.local');
+  console.error('Please create .env.local file with VITE_FIREBASE_API_KEY');
+}
+
 // Firebase 앱 초기화
 let app: FirebaseApp;
 let auth: Auth;
 let db: Firestore;
 let storage: FirebaseStorage;
+let functions: Functions;
 let analytics: Analytics | null = null;
 
 try {
@@ -41,6 +59,7 @@ try {
   auth = getAuth(app);
   db = getFirestore(app);
   storage = getStorage(app);
+  functions = getFunctions(app, 'asia-northeast3');
 
   // Analytics는 브라우저 환경에서만 초기화
   if (typeof window !== 'undefined') {
@@ -56,6 +75,5 @@ try {
 }
 
 // Firebase 서비스 export
-export { app, auth, db, storage, analytics };
+export { analytics, app, auth, db, functions, storage };
 export default app;
-

@@ -1,26 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { useApiIntegration, PaymentMethod, PaymentRequest, PaymentResponse } from './api-integration-system';
-import { useRealtimeData } from './realtime-data-context';
-import { useNavigation } from './app-router';
-import { InteractiveButton } from '../interactions/interactive-button';
-import { InteractiveModal } from '../interactions/interactive-modal';
-import { InteractiveInput } from '../interactions/interactive-input';
-import { 
-  CreditCard, Smartphone, Building, QrCode, 
-  Shield, CheckCircle, XCircle, Clock,
-  AlertCircle, DollarSign, Percent, Info,
-  Settings, Eye, RefreshCw, Download,
-  Zap, Users, BarChart3, TrendingUp,
-  Globe, Lock, Bell, FileText, ArrowLeft
+import {
+  AlertCircle,
+  ArrowLeft,
+  BarChart3,
+  Bell,
+  Building,
+  CheckCircle,
+  Clock,
+  CreditCard,
+  DollarSign,
+  Download,
+  Eye,
+  FileText,
+  Info,
+  QrCode,
+  RefreshCw,
+  Settings,
+  Shield,
+  Smartphone,
+  TrendingUp,
+  Users,
+  XCircle,
+  Zap
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { useEffect, useState } from 'react';
+import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { InteractiveButton } from '../interactions/interactive-button';
+import { InteractiveInput } from '../interactions/interactive-input';
+import { InteractiveModal } from '../interactions/interactive-modal';
+import { Alert, AlertDescription } from '../ui/alert';
 import { Badge } from '../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Progress } from '../ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Separator } from '../ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Alert, AlertDescription } from '../ui/alert';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { PaymentMethod, PaymentRequest, PaymentResponse, useApiIntegration } from './api-integration-system';
+import { useNavigation } from './app-router';
+import { useRealtimeData } from './realtime-data-context';
 
 // 결제 상태별 색상
 const paymentStatusColors = {
@@ -50,16 +66,16 @@ const paymentMethodIcons = {
 // 결제 API 대시보드
 export function PaymentApiDashboard() {
   const { navigate } = useNavigation();
-  const { 
-    state, 
-    processPayment, 
-    cancelPayment, 
+  const {
+    state,
+    processPayment,
+    cancelPayment,
     refundPayment,
     getPaymentStatus,
-    getPaymentMethods 
+    getPaymentMethods
   } = useApiIntegration();
   const { state: realtimeState } = useRealtimeData();
-  
+
   const [activeTab, setActiveTab] = useState<'overview' | 'methods' | 'transactions' | 'analytics' | 'settings'>('overview');
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [isTestPaymentModalOpen, setIsTestPaymentModalOpen] = useState(false);
@@ -140,9 +156,9 @@ export function PaymentApiDashboard() {
 
       const result = await processPayment(paymentRequest);
       console.log('Test payment result:', result);
-      
+
       setIsTestPaymentModalOpen(false);
-      
+
       // 성공 알림 표시
       alert(`테스트 결제가 성공적으로 처리되었습니다!\n거래 ID: ${result.transactionId}`);
     } catch (error) {
@@ -173,7 +189,7 @@ export function PaymentApiDashboard() {
             </p>
           </div>
         </div>
-        
+
         <div className="flex gap-2">
           <InteractiveButton
             variant="secondary"
@@ -196,27 +212,36 @@ export function PaymentApiDashboard() {
         </div>
       </div>
 
+      {/* Mock Data Warning */}
+      <Alert className="border-yellow-200 bg-yellow-50">
+        <AlertCircle className="h-4 w-4 text-yellow-600" />
+        <AlertDescription className="text-yellow-800">
+          <strong>⚠️ 데모 화면입니다.</strong> 이 페이지의 데이터는 실제 결제 정보와 연결되지 않습니다.
+          실제 결제 로그는 Firestore의 <code className="bg-yellow-100 px-1 rounded">payments</code> 컬렉션에서 확인하세요.
+        </AlertDescription>
+      </Alert>
+
       {/* API 연결 상태 */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <PaymentApiStatus 
+        <PaymentApiStatus
           name="NicePay"
           status="healthy"
           responseTime={120}
           errorRate={0.5}
         />
-        <PaymentApiStatus 
+        <PaymentApiStatus
           name="카카오페이"
           status="healthy"
           responseTime={85}
           errorRate={0.2}
         />
-        <PaymentApiStatus 
+        <PaymentApiStatus
           name="네이버페이"
           status="healthy"
           responseTime={95}
           errorRate={0.3}
         />
-        <PaymentApiStatus 
+        <PaymentApiStatus
           name="페이코"
           status="degraded"
           responseTime={450}
@@ -256,10 +281,10 @@ export function PaymentApiDashboard() {
 
         {/* 결제 수단 탭 */}
         <TabsContent value="methods" className="space-y-6">
-          <PaymentMethodsManagement 
+          <PaymentMethodsManagement
             methods={paymentMethods}
             onUpdateMethod={(method) => {
-              setPaymentMethods(prev => 
+              setPaymentMethods(prev =>
                 prev.map(m => m.id === method.id ? method : m)
               );
             }}
@@ -268,7 +293,7 @@ export function PaymentApiDashboard() {
 
         {/* 거래 내역 탭 */}
         <TabsContent value="transactions" className="space-y-6">
-          <PaymentTransactions 
+          <PaymentTransactions
             onViewTransaction={(transaction) => {
               setSelectedTransaction(transaction);
               setIsTransactionDetailOpen(true);
@@ -278,7 +303,7 @@ export function PaymentApiDashboard() {
 
         {/* 분석 탭 */}
         <TabsContent value="analytics" className="space-y-6">
-          <PaymentAnalytics 
+          <PaymentAnalytics
             hourlyData={hourlyPaymentData}
             methodStats={paymentMethodStats}
           />
@@ -297,7 +322,7 @@ export function PaymentApiDashboard() {
         title="테스트 결제"
         size="md"
       >
-        <TestPaymentModal 
+        <TestPaymentModal
           paymentMethods={paymentMethods}
           onSubmit={handleTestPayment}
           onClose={() => setIsTestPaymentModalOpen(false)}
@@ -312,7 +337,7 @@ export function PaymentApiDashboard() {
         size="lg"
       >
         {selectedTransaction && (
-          <PaymentTransactionDetail 
+          <PaymentTransactionDetail
             transaction={selectedTransaction}
             onCancel={cancelPayment}
             onRefund={refundPayment}
@@ -325,11 +350,11 @@ export function PaymentApiDashboard() {
 }
 
 // 결제 API 상태 컴포넌트
-function PaymentApiStatus({ 
-  name, 
-  status, 
-  responseTime, 
-  errorRate 
+function PaymentApiStatus({
+  name,
+  status,
+  responseTime,
+  errorRate
 }: {
   name: string;
   status: 'healthy' | 'degraded' | 'down';
@@ -360,7 +385,7 @@ function PaymentApiStatus({
             {status === 'healthy' ? '정상' : status === 'degraded' ? '지연' : '오류'}
           </Badge>
         </div>
-        
+
         <div className="space-y-2">
           <div className="flex justify-between text-body-small">
             <span className="text-gray-600">응답 시간</span>
@@ -516,19 +541,19 @@ function PaymentOverview({ stats }: { stats: typeof paymentStats }) {
               <Alert className="border-yellow-200 bg-yellow-50">
                 <AlertCircle className="h-4 w-4 text-yellow-600" />
                 <AlertDescription className="text-yellow-800">
-                  <strong>페이코 API</strong>의 응답 시간이 증가하고 있습니다. 
+                  <strong>페이코 API</strong>의 응답 시간이 증가하고 있습니다.
                   모니터링을 강화해주세요.
                 </AlertDescription>
               </Alert>
-              
+
               <Alert className="border-blue-200 bg-blue-50">
                 <Info className="h-4 w-4 text-blue-600" />
                 <AlertDescription className="text-blue-800">
-                  새로운 결제 보안 정책이 다음 주부터 적용됩니다. 
+                  새로운 결제 보안 정책이 다음 주부터 적용됩니다.
                   <a href="#" className="underline ml-1">자세히 보기</a>
                 </AlertDescription>
               </Alert>
-              
+
               <Alert className="border-green-200 bg-green-50">
                 <CheckCircle className="h-4 w-4 text-green-600" />
                 <AlertDescription className="text-green-800">
@@ -544,9 +569,9 @@ function PaymentOverview({ stats }: { stats: typeof paymentStats }) {
 }
 
 // 결제 수단 관리 컴포넌트
-function PaymentMethodsManagement({ 
-  methods, 
-  onUpdateMethod 
+function PaymentMethodsManagement({
+  methods,
+  onUpdateMethod
 }: {
   methods: PaymentMethod[];
   onUpdateMethod: (method: PaymentMethod) => void;
@@ -563,7 +588,7 @@ function PaymentMethodsManagement({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {methods.map(method => {
           const IconComponent = paymentMethodIcons[method.type];
-          
+
           return (
             <Card key={method.id} className={`border-2 ${method.isEnabled ? 'border-green-200 bg-green-50' : 'border-gray-200'}`}>
               <CardHeader className="pb-3">
@@ -628,8 +653,8 @@ function PaymentMethodsManagement({
 }
 
 // 거래 내역 컴포넌트
-function PaymentTransactions({ 
-  onViewTransaction 
+function PaymentTransactions({
+  onViewTransaction
 }: {
   onViewTransaction: (transaction: PaymentResponse) => void;
 }) {
@@ -735,9 +760,9 @@ function PaymentTransactions({
 }
 
 // 결제 분석 컴포넌트
-function PaymentAnalytics({ 
-  hourlyData, 
-  methodStats 
+function PaymentAnalytics({
+  hourlyData,
+  methodStats
 }: {
   hourlyData: any[];
   methodStats: any[];
@@ -759,7 +784,7 @@ function PaymentAnalytics({
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="hour" />
                   <YAxis />
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value: number, name: string) => [
                       name === 'amount' ? `${value.toLocaleString()}원` : `${value}건`,
                       name === 'amount' ? '결제금액' : '결제건수'
@@ -802,8 +827,8 @@ function PaymentAnalytics({
               <div className="w-1/2 space-y-3">
                 {methodStats.map((item, index) => (
                   <div key={item.name} className="flex items-center gap-3">
-                    <div 
-                      className="w-4 h-4 rounded-full" 
+                    <div
+                      className="w-4 h-4 rounded-full"
                       style={{ backgroundColor: item.color }}
                     />
                     <div className="flex-1">
@@ -845,7 +870,7 @@ function PaymentSettings() {
                 설정
               </InteractiveButton>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-body text-gray-900">IP 화이트리스트</p>
@@ -875,7 +900,7 @@ function PaymentSettings() {
                 활성화됨
               </InteractiveButton>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-body text-gray-900">실패 알림</p>
@@ -912,7 +937,7 @@ function PaymentSettings() {
                 </InteractiveButton>
               </div>
             </div>
-            
+
             <div>
               <label className="text-label text-gray-700 mb-2 block">
                 Webhook URL
@@ -931,10 +956,10 @@ function PaymentSettings() {
 }
 
 // 테스트 결제 모달
-function TestPaymentModal({ 
-  paymentMethods, 
-  onSubmit, 
-  onClose 
+function TestPaymentModal({
+  paymentMethods,
+  onSubmit,
+  onClose
 }: {
   paymentMethods: PaymentMethod[];
   onSubmit: (data: any) => void;
@@ -970,7 +995,7 @@ function TestPaymentModal({
           <InteractiveInput
             type="number"
             value={formData.amount}
-            onChange={(e) => setFormData({...formData, amount: Number(e.target.value)})}
+            onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
             min={1000}
             max={1000000}
           />
@@ -980,9 +1005,9 @@ function TestPaymentModal({
           <label className="text-label text-gray-700 mb-2 block">
             결제 수단
           </label>
-          <Select 
-            value={formData.paymentMethod} 
-            onValueChange={(value) => setFormData({...formData, paymentMethod: value})}
+          <Select
+            value={formData.paymentMethod}
+            onValueChange={(value) => setFormData({ ...formData, paymentMethod: value })}
           >
             <SelectTrigger>
               <SelectValue />
@@ -1004,7 +1029,7 @@ function TestPaymentModal({
           <InteractiveInput
             type="text"
             value={formData.customerName}
-            onChange={(e) => setFormData({...formData, customerName: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
           />
         </div>
 
@@ -1015,7 +1040,7 @@ function TestPaymentModal({
           <InteractiveInput
             type="email"
             value={formData.customerEmail}
-            onChange={(e) => setFormData({...formData, customerEmail: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
           />
         </div>
 
@@ -1026,7 +1051,7 @@ function TestPaymentModal({
           <InteractiveInput
             type="tel"
             value={formData.customerPhone}
-            onChange={(e) => setFormData({...formData, customerPhone: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
           />
         </div>
       </div>
@@ -1059,11 +1084,11 @@ function TestPaymentModal({
 }
 
 // 거래 상세 모달
-function PaymentTransactionDetail({ 
-  transaction, 
-  onCancel, 
-  onRefund, 
-  onClose 
+function PaymentTransactionDetail({
+  transaction,
+  onCancel,
+  onRefund,
+  onClose
 }: {
   transaction: PaymentResponse;
   onCancel: (transactionId: string) => Promise<boolean>;
@@ -1105,14 +1130,14 @@ function PaymentTransactionDetail({
               {transaction.amount.toLocaleString()}원
             </p>
           </div>
-          
+
           <div>
             <p className="text-label text-gray-700 mb-1">수수료</p>
             <p className="text-body text-gray-900">
               {transaction.fees.toLocaleString()}원
             </p>
           </div>
-          
+
           <div>
             <p className="text-label text-gray-700 mb-1">실수령액</p>
             <p className="text-body text-primary-blue">
@@ -1130,7 +1155,7 @@ function PaymentTransactionDetail({
               </p>
             </div>
           )}
-          
+
           <div>
             <p className="text-label text-gray-700 mb-1">처리 상태</p>
             <p className="text-body text-gray-900">
@@ -1159,7 +1184,7 @@ function PaymentTransactionDetail({
                 최대 환불 가능 금액: {transaction.amount.toLocaleString()}원
               </p>
             </div>
-            
+
             <InteractiveButton
               variant="primary"
               onClick={handleRefund}

@@ -1,22 +1,34 @@
-import React, { useState } from 'react';
-import { 
-  Store, Users, TrendingUp, TrendingDown, Activity, Clock, Bell, 
-  Search, Settings, Zap, UserPlus, Star, ShoppingCart, AlertCircle, 
-  RefreshCw, CheckCircle, Edit, Trash2, Download, MoreHorizontal,
-  Calendar, DollarSign, Package, Phone, Mail, MapPin, User,
-  Eye, X, Save, Plus, Filter, Target, BarChart3, PieChart, LineChart,
-  BarChart, Award, ArrowRight, UserCheck, UserX, Shield, Building
+import {
+  BarChart3,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Edit,
+  Eye,
+  Mail, MapPin,
+  Phone,
+  Plus,
+  Save,
+  Search, Settings,
+  ShoppingCart,
+  Store,
+  Trash2,
+  TrendingDown,
+  TrendingUp,
+  User,
+  X
 } from 'lucide-react';
+import { useState } from 'react';
+import { Bar, CartesianGrid, Cell, Legend, Line, Pie, BarChart as RechartsBarChart, LineChart as RechartsLineChart, PieChart as RechartsPieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { toast } from 'sonner';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { toast } from 'sonner@2.0.3';
-import { BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Pie, Cell, LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Textarea } from '../ui/textarea';
 
 export function StoreManagement() {
   return <StoreManagementSystem />;
@@ -129,9 +141,8 @@ function StoreOverviewDashboard() {
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${item.bgColor} ${item.color}`}>
                 {item.icon}
               </div>
-              <div className={`flex items-center gap-1 ${
-                item.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-              }`}>
+              <div className={`flex items-center gap-1 ${item.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+                }`}>
                 {item.changeType === 'positive' ? (
                   <TrendingUp className="w-4 h-4" />
                 ) : (
@@ -239,12 +250,12 @@ function StoreListManagement({
 
   const filteredStores = mockStores.filter(store => {
     const matchesSearch = store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         store.owner.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         store.category.toLowerCase().includes(searchTerm.toLowerCase());
+      store.owner.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      store.category.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === '전체' || store.status === statusFilter;
     const matchesPlan = planFilter === '전체' || store.plan === planFilter;
     const matchesCategory = categoryFilter === '전체' || store.category === categoryFilter;
-    
+
     return matchesSearch && matchesStatus && matchesPlan && matchesCategory;
   });
 
@@ -267,15 +278,15 @@ function StoreListManagement({
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">상점 목록</h2>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={selectedStores.length === 0}
           >
             선택된 상점 승인 ({selectedStores.length})
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={selectedStores.length === 0}
           >
@@ -416,8 +427,8 @@ function StoreListManagement({
                 </td>
                 <td className="py-4 px-4">
                   <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => onStoreSelect(store)}
                     >
@@ -479,11 +490,10 @@ function StoreDetailTabs({ store, activeTab, setActiveTab, onClose }: any) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === tab.id
+              className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               {tab.icon}
               {tab.label}
@@ -520,28 +530,28 @@ function BasicInfoTab({ store }: any) {
   });
 
   const mockMenus = [
-    { 
+    {
       id: '1',
-      name: '김치찌개', 
-      price: 8000, 
+      name: '김치찌개',
+      price: 8000,
       category: '찌개류',
       description: '매콤하고 얼큰한 김치찌개',
       image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=80&h=80&fit=crop',
       isPopular: true
     },
-    { 
+    {
       id: '2',
-      name: '된장찌개', 
-      price: 7000, 
+      name: '된장찌개',
+      price: 7000,
       category: '찌개류',
       description: '구수한 된장찌개',
       image: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=80&h=80&fit=crop',
       isPopular: true
     },
-    { 
+    {
       id: '3',
-      name: '불고기', 
-      price: 15000, 
+      name: '불고기',
+      price: 15000,
       category: '고기류',
       description: '달콤한 불고기',
       image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=80&h=80&fit=crop',
@@ -575,7 +585,7 @@ function BasicInfoTab({ store }: any) {
               <DialogHeader>
                 <DialogTitle>상점 정보 수정</DialogTitle>
               </DialogHeader>
-              <StoreInfoEditForm 
+              <StoreInfoEditForm
                 editedStore={editedStore}
                 setEditedStore={setEditedStore}
                 onSave={handleSaveStoreInfo}
@@ -584,7 +594,7 @@ function BasicInfoTab({ store }: any) {
             </DialogContent>
           </Dialog>
         </div>
-        
+
         <div className="space-y-3">
           <div className="flex items-center gap-3">
             <Store className="w-5 h-5 text-gray-400" />
@@ -667,7 +677,7 @@ function BasicInfoTab({ store }: any) {
               <DialogHeader>
                 <DialogTitle>메뉴 관리</DialogTitle>
               </DialogHeader>
-              <MenuManagementDialog 
+              <MenuManagementDialog
                 menus={menus}
                 setMenus={setMenus}
                 onClose={() => setIsMenuDialogOpen(false)}
@@ -675,7 +685,7 @@ function BasicInfoTab({ store }: any) {
             </DialogContent>
           </Dialog>
         </div>
-        
+
         <div className="space-y-4">
           {menus.slice(0, 3).map((menu, index) => (
             <div key={menu.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
@@ -907,17 +917,17 @@ function StatusManagementTab({ store }: any) {
               <div className="flex items-center gap-3 mb-4">
                 <Badge className={
                   status === '활성' ? 'bg-green-100 text-green-800' :
-                  status === '승인대기' ? 'bg-orange-100 text-orange-800' :
-                  status === '정지' ? 'bg-red-100 text-red-800' :
-                  'bg-gray-100 text-gray-800'
+                    status === '승인대기' ? 'bg-orange-100 text-orange-800' :
+                      status === '정지' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
                 }>
                   {status}
                 </Badge>
                 <span className="text-sm text-gray-500">
                   {status === '활성' ? '정상 운영 중' :
-                   status === '승인대기' ? '승인 검토 중' :
-                   status === '정지' ? '운영 정지 상태' :
-                   '비활성 상태'}
+                    status === '승인대기' ? '승인 검토 중' :
+                      status === '정지' ? '운영 정지 상태' :
+                        '비활성 상태'}
                 </span>
               </div>
 
@@ -985,9 +995,9 @@ function StatusManagementTab({ store }: any) {
                 <div className="flex items-center gap-4">
                   <Badge className={
                     history.status === '활성' ? 'bg-green-100 text-green-800' :
-                    history.status === '승인대기' ? 'bg-orange-100 text-orange-800' :
-                    history.status === '정지' ? 'bg-red-100 text-red-800' :
-                    'bg-gray-100 text-gray-800'
+                      history.status === '승인대기' ? 'bg-orange-100 text-orange-800' :
+                        history.status === '정지' ? 'bg-red-100 text-red-800' :
+                          'bg-gray-100 text-gray-800'
                   }>
                     {history.status}
                   </Badge>

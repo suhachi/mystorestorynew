@@ -1,42 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Progress } from '../ui/progress';
-import { Alert, AlertDescription } from '../ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Checkbox } from '../ui/checkbox';
-import { 
-  Play, 
-  CheckCircle, 
+import {
+  Activity,
   AlertTriangle,
-  XCircle,
-  Eye,
-  Settings,
-  Smartphone,
-  Crown,
-  Zap,
-  RefreshCw,
-  Target,
   BarChart3,
-  Users,
-  ShoppingCart,
-  ArrowRight,
+  CheckCircle,
   Clock,
-  Rocket,
-  TestTube,
-  Monitor,
-  Globe,
+  Crown,
   Database,
-  Cpu,
-  Shield,
+  Globe,
+  Play,
+  RefreshCw,
+  Settings,
   Star,
-  TrendingUp,
-  Activity
+  TestTube,
+  XCircle,
+  Zap
 } from 'lucide-react';
-import { AppPreviewModal } from './app-preview-modal';
-import { useAppBuilder, DataProvider } from '../system/data-context';
-import { toast } from 'sonner@2.0.3';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Checkbox } from '../ui/checkbox';
+import { Progress } from '../ui/progress';
 
 // E2E Test Scenarios
 interface TestScenario {
@@ -206,7 +192,7 @@ export function E2ESimulationDashboard() {
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [testResults, setTestResults] = useState<{[key: string]: any}>({});
+  const [testResults, setTestResults] = useState<{ [key: string]: any }>({});
   const [selectedTests, setSelectedTests] = useState<string[]>([]);
 
   const runScenario = async (scenarioId: string) => {
@@ -218,7 +204,7 @@ export function E2ESimulationDashboard() {
     setCurrentStep(0);
 
     // 시나리오 상태 업데이트
-    setScenarios(prev => prev.map(s => 
+    setScenarios(prev => prev.map(s =>
       s.id === scenarioId ? { ...s, status: 'running' } : s
     ));
 
@@ -227,12 +213,12 @@ export function E2ESimulationDashboard() {
     try {
       for (let i = 0; i < scenario.steps.length; i++) {
         setCurrentStep(i);
-        
+
         // 단계 상태 업데이트
-        setScenarios(prev => prev.map(s => 
+        setScenarios(prev => prev.map(s =>
           s.id === scenarioId ? {
             ...s,
-            steps: s.steps.map((step, index) => 
+            steps: s.steps.map((step, index) =>
               index === i ? { ...step, status: 'running' } : step
             )
           } : s
@@ -243,12 +229,12 @@ export function E2ESimulationDashboard() {
         await new Promise(resolve => setTimeout(resolve, stepDuration));
 
         // 단계 완료 상태 업데이트
-        setScenarios(prev => prev.map(s => 
+        setScenarios(prev => prev.map(s =>
           s.id === scenarioId ? {
             ...s,
-            steps: s.steps.map((step, index) => 
-              index === i ? { 
-                ...step, 
+            steps: s.steps.map((step, index) =>
+              index === i ? {
+                ...step,
                 status: 'passed',
                 duration: Math.round(stepDuration)
               } : step
@@ -260,9 +246,9 @@ export function E2ESimulationDashboard() {
       const totalDuration = Date.now() - startTime;
 
       // 시나리오 완료
-      setScenarios(prev => prev.map(s => 
-        s.id === scenarioId ? { 
-          ...s, 
+      setScenarios(prev => prev.map(s =>
+        s.id === scenarioId ? {
+          ...s,
           status: 'passed',
           duration: totalDuration
         } : s
@@ -271,9 +257,9 @@ export function E2ESimulationDashboard() {
       toast.success(`${scenario.name} 테스트가 성공적으로 완료되었습니다!`);
     } catch (error) {
       // 오류 처리
-      setScenarios(prev => prev.map(s => 
-        s.id === scenarioId ? { 
-          ...s, 
+      setScenarios(prev => prev.map(s =>
+        s.id === scenarioId ? {
+          ...s,
           status: 'failed',
           errors: [error instanceof Error ? error.message : '알 수 없는 오류']
         } : s
@@ -303,12 +289,12 @@ export function E2ESimulationDashboard() {
   };
 
   const resetScenario = (scenarioId: string) => {
-    setScenarios(prev => prev.map(s => 
+    setScenarios(prev => prev.map(s =>
       s.id === scenarioId ? {
         ...s,
         status: 'pending',
-        steps: s.steps.map(step => ({ 
-          ...step, 
+        steps: s.steps.map(step => ({
+          ...step,
           status: 'pending',
           duration: undefined
         })),
@@ -368,7 +354,7 @@ export function E2ESimulationDashboard() {
           <h2 className="text-3xl font-bold text-gray-900">E2E 시뮬레이션 대시보드</h2>
         </div>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          실제 사용자 시나리오를 기반으로 한 End-to-End 테스트를 실행하여 
+          실제 사용자 시나리오를 기반으로 한 End-to-End 테스트를 실행하여
           전체 시스템이 올바르게 작동하는지 확인하세요.
         </p>
       </div>
@@ -400,7 +386,7 @@ export function E2ESimulationDashboard() {
               </label>
             </div>
             <div className="flex gap-2">
-              <Button 
+              <Button
                 onClick={runAllScenarios}
                 disabled={isRunning || selectedTests.length === 0}
                 className="flex items-center gap-2"
@@ -408,7 +394,7 @@ export function E2ESimulationDashboard() {
                 <Play className="w-4 h-4" />
                 선택된 테스트 실행
               </Button>
-              <Button 
+              <Button
                 onClick={resetAllScenarios}
                 variant="outline"
                 disabled={isRunning}
@@ -433,7 +419,7 @@ export function E2ESimulationDashboard() {
                     onCheckedChange={(checked) => handleTestSelection(scenario.id, checked as boolean)}
                     disabled={isRunning}
                   />
-                  <Badge 
+                  <Badge
                     variant={scenario.plan === 'Basic' ? 'secondary' : scenario.plan === 'Pro' ? 'default' : 'destructive'}
                     className="text-xs"
                   >
@@ -457,11 +443,11 @@ export function E2ESimulationDashboard() {
                     {scenario.steps.filter(step => step.status === 'passed').length} / {scenario.steps.length}
                   </span>
                 </div>
-                <Progress 
+                <Progress
                   value={(scenario.steps.filter(step => step.status === 'passed').length / scenario.steps.length) * 100}
                   className="h-2"
                 />
-                
+
                 {scenario.duration && (
                   <div className="text-sm text-gray-600">
                     소요시간: {Math.round(scenario.duration / 1000)}초
@@ -600,7 +586,7 @@ export function E2ESimulationDashboard() {
                   {Math.round((scenarios.filter(s => s.status === 'passed').length / scenarios.length) * 100)}%
                 </span>
               </div>
-              <Progress 
+              <Progress
                 value={(scenarios.filter(s => s.status === 'passed').length / scenarios.length) * 100}
                 className="h-2"
               />

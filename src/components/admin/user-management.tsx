@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
-import { 
-  Users, TrendingUp, TrendingDown, UserPlus, UserCheck, UserX, 
-  Building, User, Shield, Search, Edit, Trash2, Eye, X, Save,
-  Calendar, Phone, Mail, MapPin, BarChart3, Settings, Star,
-  ShoppingCart, Activity, Clock, ArrowRight
+import {
+  Activity,
+  BarChart3,
+  Building,
+  Calendar,
+  Clock,
+  Edit,
+  Eye,
+  Mail,
+  Phone,
+  Search,
+  Settings,
+  Shield,
+  ShoppingCart,
+  Trash2,
+  TrendingDown,
+  TrendingUp,
+  User,
+  UserCheck,
+  UserPlus,
+  Users,
+  X
 } from 'lucide-react';
+import { useState } from 'react';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { toast } from 'sonner@2.0.3';
 import { CustomerAccountDetail } from './customer-account-detail';
 import { UserAnalyticsDashboard } from './user-analytics-dashboard';
 
@@ -85,15 +96,15 @@ function UserManagementSystem() {
       {activeUserTab === '전체' && (
         <UserAnalyticsDashboard activeUserType={activeUserTab} />
       )}
-      
+
       {activeUserTab === '이용자' && (
         <UserAnalyticsDashboard activeUserType={activeUserTab} />
       )}
-      
+
       {activeUserTab === '사장님' && (
         <UserAnalyticsDashboard activeUserType={activeUserTab} />
       )}
-      
+
       {activeUserTab === '관리자' && (
         <UserAnalyticsDashboard activeUserType={activeUserTab} />
       )}
@@ -106,30 +117,30 @@ function UserTypeTabs({ activeTab, setActiveTab }: {
   setActiveTab: (tab: string) => void;
 }) {
   const tabs = [
-    { 
-      id: '전체', 
-      label: '전체 사용자', 
+    {
+      id: '전체',
+      label: '전체 사용자',
       icon: <Users className="w-5 h-5" />,
       count: 13023,
       color: 'text-blue-600 bg-blue-50'
     },
-    { 
-      id: '사장님', 
-      label: '사장님 계정', 
+    {
+      id: '사장님',
+      label: '사장님 계정',
       icon: <Building className="w-5 h-5" />,
       count: 567,
       color: 'text-blue-600 bg-blue-50'
     },
-    { 
-      id: '이용자', 
-      label: '이용자 계정', 
+    {
+      id: '이용자',
+      label: '이용자 계정',
       icon: <User className="w-5 h-5" />,
       count: 12234,
       color: 'text-green-600 bg-green-50'
     },
-    { 
-      id: '관리자', 
-      label: '관리자 계정', 
+    {
+      id: '관리자',
+      label: '관리자 계정',
       icon: <Shield className="w-5 h-5" />,
       count: 8,
       color: 'text-purple-600 bg-purple-50'
@@ -144,15 +155,13 @@ function UserTypeTabs({ activeTab, setActiveTab }: {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === tab.id
+              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
                   ? 'border-blue-500 text-blue-600 bg-blue-50'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
+                }`}
             >
-              <div className={`p-2 rounded-lg ${
-                activeTab === tab.id ? tab.color : 'text-gray-400 bg-gray-100'
-              }`}>
+              <div className={`p-2 rounded-lg ${activeTab === tab.id ? tab.color : 'text-gray-400 bg-gray-100'
+                }`}>
                 {tab.icon}
               </div>
               <div className="text-left">
@@ -359,10 +368,9 @@ function UserOverviewDashboard({ activeTab }: { activeTab: string }) {
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${item.bgColor} ${item.color}`}>
                 {item.icon}
               </div>
-              <div className={`flex items-center gap-1 ${
-                item.changeType === 'positive' ? 'text-green-600' : 
-                item.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'
-              }`}>
+              <div className={`flex items-center gap-1 ${item.changeType === 'positive' ? 'text-green-600' :
+                  item.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'
+                }`}>
                 {item.changeType === 'positive' ? (
                   <TrendingUp className="w-4 h-4" />
                 ) : item.changeType === 'negative' ? (
@@ -535,11 +543,11 @@ function UserListManagement({
 
   const filteredUsers = currentUsers.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.phone.includes(searchTerm);
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.phone.includes(searchTerm);
     const matchesStatus = statusFilter === '전체' || user.status === statusFilter;
     const matchesType = typeFilter === '전체' || user.type === typeFilter;
-    
+
     return matchesSearch && matchesStatus && matchesType;
   });
 
@@ -569,15 +577,15 @@ function UserListManagement({
           {activeTab === '전체' ? '전체 사용자 목록' : `${activeTab} 목록`}
         </h2>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={selectedUsers.length === 0}
           >
             선택된 사용자 활성화 ({selectedUsers.length})
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={selectedUsers.length === 0}
           >
@@ -743,8 +751,8 @@ function UserListManagement({
                 </td>
                 <td className="py-4 px-4">
                   <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => onUserSelect(user)}
                     >
@@ -818,11 +826,10 @@ function OwnerAccountDetail({ user, onClose }: { user: any; onClose: () => void 
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === tab.id
+              className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               {tab.icon}
               {tab.label}

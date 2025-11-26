@@ -1,15 +1,27 @@
 /**
  * Public Order Service
- * T14-06: Checkout & Order Creation (Billing OFF)
- * 
+ * T14-06: Checkout & Order Creation
+ *
+ * 이중 경로 구조:
+ * - VITE_USE_FIREBASE=true: Firebase Functions 사용
+ * - VITE_USE_FIREBASE=false: Mock 기반 (기본값, E2E 테스트용)
+ *
  * This service handles public order creation from customer checkout.
  * - PII masking in logs
  * - Retry queue integration
  * - Billing disabled (payment.enabled = false)
  * - Order status starts as 'NEW'
+ *
+ * @see docs/BACKEND_STATUS.md for Firebase Functions deployment status
+ * @see docs/FUNCTIONS_EMULATOR_TEST_GUIDE.md for Emulator testing
  */
 
-import { CreateOrderRequest, Order, OrderItem } from '../types/order';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '../firebase/config';
+import { CreateOrderRequest, GetOrderRequest, Order, OrderItem, PublicOrder } from '../types/order';
+
+// Environment flag
+const USE_FIREBASE = import.meta.env.VITE_USE_FIREBASE === 'true';
 
 /**
  * Mask phone number for PII protection
@@ -63,7 +75,11 @@ export function calculateOrderTotals(items: OrderItem[]): {
 } {
   const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
   const tax = Math.round(subtotal * 0.1); // 10% tax
-  const delivery = subtotal >= 20000 ? 0 : 3000; // Free delivery over ₩20,000
+
+  // Feature Flag: Use legacy delivery fee calculation for now
+  // TODO: Integrate with calculateDeliveryFee() from lib/calculateDeliveryFee.ts
+  const delivery = subtotal >= 20000 ? 0 : 3000; // Legacy logic
+
   const total = subtotal + tax + delivery;
 
   return { subtotal, tax, delivery, total };
@@ -72,6 +88,10 @@ export function calculateOrderTotals(items: OrderItem[]): {
 /**
  * Create order (public API - Billing OFF)
  * T14-06: No payment processing, status starts as NEW
+ *
+ * Dual-path implementation:
+ * - USE_FIREBASE=true: Calls Firebase Functions createOrder
+ * - USE_FIREBASE=false: Uses Mock implementation (default)
  */
 export async function createOrderPublic(request: CreateOrderRequest): Promise<Order> {
   // Validate request
@@ -80,59 +100,79 @@ export async function createOrderPublic(request: CreateOrderRequest): Promise<Or
     throw new Error(validation.error);
   }
 
-  // Calculate totals
+  // 🔥 Firebase Functions Mode
+  if (USE_FIREBASE) {
+    try {
+      console.log('[createOrderPublic] Using Firebase Functions');
+      const callable = httpsCallable<CreateOrderRequest, Order>(functions, 'createOrder');
+      const result = await callable(request);
+      return result.data;
+    } catch (error) {
+      console.error('[createOrderPublic] Firebase Functions error:', error);
+      throw error;
+    }
+  }
+
+  // 🔥 Mock Mode (Default for E2E testing)
+  console.log('[createOrderPublic] Using Mock implementation');
   const totals = calculateOrderTotals(request.items);
 
-  // Generate order ID and number
-  const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  const orderNumber = `#${Date.now().toString().slice(-8)}`;
-
-  // Create masked customer data (PII protection)
-  const customerMasked = {
-    name: request.customer.name.charAt(0) + '*'.repeat(request.customer.name.length - 1),
-    phone: maskPhone(request.customer.phone)
-  };
-
-  // Create order object
-  const order: Order = {
-    id: orderId,
+  const mockOrder: Order = {
+    id: `TEST-ORDER-${Date.now()}`,
     storeId: request.storeId,
-    orderNumber,
+    orderNumber: `ORD-${Date.now()}`,
+    orderType: request.orderType,
     status: 'NEW',
     items: request.items,
     customer: request.customer,
-    customerMasked,
+    customerMasked: {
+      name: request.customer.name.slice(0, 1) + '**',
+      phone: maskPhone(request.customer.phone)
+    },
     deliveryAddress: request.deliveryAddress,
     specialRequests: request.specialRequests,
     payment: {
-      enabled: false // T14-06: Billing OFF
+      enabled: false,
+      method: request.paymentMethod as any,
+      channel: 'OFFLINE',
+      status: 'NOT_PAID',
+      totalAmount: totals.total
     },
     totals,
     createdAt: Date.now(),
     updatedAt: Date.now()
   };
 
-  // In production, this would:
-  // 1. Save to Firestore: stores/{storeId}/orders/{orderId}
-  // 2. Create public document with masked data
-  // 3. Add to retry queue if offline
-  // 4. Log with PII masking
-  
-  console.log('[Order Create] Order created:', {
-    orderId,
-    orderNumber,
-    storeId: request.storeId,
-    itemCount: request.items.length,
-    customer: customerMasked, // PII-safe logging
-    total: totals.total,
-    billingEnabled: false
-  });
-
-  // Simulate API call delay
+  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
 
-  // Mock success - in production, return saved order from Firestore
-  return order;
+  return mockOrder;
+}
+
+/**
+ * Get order by ID (public API)
+ *
+ * Dual-path implementation:
+ * - USE_FIREBASE=true: Calls Firebase Functions getOrder
+ * - USE_FIREBASE=false: Throws error (not implemented in Mock mode)
+ */
+export async function getOrderPublic(params: GetOrderRequest): Promise<PublicOrder> {
+  // 🔥 Firebase Functions Mode
+  if (USE_FIREBASE) {
+    try {
+      console.log('[getOrderPublic] Using Firebase Functions');
+      const callable = httpsCallable<GetOrderRequest, PublicOrder>(functions, 'getOrder');
+      const result = await callable(params);
+      return result.data;
+    } catch (error) {
+      console.error('[getOrderPublic] Firebase Functions error:', error);
+      throw error;
+    }
+  }
+
+  // 🔥 Mock Mode: Not implemented
+  // In Mock mode, orders are not persisted, so getOrder is not available
+  throw new Error('getOrderPublic is not available in Mock mode. Set VITE_USE_FIREBASE=true to use Firebase Functions.');
 }
 
 /**
@@ -141,14 +181,14 @@ export async function createOrderPublic(request: CreateOrderRequest): Promise<Or
 export function addToRetryQueue(request: CreateOrderRequest): void {
   const queueKey = `retry_queue_orders`;
   const queue = JSON.parse(localStorage.getItem(queueKey) || '[]');
-  
+
   queue.push({
     type: 'createOrder',
     request,
     timestamp: Date.now(),
     retryCount: 0
   });
-  
+
   localStorage.setItem(queueKey, JSON.stringify(queue));
   console.log('[Retry Queue] Order added to retry queue');
 }
@@ -159,13 +199,13 @@ export function addToRetryQueue(request: CreateOrderRequest): void {
 export async function processRetryQueue(): Promise<void> {
   const queueKey = `retry_queue_orders`;
   const queue = JSON.parse(localStorage.getItem(queueKey) || '[]');
-  
+
   if (queue.length === 0) return;
-  
+
   console.log(`[Retry Queue] Processing ${queue.length} queued orders`);
-  
+
   const processed: number[] = [];
-  
+
   for (let i = 0; i < queue.length; i++) {
     const item = queue[i];
     try {
@@ -175,7 +215,7 @@ export async function processRetryQueue(): Promise<void> {
     } catch (error) {
       console.error('[Retry Queue] Failed to process queued order', i, error);
       item.retryCount = (item.retryCount || 0) + 1;
-      
+
       // Remove from queue after 5 failed attempts
       if (item.retryCount >= 5) {
         processed.push(i);
@@ -183,7 +223,7 @@ export async function processRetryQueue(): Promise<void> {
       }
     }
   }
-  
+
   // Remove processed items
   const newQueue = queue.filter((_: any, i: number) => !processed.includes(i));
   localStorage.setItem(queueKey, JSON.stringify(newQueue));

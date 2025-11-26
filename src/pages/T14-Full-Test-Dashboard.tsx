@@ -2,12 +2,12 @@ import React from 'react';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
-import { 
-  ShoppingCart, 
-  MapPin, 
-  Bell, 
-  Settings, 
-  FileText, 
+import {
+  ShoppingCart,
+  MapPin,
+  Bell,
+  Settings,
+  FileText,
   Activity,
   Smartphone,
   Eye,
@@ -225,10 +225,10 @@ npm run dev`}
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h2 className="text-gray-900">{section.title}</h2>
-                  <Badge 
+                  <Badge
                     className={
-                      section.status === 'ready' 
-                        ? 'bg-green-50 text-green-700 border-green-200' 
+                      section.status === 'ready'
+                        ? 'bg-green-50 text-green-700 border-green-200'
                         : 'bg-blue-50 text-blue-700 border-blue-200'
                     }
                   >
@@ -241,7 +241,7 @@ npm run dev`}
 
             <div className="grid gap-4">
               {section.tests.map((test, testIdx) => (
-                <div 
+                <div
                   key={testIdx}
                   className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-primary-blue transition-colors"
                 >
@@ -249,7 +249,7 @@ npm run dev`}
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="text-gray-900">{test.name}</h3>
-                        <Badge 
+                        <Badge
                           variant="outline"
                           className={
                             test.status === 'ready'
@@ -266,7 +266,7 @@ npm run dev`}
                       {test.features && (
                         <div className="mt-2 flex flex-wrap gap-2">
                           {test.features.map((feature, fIdx) => (
-                            <span 
+                            <span
                               key={fIdx}
                               className="text-xs px-2 py-1 bg-white rounded border border-gray-200 text-gray-600"
                             >
@@ -306,7 +306,7 @@ npm run dev`}
                   <infra.icon className="w-5 h-5 text-primary-blue" />
                   <h3 className="text-gray-900">{infra.name}</h3>
                 </div>
-                <Badge 
+                <Badge
                   className={
                     infra.status === 'code-ready'
                       ? 'bg-green-50 text-green-700 border-green-200 mb-3'

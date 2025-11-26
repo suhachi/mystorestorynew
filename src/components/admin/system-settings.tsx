@@ -1,19 +1,27 @@
-import React, { useState } from 'react';
-import { 
-  Settings, Globe, Shield, Bell, Database, Save, RefreshCw,
-  Mail, MessageSquare, Smartphone, Lock, Key, Clock, AlertTriangle,
-  Eye, Download, Upload, Monitor, User, Building
+import {
+  AlertTriangle,
+  Bell, Database,
+  Download,
+  Mail, MessageSquare,
+  Monitor,
+  RefreshCw,
+  Save,
+  Settings,
+  Shield,
+  Smartphone,
+  Upload
 } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Switch } from '../ui/switch';
 import { Separator } from '../ui/separator';
-import { toast } from 'sonner@2.0.3';
+import { Switch } from '../ui/switch';
+import { Textarea } from '../ui/textarea';
 
 export function SystemSettings() {
   const [activeTab, setActiveTab] = useState('기본설정');
@@ -95,22 +103,22 @@ export function SystemSettings() {
       {/* 설정 콘텐츠 */}
       <div className="min-h-[600px]">
         {activeTab === '기본설정' && (
-          <BasicSettings 
-            settings={settings} 
+          <BasicSettings
+            settings={settings}
             onSettingsChange={setSettings}
             onSave={handleSaveSettings}
           />
         )}
         {activeTab === '보안설정' && (
-          <SecuritySettings 
-            settings={settings} 
+          <SecuritySettings
+            settings={settings}
             onSettingsChange={setSettings}
             onSave={handleSaveSettings}
           />
         )}
         {activeTab === '알림설정' && (
-          <NotificationSettings 
-            settings={settings} 
+          <NotificationSettings
+            settings={settings}
             onSettingsChange={setSettings}
             onSave={handleSaveSettings}
           />
@@ -142,11 +150,10 @@ function SettingsTabs({ activeTab, setActiveTab }: {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === tab.id
+              className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
                   ? 'border-blue-500 text-blue-600 bg-blue-50'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
+                }`}
             >
               {tab.icon}
               {tab.label}
@@ -178,7 +185,7 @@ function BasicSettings({ settings, onSettingsChange, onSave }: {
       {/* 사이트 정보 */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">사이트 정보</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <Label htmlFor="siteName">사이트 이름</Label>
@@ -260,7 +267,7 @@ function BasicSettings({ settings, onSettingsChange, onSave }: {
       {/* 파일 업로드 */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">로고 및 파일</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <Label>사이트 로고</Label>
@@ -330,7 +337,7 @@ function SecuritySettings({ settings, onSettingsChange, onSave }: {
       {/* 비밀번호 정책 */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">비밀번호 정책</h3>
-        
+
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -394,7 +401,7 @@ function SecuritySettings({ settings, onSettingsChange, onSave }: {
       {/* 인증 설정 */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">인증 설정</h3>
-        
+
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -503,7 +510,7 @@ function NotificationSettings({ settings, onSettingsChange, onSave }: {
             onCheckedChange={(checked) => updateNotifications('email', 'enabled', checked)}
           />
         </div>
-        
+
         {settings.notifications.email.enabled && (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -580,7 +587,7 @@ function NotificationSettings({ settings, onSettingsChange, onSave }: {
             onCheckedChange={(checked) => updateNotifications('sms', 'enabled', checked)}
           />
         </div>
-        
+
         {settings.notifications.sms.enabled && (
           <div className="space-y-4">
             <div>
@@ -631,7 +638,7 @@ function NotificationSettings({ settings, onSettingsChange, onSave }: {
             onCheckedChange={(checked) => updateNotifications('push', 'enabled', checked)}
           />
         </div>
-        
+
         {settings.notifications.push.enabled && (
           <div className="space-y-4">
             <div>

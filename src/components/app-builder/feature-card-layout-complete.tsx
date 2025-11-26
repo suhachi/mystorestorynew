@@ -1,48 +1,41 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Alert, AlertDescription } from '../ui/alert';
-import { 
-  Grid3X3, 
-  Layers, 
-  Crown, 
-  Zap, 
-  Star,
-  CheckCircle,
-  Lock,
-  Settings,
-  Eye,
-  Play,
-  Target,
-  Users,
+import {
   BarChart3,
-  ShoppingCart,
-  MessageSquare,
-  Gift,
-  CreditCard,
   Bell,
-  MapPin,
+  CheckCircle,
   Clock,
-  TrendingUp,
-  Shield,
-  Smartphone,
-  Database,
   Cpu,
-  Wifi,
+  CreditCard,
+  Crown,
+  Database,
+  Eye,
+  Gift,
   Globe,
-  Heart,
-  Search,
-  Filter,
+  Grid3X3,
+  Layers,
+  MapPin,
+  MessageSquare,
+  Minus,
+  Play,
   Plus,
-  Minus
+  Search,
+  Settings,
+  Shield,
+  ShoppingCart,
+  Smartphone,
+  Star,
+  Target,
+  TrendingUp,
+  Users,
+  Zap
 } from 'lucide-react';
-import { FeatureCard } from './feature-card';
-import { AppCanvas } from './app-canvas';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { AppPreviewModal } from './app-preview-modal';
-import { useAppBuilder, DataProvider } from '../system/data-context';
-import { toast } from 'sonner@2.0.3';
 
 interface FeatureCardData {
   id: string;
@@ -226,10 +219,10 @@ const ALL_FEATURE_CARDS: FeatureCardData[] = [
   }
 ];
 
-export function FeatureCardLayoutComplete({ 
-  currentPlan, 
-  onPreview, 
-  onGenerate 
+export function FeatureCardLayoutComplete({
+  currentPlan,
+  onPreview,
+  onGenerate
 }: FeatureCardLayoutCompleteProps) {
   const [activeTab, setActiveTab] = useState<'layout' | 'canvas' | 'preview'>('layout');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -248,18 +241,18 @@ export function FeatureCardLayoutComplete({
   // 검색 및 카테고리 필터링
   const getFilteredFeatures = () => {
     let features = getAvailableFeatures();
-    
+
     if (searchQuery) {
-      features = features.filter(card => 
+      features = features.filter(card =>
         card.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         card.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    
+
     if (selectedCategory !== 'all') {
       features = features.filter(card => card.category === selectedCategory);
     }
-    
+
     return features;
   };
 
@@ -310,8 +303,8 @@ export function FeatureCardLayoutComplete({
   };
 
   const handleFeatureToggle = (featureId: string) => {
-    setSelectedFeatures(prev => 
-      prev.includes(featureId) 
+    setSelectedFeatures(prev =>
+      prev.includes(featureId)
         ? prev.filter(id => id !== featureId)
         : [...prev, featureId]
     );
@@ -374,7 +367,7 @@ export function FeatureCardLayoutComplete({
             </Badge>
           </div>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            원하는 기능을 선택하고 나만의 앱을 구성하세요. 
+            원하는 기능을 선택하고 나만의 앱을 구성하세요.
             실시간 미리보기로 결과를 확인할 수 있습니다.
           </p>
         </div>
@@ -456,11 +449,10 @@ export function FeatureCardLayoutComplete({
                       {category.features.map((card) => (
                         <div
                           key={card.id}
-                          className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                            selectedFeatures.includes(card.id)
+                          className={`p-4 border rounded-lg cursor-pointer transition-all ${selectedFeatures.includes(card.id)
                               ? 'border-primary-blue bg-primary-blue-50'
                               : 'border-gray-200 hover:border-gray-300'
-                          }`}
+                            }`}
                           onClick={() => handleFeatureToggle(card.id)}
                         >
                           <div className="flex items-center justify-between mb-2">
@@ -506,7 +498,7 @@ export function FeatureCardLayoutComplete({
                           <Badge key={featureId} variant="outline" className="flex items-center gap-1">
                             {feature.icon}
                             {feature.name}
-                            <Minus 
+                            <Minus
                               className="w-3 h-3 cursor-pointer hover:text-red-600"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -523,9 +515,9 @@ export function FeatureCardLayoutComplete({
 
               {/* 액션 버튼 */}
               <div className="flex justify-center gap-4">
-                <Button 
-                  onClick={() => setActiveTab('canvas')} 
-                  size="lg" 
+                <Button
+                  onClick={() => setActiveTab('canvas')}
+                  size="lg"
                   className="flex items-center gap-2"
                   disabled={selectedFeatures.length === 0}
                 >
@@ -578,7 +570,7 @@ export function FeatureCardLayoutComplete({
                 </div>
               </CardContent>
             </Card>
-            
+
             {/* 액션 버튼 */}
             <div className="flex justify-center gap-4 mt-8">
               <Button onClick={() => setActiveTab('layout')} variant="outline" size="lg">
@@ -644,9 +636,9 @@ export function FeatureCardLayoutComplete({
               <Button onClick={() => setActiveTab('canvas')} variant="outline" size="lg">
                 앱 구성 수정
               </Button>
-              <Button 
-                onClick={handleGenerate} 
-                size="lg" 
+              <Button
+                onClick={handleGenerate}
+                size="lg"
                 className="flex items-center gap-2"
                 disabled={selectedFeatures.length === 0}
               >
@@ -662,7 +654,7 @@ export function FeatureCardLayoutComplete({
           <Alert className="mt-8">
             <Crown className="h-4 w-4" />
             <AlertDescription>
-              {currentPlan === 'Basic' 
+              {currentPlan === 'Basic'
                 ? 'Pro 플랜으로 업그레이드하면 고급 분석, 마케팅 도구 등을 사용할 수 있습니다.'
                 : 'Enterprise 플랜으로 업그레이드하면 AI 기능, 다중 지점 관리 등을 사용할 수 있습니다.'
               }

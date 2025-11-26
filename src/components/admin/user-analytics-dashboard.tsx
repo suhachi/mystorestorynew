@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
-import { 
-  Users, TrendingUp, TrendingDown, Activity, Target, BarChart3, 
-  PieChart, LineChart, ArrowRight, UserPlus, UserMinus, UserCheck,
-  Calendar, Clock, MapPin, Smartphone, Monitor, Filter, Download,
-  RefreshCw, Settings, AlertTriangle, CheckCircle, XCircle
+import {
+  Activity,
+  AlertTriangle,
+  ArrowRight,
+  BarChart3,
+  CheckCircle,
+  Download,
+  LineChart,
+  Monitor,
+  RefreshCw, Settings,
+  Smartphone,
+  Target,
+  UserCheck,
+  UserPlus,
+  Users,
+  XCircle
 } from 'lucide-react';
-import { Card } from '../ui/card';
-import { Button } from '../ui/button';
+import { useState } from 'react';
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Line, Pie, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Badge } from '../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Button } from '../ui/button';
+import { Card } from '../ui/card';
 import { Progress } from '../ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 
 interface UserAnalyticsDashboardProps {
   activeUserType: string;
@@ -29,7 +40,7 @@ export function UserAnalyticsDashboard({ activeUserType }: UserAnalyticsDashboar
           <h2 className="text-2xl font-bold text-gray-900">사용자 분석 대시보드</h2>
           <p className="text-gray-600">{activeUserType} 대상 분석 및 인사이트</p>
         </div>
-        
+
         <div className="flex items-center gap-3">
           <Select value={selectedDateRange} onValueChange={setSelectedDateRange}>
             <SelectTrigger className="w-32">
@@ -42,12 +53,12 @@ export function UserAnalyticsDashboard({ activeUserType }: UserAnalyticsDashboar
               <SelectItem value="1year">최근 1년</SelectItem>
             </SelectContent>
           </Select>
-          
+
           <Button variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
             내보내기
           </Button>
-          
+
           <Button variant="outline" size="sm">
             <RefreshCw className="w-4 h-4 mr-2" />
             새로고침
@@ -65,36 +76,36 @@ export function UserAnalyticsDashboard({ activeUserType }: UserAnalyticsDashboar
         </TabsList>
 
         <TabsContent value="overview">
-          <UserOverviewAnalytics 
-            userType={activeUserType} 
+          <UserOverviewAnalytics
+            userType={activeUserType}
             dateRange={selectedDateRange}
           />
         </TabsContent>
 
         <TabsContent value="acquisition">
-          <AcquisitionAnalytics 
-            userType={activeUserType} 
+          <AcquisitionAnalytics
+            userType={activeUserType}
             dateRange={selectedDateRange}
           />
         </TabsContent>
 
         <TabsContent value="behavior">
-          <BehaviorPatternAnalytics 
-            userType={activeUserType} 
+          <BehaviorPatternAnalytics
+            userType={activeUserType}
             dateRange={selectedDateRange}
           />
         </TabsContent>
 
         <TabsContent value="churn">
-          <ChurnPredictionAnalytics 
-            userType={activeUserType} 
+          <ChurnPredictionAnalytics
+            userType={activeUserType}
             dateRange={selectedDateRange}
           />
         </TabsContent>
 
         <TabsContent value="segments">
-          <UserSegmentAnalytics 
-            userType={activeUserType} 
+          <UserSegmentAnalytics
+            userType={activeUserType}
             dateRange={selectedDateRange}
           />
         </TabsContent>
@@ -282,7 +293,7 @@ function AcquisitionAnalytics({ userType, dateRange }: { userType: string; dateR
           {/* 파이 차트 */}
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <RechartsPieChart>
                 <Pie
                   data={acquisitionChannels}
                   cx="50%"
@@ -296,7 +307,7 @@ function AcquisitionAnalytics({ userType, dateRange }: { userType: string; dateR
                   ))}
                 </Pie>
                 <Tooltip />
-              </PieChart>
+              </RechartsPieChart>
             </ResponsiveContainer>
           </div>
 
@@ -368,55 +379,50 @@ function AcquisitionAnalytics({ userType, dateRange }: { userType: string; dateR
                   </td>
                   <td className="py-3 px-4 text-center">
                     {cohort.month2 && (
-                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${
-                        cohort.month2 >= 70 ? 'bg-green-100 text-green-800' :
+                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${cohort.month2 >= 70 ? 'bg-green-100 text-green-800' :
                         cohort.month2 >= 50 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                          'bg-red-100 text-red-800'
+                        }`}>
                         {cohort.month2}%
                       </div>
                     )}
                   </td>
                   <td className="py-3 px-4 text-center">
                     {cohort.month3 && (
-                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${
-                        cohort.month3 >= 50 ? 'bg-green-100 text-green-800' :
+                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${cohort.month3 >= 50 ? 'bg-green-100 text-green-800' :
                         cohort.month3 >= 30 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                          'bg-red-100 text-red-800'
+                        }`}>
                         {cohort.month3}%
                       </div>
                     )}
                   </td>
                   <td className="py-3 px-4 text-center">
                     {cohort.month4 && (
-                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${
-                        cohort.month4 >= 40 ? 'bg-green-100 text-green-800' :
+                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${cohort.month4 >= 40 ? 'bg-green-100 text-green-800' :
                         cohort.month4 >= 25 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                          'bg-red-100 text-red-800'
+                        }`}>
                         {cohort.month4}%
                       </div>
                     )}
                   </td>
                   <td className="py-3 px-4 text-center">
                     {cohort.month5 && (
-                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${
-                        cohort.month5 >= 30 ? 'bg-green-100 text-green-800' :
+                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${cohort.month5 >= 30 ? 'bg-green-100 text-green-800' :
                         cohort.month5 >= 20 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                          'bg-red-100 text-red-800'
+                        }`}>
                         {cohort.month5}%
                       </div>
                     )}
                   </td>
                   <td className="py-3 px-4 text-center">
                     {cohort.month6 && (
-                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${
-                        cohort.month6 >= 25 ? 'bg-green-100 text-green-800' :
+                      <div className={`inline-flex items-center justify-center w-12 h-8 rounded text-xs font-medium ${cohort.month6 >= 25 ? 'bg-green-100 text-green-800' :
                         cohort.month6 >= 15 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                          'bg-red-100 text-red-800'
+                        }`}>
                         {cohort.month6}%
                       </div>
                     )}
@@ -512,9 +518,9 @@ function BehaviorPatternAnalytics({ userType, dateRange }: { userType: string; d
               <div key={index} className="space-y-2">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    {device.device === '모바일' ? <Smartphone className="w-4 h-4 text-gray-600" /> : 
-                     device.device === '데스크톱' ? <Monitor className="w-4 h-4 text-gray-600" /> :
-                     <Monitor className="w-4 h-4 text-gray-600" />}
+                    {device.device === '모바일' ? <Smartphone className="w-4 h-4 text-gray-600" /> :
+                      device.device === '데스크톱' ? <Monitor className="w-4 h-4 text-gray-600" /> :
+                        <Monitor className="w-4 h-4 text-gray-600" />}
                     <span className="font-medium text-gray-900">{device.device}</span>
                   </div>
                   <div className="text-right">
@@ -622,28 +628,28 @@ function ChurnPredictionAnalytics({ userType, dateRange }: { userType: string; d
   ];
 
   const retentionActionsData = [
-    { 
+    {
       action: '맞춤형 할인 쿠폰 제공',
       targetUsers: 850,
       expectedRetention: 65,
       cost: '₩425,000',
       roi: '320%'
     },
-    { 
+    {
       action: '재참여 캠페인 실행',
       targetUsers: 650,
       expectedRetention: 45,
       cost: '₩180,000',
       roi: '580%'
     },
-    { 
+    {
       action: '개인화된 푸시 알림',
       targetUsers: 1200,
       expectedRetention: 35,
       cost: '₩50,000',
       roi: '840%'
     },
-    { 
+    {
       action: 'VIP 고객 혜택 제공',
       targetUsers: 300,
       expectedRetention: 80,
@@ -759,8 +765,8 @@ function ChurnPredictionAnalytics({ userType, dateRange }: { userType: string; d
                   <td className="py-3 px-4 text-center">
                     <Badge className={
                       parseInt(action.roi) >= 500 ? 'bg-green-100 text-green-800' :
-                      parseInt(action.roi) >= 300 ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-800'
+                        parseInt(action.roi) >= 300 ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-gray-100 text-gray-800'
                     }>
                       {action.roi}
                     </Badge>
@@ -893,9 +899,9 @@ function UserSegmentAnalytics({ userType, dateRange }: { userType: string; dateR
                   {segment.percentage}%
                 </Badge>
               </div>
-              
+
               <p className="text-sm text-gray-600">{segment.description}</p>
-              
+
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">사용자 수</span>
@@ -910,7 +916,7 @@ function UserSegmentAnalytics({ userType, dateRange }: { userType: string; dateR
                   <span className="font-medium">{segment.retentionRate}%</span>
                 </div>
               </div>
-              
+
               <div className="space-y-1">
                 <p className="text-xs text-gray-600">주요 특성:</p>
                 <div className="flex flex-wrap gap-1">
@@ -973,7 +979,7 @@ function UserSegmentAnalytics({ userType, dateRange }: { userType: string; dateR
                   <p className="text-sm text-blue-600">목표: {action.targetMetric}</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 {action.status === 'active' ? (
                   <Button size="sm" variant="outline">
