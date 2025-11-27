@@ -46,17 +46,12 @@ import { PopularMenuAnalysisPage } from '../store-admin/pages/popular-menu-analy
 
 // 테스트 시스템 import 추가
 import { AppApprovalDetail } from '../admin/app-approval-detail';
-import { EnterpriseDeliveryAppSample } from '../examples/enterprise-delivery-app-sample';
-import { FinalTestDashboard } from '../examples/final-test-dashboard';
-import { PlanUsageDemo } from '../examples/plan-usage-demo';
-import { SystemTestDashboard } from '../system/system-test-dashboard';
 import { ApiDetailPage } from './master-api-dashboard';
 
 // T14-06~T14-10: 주문 & 알림 시스템 페이지들
 import CheckoutPage from '../../pages/customer/CheckoutPage';
 import CustomerOrderTrackPage from '../../pages/customer/CustomerOrderTrackPage';
 import NotificationPrefsPage from '../../pages/customer/NotificationPrefsPage';
-import OrderTrackPage from '../../pages/customer/OrderTrackPage';
 import NotifyOpsPanel from '../../pages/owner/NotifyOpsPanel';
 import NotifyTemplatesPage from '../../pages/owner/NotifyTemplatesPage';
 import { OwnerOrdersManagePage } from '../../pages/owner/OwnerOrdersManagePage';
@@ -66,8 +61,6 @@ import { RequireRole } from '../auth/RequireRole';
 import { DesignSystemPage } from '../../pages/design-system';
 
 // App Preview by Plan import
-import { AppPreviewByPlan } from '../../pages/app-preview-by-plan';
-import { AppPreviewQuickAccess } from '../examples/app-preview-quick-access';
 
 // 라우터 타입 정의
 export type Route =
@@ -108,8 +101,6 @@ export type Route =
   | 'store-analytics'
   | 'store-settings'
   | 'app-builder'
-  | 'app-builder-demo'
-  | 'app-builder-legacy'
   | 'app-builder-step-1'
   | 'app-builder-step-2'
   | 'app-builder-step-3'
@@ -145,20 +136,13 @@ export type Route =
   | 'app-deployment'
   | 'app-final-notification'
   | 'final-completion'
-  | 'final-test-dashboard'
-  | 'system-test'
-  | 'enterprise-app-sample'
-  | 'plan-usage-demo'
   | 'customer-checkout'
   | 'customer-order-track'
-  | 'customer-order-track-old'
   | 'customer-notification-prefs'
   | 'owner-orders-manage'
   | 'owner-notify-ops'
   | 'owner-notify-templates'
-  | 'design-system'
-  | 'app-preview-by-plan'
-  | 'app-preview-quick';
+  | 'design-system';
 
 interface NavigationState {
   currentRoute: Route;
@@ -554,10 +538,6 @@ function renderRoute(route: Route, params: Record<string, any>) {
     // 앱빌더 페이지들
     case 'app-builder':
       return <AppBuilderLegacyPage />;
-    case 'app-builder-demo':
-      return <AppBuilderLegacyPage />;
-    case 'app-builder-legacy':
-      return <AppBuilderLegacyPage />;
     case 'app-builder-step-1':
       return <AppBuilderStepOnePage />;
     case 'app-builder-step-2':
@@ -649,23 +629,7 @@ function renderRoute(route: Route, params: Record<string, any>) {
     case 'final-completion':
       return <AppCreationSuccessPage />;
 
-    // 테스트 시스템
-    case 'final-test-dashboard':
-      return (
-        <FinalTestDashboard />
-      );
-    case 'system-test':
-      return (
-        <SystemTestDashboard />
-      );
-    case 'enterprise-app-sample':
-      return (
-        <EnterpriseDeliveryAppSample />
-      );
-    case 'plan-usage-demo':
-      return (
-        <PlanUsageDemo />
-      );
+
 
     // 기능 소개 페이지
     case 'features':
@@ -694,12 +658,6 @@ function renderRoute(route: Route, params: Record<string, any>) {
     case 'customer-order-track':
       // ✅ 새로운 간단한 주문완료 페이지 사용
       return <CustomerOrderTrackPage />;
-
-    case 'customer-order-track-old':
-      // 기존 복잡한 OrderTrackPage (Firebase Functions 필요)
-      const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
-      const orderId = urlParams.get('orderId') || params.orderId;
-      return <OrderTrackPage orderId={orderId} />;
 
     case 'customer-notification-prefs':
       return <NotificationPrefsPage />;
@@ -733,17 +691,9 @@ function renderRoute(route: Route, params: Record<string, any>) {
         </RequireRole>
       );
 
-    // Design System
+    // Design System (Dev Only)
     case 'design-system':
       return <DesignSystemPage />;
-
-    // App Preview by Plan
-    case 'app-preview-by-plan':
-      return <AppPreviewByPlan />;
-
-    // App Preview Quick Access
-    case 'app-preview-quick':
-      return <AppPreviewQuickAccess />;
 
     default:
       console.warn(`Route not found: ${route}`);
