@@ -107,6 +107,23 @@ npm run dev
 - [ ] 오류 발생 시 alert 표시 (STEP 3-B)
 - [ ] 앱이 크래시하지 않음
 
+### 4.3 온라인 결제 (Online Payment) - Phase S3
+
+#### 결제 옵션 노출 (Checkout)
+- [ ] `VITE_USE_ONLINE_PAYMENT=true`일 때 '앱에서 카드결제' 옵션이 보이는가?
+- [ ] 상점 설정(`enabled=false`) 시 옵션이 숨겨지는가?
+- [ ] Client Key 누락 시 '준비중'으로 비활성화되는가?
+
+#### 결제 진행 (Sandbox)
+- [ ] 배달 주문 + 앱카드 결제 성공 시 `TrackPage`로 정상 이동하는가?
+- [ ] 포장 주문 + 앱카드 결제 성공 시 `TrackPage`로 정상 이동하는가?
+- [ ] 결제창에서 취소 시 주문이 완료되지 않고 Checkout 페이지에 머무르는가?
+
+#### 데이터 무결성
+- [ ] 결제 완료 후 Firestore 주문 상태가 `PAID` / `COMPLETED` 인가?
+- [ ] `payment.tid`가 저장되었는가?
+
+
 ---
 
 ## 5. E2E 테스트 실행 체크리스트

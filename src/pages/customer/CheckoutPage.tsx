@@ -12,7 +12,7 @@
  */
 
 import { AlertCircle, Check, CreditCard, Package, ShoppingCart, Truck } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, AlertDescription } from '../../components/ui/alert';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
@@ -23,8 +23,7 @@ import { RadioGroup, RadioGroupItem } from '../../components/ui/radio-group';
 import { Separator } from '../../components/ui/separator';
 import { Textarea } from '../../components/ui/textarea';
 import { useCheckoutPaymentOptions } from '../../hooks/useCheckoutPaymentOptions';
-import { calculateDeliveryFeeLegacy } from '../../lib/calculateDeliveryFee';
-import { addToRetryQueue, calculateOrderTotals, createOrderPublic } from '../../services/orders.public';
+import { addToRetryQueue, createOrderPublic } from '../../services/orders.public';
 import { CreateOrderRequest, OrderItem, OrderType, PaymentMethod } from '../../types/order';
 
 export default function CheckoutPage() {
@@ -70,36 +69,20 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Get available payment options
-  const globalOnlineFlag = import.meta.env.VITE_USE_ONLINE_PAYMENT === 'true';
-  const paymentOptions = useCheckoutPaymentOptions({
-    orderType,
-    globalOnlineFlag
-  });
-
-  // NOTE: Calculate base totals FIRST (before using it in useEffect)
-  // This prevents "Cannot access 'totals' before initialization" error
-  const baseTotals = calculateOrderTotals(cartItems);
-
-  // TODO(DEL-INT-01): Calculate delivery fee based on distance
-  // For now, using legacy calculation (orderAmount >= 20000 ? 0 : 3000)
-  useEffect(() => {
-    if (orderType === 'DELIVERY') {
-      const itemsTotal = baseTotals.subtotal;
-      const fee = calculateDeliveryFeeLegacy(itemsTotal);
-      setDeliveryFee(fee);
-    } else {
-      // PICKUP: delivery fee is always 0
-      setDeliveryFee(0);
-    }
-  }, [orderType, baseTotals.subtotal]);
-
   // Final totals with delivery fee
   const totals = {
     ...baseTotals,
     delivery: deliveryFee,
     total: baseTotals.subtotal + baseTotals.tax + deliveryFee
   };
+
+  // Get available payment options
+  const globalOnlineFlag = import.meta.env.VITE_USE_ONLINE_PAYMENT === 'true';
+  const paymentOptions = useCheckoutPaymentOptions({
+    orderType,
+    globalOnlineFlag,
+    orderTotal: totals.total
+  });
 
   // STEP 3-A: Empty cart fallback UI
   if (isCartEmpty) {
@@ -163,14 +146,88 @@ export default function CheckoutPage() {
         } : undefined,
         specialRequests: formData.specialRequests || undefined,
         paymentMethod: selectedPaymentMethod,
-        deliveryFee: deliveryFee  // 🔥 A2-1: deliveryFee 추가
+        deliveryFee: deliveryFee
       };
 
-      console.log('[CHECKOUT] orderRequest:', orderRequest); // 🔥 DEBUG LOG
+      console.log('[CHECKOUT] orderRequest:', orderRequest);
 
-      // Create order
+      // 1. Create Order (PENDING)
       const order = await createOrderPublic(orderRequest);
-      console.log('[CHECKOUT] createOrder response:', order); // 🔥 DEBUG LOG
+      console.log('[CHECKOUT] createOrder response:', order);
+
+      // 2. Handle Payment Flow
+      if (selectedPaymentMethod === 'APP_CARD') {
+        // Online Payment Flow
+        try {
+          // Dynamic import to avoid SSR issues or circular deps
+          const { requestNicepayPay } = await import('../../lib/payments/nicepay.client');
+          const { confirmPaymentPublic } = await import('../../services/payments.public');
+
+          // Get Nicepay settings (assuming they are available in context or hook,
+          // but for now accessing via storePaymentSettings if we had it,
+          // or using the ones from useCheckoutPaymentOptions logic if exposed.
+          // Since we don't have direct access to store settings here easily without context,
+          // we'll assume they are passed or available.
+          // For this ATOMIC step, we'll use a placeholder or assume global config for demo.)
+
+          // TODO: Fetch actual clientKey from store settings
+          const clientKey = import.meta.env.VITE_NICEPAY_CLIENT_KEY || 'test_client_key';
+          const USE_FIREBASE = import.meta.env.VITE_USE_FIREBASE === 'true';
+          const USE_ONLINE_PAYMENT = import.meta.env.VITE_USE_ONLINE_PAYMENT === 'true';
+
+          const paymentResult = await requestNicepayPay({
+            clientId: clientKey,
+            method: 'card',
+            orderId: order.id,
+            amount: totals.total,
+            goodsName: cartItems[0].name + (cartItems.length > 1 ? ` 외 ${cartItems.length - 1}건` : ''),
+            buyerName: formData.customerName,
+            buyerTel: formData.customerPhone,
+            buyerEmail: formData.customerEmail,
+            returnUrl: `${window.location.origin}/api/payments/nicepay/return` // Fallback
+          });
+
+          console.log('[CHECKOUT] Payment success:', paymentResult);
+
+          // 3. Confirm Payment (Server-side)
+          if (USE_FIREBASE && USE_ONLINE_PAYMENT) {
+            try {
+              const confirmedOrder = await confirmPaymentPublic({
+                storeId: order.storeId,
+                orderId: order.id,
+                tid: paymentResult.tid,
+                amount: totals.total,
+              });
+
+              // 4. Redirect to Track Page (Confirmed)
+              const redirectPath = `/#/customer-order-track?orderId=${confirmedOrder.id}`;
+              window.location.href = redirectPath;
+              return;
+            } catch (confirmErr) {
+              console.error('[PAYMENT] confirmPayment failed', confirmErr);
+              // TODO: Show friendly error toast/alert
+              // For now, we fall back to track page but user might see PENDING status
+              // Ideally we should show "Payment verification failed, please contact support"
+              setError('결제 승인에 실패했습니다. 관리자에게 문의해주세요.');
+              return;
+            }
+          }
+
+          // 4-1. Fallback for Mock/Dev (No Firebase)
+          // Just redirect to track page
+          console.log('[CHECKOUT] Mock mode: Proceeding to track page without server confirmation');
+          const fallbackRedirect = `/#/customer-order-track?orderId=${order.id}`;
+          window.location.href = fallbackRedirect;
+          return;
+
+        } catch (payErr) {
+          console.error('[CHECKOUT] Payment failed:', payErr);
+          // Don't throw, just show error in UI
+          setError(payErr instanceof Error ? payErr.message : '결제 중 오류가 발생했습니다.');
+          setLoading(false);
+          return;
+        }
+      }
 
       // Clear cart (in production, use cart context)
       console.log('[Checkout] Order created successfully, clearing cart');
@@ -179,7 +236,7 @@ export default function CheckoutPage() {
 
       // Redirect to tracking page using hash router
       const redirectPath = `/#/customer-order-track?orderId=${order.id}`;
-      console.log('[CHECKOUT] navigating to:', redirectPath); // 🔥 DEBUG LOG
+      console.log('[CHECKOUT] navigating to:', redirectPath);
 
       setTimeout(() => {
         window.location.href = redirectPath;

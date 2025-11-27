@@ -14,18 +14,25 @@ exports.paymentWebhook = (0, https_1.onRequest)({
     region: 'asia-northeast3',
     secrets: nicepay_1.nicepaySecrets
 }, async (req, res) => {
+    const LOG_PREFIX = '[PAYMENT_WEBHOOK]';
     if (req.method !== 'POST') {
         res.status(405).send('Method Not Allowed');
         return;
     }
     const { TID, Moid, Amt, ResultCode, Signature } = req.body;
-    console.log('[PAYMENT_WEBHOOK]', { TID, Moid, ResultCode });
+    console.log(LOG_PREFIX, 'incoming payload', { TID, Moid, ResultCode, Amt });
+    // Guard: Missing required fields
+    if (!TID || !Moid || !Amt || !Signature) {
+        console.error(LOG_PREFIX, 'missing required fields', { TID, Moid, Amt, Signature });
+        res.status(400).send('Missing required fields');
+        return;
+    }
     const config = (0, nicepay_1.getNicepayConfig)();
     // 1. Verify Signature
     // NicePay Signature = hex(sha256(TID + MID + Amt + MerchantKey))
     const isValid = (0, nicepay_1.verifySignature)(Signature, TID, config.mid, parseInt(Amt), config.merchantKey);
     if (!isValid) {
-        console.error('[WEBHOOK_SIG_FAIL]', { TID, Signature });
+        console.error(LOG_PREFIX, 'signature verification failed', { TID, Signature });
         res.status(400).send('Invalid Signature');
         return;
     }
@@ -34,11 +41,34 @@ exports.paymentWebhook = (0, https_1.onRequest)({
     const orderRef = db.collectionGroup('orders').where('id', '==', Moid).limit(1);
     const snapshot = await orderRef.get();
     if (snapshot.empty) {
-        console.error('[WEBHOOK_ORDER_NOT_FOUND]', { Moid });
+        console.error(LOG_PREFIX, 'order not found', { Moid });
         res.status(404).send('Order Not Found');
         return;
     }
     const orderDoc = snapshot.docs[0];
+    const orderData = orderDoc.data();
+    // Guard: Amount mismatch
+    // Check if the paid amount matches the order total
+    if (orderData.payment?.totalAmount && orderData.payment.totalAmount !== parseInt(Amt)) {
+        console.error(LOG_PREFIX, 'amount mismatch', {
+            expected: orderData.payment.totalAmount,
+            received: parseInt(Amt)
+        });
+        // Mark as tampering but do not approve
+        await orderDoc.ref.update({
+            status: 'PAYMENT_TAMPERING',
+            'payment.status': 'FAILED',
+            'payment.error': 'Amount mismatch in webhook',
+            updatedAt: firestore_1.FieldValue.serverTimestamp()
+        });
+        res.status(400).send('Amount mismatch');
+        return;
+    }
+    console.log(LOG_PREFIX, 'updating order payment status', {
+        orderId: Moid,
+        prevStatus: orderData.payment?.status,
+        resultCode: ResultCode
+    });
     // 2. Update Order Status
     if (ResultCode === '0000') {
         // Success (e.g. Deposit Completed)

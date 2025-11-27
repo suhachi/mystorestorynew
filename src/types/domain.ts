@@ -213,6 +213,22 @@ export type OrderType = 'DELIVERY' | 'PICKUP';
 export type PaymentChannel = 'ONLINE' | 'OFFLINE';
 
 /**
+ * Online Payment Mode
+ */
+export type OnlinePaymentMode = 'NONE' | 'SANDBOX' | 'LIVE';
+
+/**
+ * NICEPAY Store Settings
+ */
+export interface NicepayStoreSettings {
+  enabled: boolean;               // 이 상점이 NICEPAY 온라인 결제를 켜는지
+  clientKey: string | null;       // 상점이 Admin에서 입력하는 NICEPAY clientKey
+  mode: OnlinePaymentMode;        // 'SANDBOX' | 'LIVE'
+  appCardEnabled: boolean;        // APP_CARD 사용 여부
+  minAmount?: number;             // (선택) 최소 결제 가능 금액
+}
+
+/**
  * Store Payment Settings
  * 상점별 결제 방식 On/Off 설정
  */
@@ -225,6 +241,10 @@ export interface StorePaymentSettings {
   pickup: {
     appCard: boolean;     // 앱상 카드결제 허용
     visitStore: boolean;  // 매장 방문 결제 허용
+  };
+  // Online Payment Settings (Phase S3)
+  payments?: {
+    nicepay?: NicepayStoreSettings;
   };
 }
 

@@ -16,6 +16,12 @@ MyStoreStory는 배달 주문 시스템을 위한 완전한 템플릿입니다.
 > **참고**: 현재 모드는 Mock 모드이며, 실제 Firebase Functions 연동은 Phase 2.5에서 진행됩니다.  
 > 자세한 내용은 [`docs/BACKEND_STATUS.md`](./docs/BACKEND_STATUS.md)를 참조하세요.
 
+### 💳 온라인 결제 (Online Payment)
+NICEPAY를 연동한 온라인 카드 결제를 지원합니다. (Phase S3)
+- **문서**: [결제 스키마](docs/ONLINE_PAYMENTS_SCHEMA.md), [테스트 계획](docs/ONLINE_PAYMENTS_TEST_PLAN.md)
+- **설정**: `VITE_USE_ONLINE_PAYMENT` 플래그와 Firestore 상점 설정을 통해 제어됩니다.
+
+
 ---
 
 ## 🚀 빠른 시작 (Quick Start)

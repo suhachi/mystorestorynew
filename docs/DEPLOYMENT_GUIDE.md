@@ -339,4 +339,31 @@ npm --version
 ---
 
 **마지막 업데이트**: 2025-11-26  
-**문서 버전**: 1.0.0
+**문서 버전**: 1.1.0
+
+---
+
+## 8. 온라인 결제 (Online Payment) 운영 가이드
+
+온라인 결제 기능은 선택적 기능으로, 환경 변수와 상점 설정을 통해 제어됩니다.
+
+### 8.1. ON/OFF 전략
+
+| 환경 | VITE_USE_ONLINE_PAYMENT | 설명 |
+|---|---|---|
+| **Local** | `false` | 개발 시에는 Mock 결제(현금/방문) 위주로 사용 |
+| **Staging** | `true` | Sandbox 환경에서 결제 테스트 진행 |
+| **Production** | `false` (초기) -> `true` | 초기 배포 시 OFF, 내부 테스트 완료 후 ON 전환 |
+
+### 8.2. 결제 활성화 절차 (Production)
+
+1. **환경 변수 변경**: `.env.production`에서 `VITE_USE_ONLINE_PAYMENT=true` 설정 후 재배포.
+2. **상점 설정 활성화**: Firestore `stores/{storeId}` 문서의 `storePaymentSettings.payments.nicepay.enabled`를 `true`로 설정.
+3. **Client Key 입력**: 해당 상점의 `clientKey`가 올바르게 설정되었는지 확인.
+
+### 8.3. 긴급 중단 (Kill Switch)
+
+결제 관련 장애 발생 시 다음 중 하나를 수행하여 즉시 중단합니다.
+
+1. **상점별 OFF**: Firestore에서 해당 상점의 `enabled`를 `false`로 변경 (즉시 반영).
+2. **전체 OFF**: `.env.production`에서 `VITE_USE_ONLINE_PAYMENT=false`로 변경 후 긴급 배포.

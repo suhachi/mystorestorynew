@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
-import { 
-  Store, Clock, Phone, Mail, MapPin, Camera, Upload, Save,
-  Bell, CreditCard, Truck, Globe, Settings, Shield, Palette,
-  QrCode, Smartphone, Wifi, Printer, Zap, AlertCircle, Check,
-  DollarSign, Download
+import {
+  AlertCircle,
+  Bell,
+  Camera,
+  CreditCard,
+  Download,
+  Mail,
+  Palette,
+  Printer,
+  QrCode,
+  Save,
+  Settings,
+  Smartphone,
+  Store,
+  Upload
 } from 'lucide-react';
-import { Card } from '../ui/card';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import StorePaymentSettingsTab from '../admin/settings/StorePaymentSettingsTab';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { Card } from '../ui/card';
 import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Separator } from '../ui/separator';
 import { Switch } from '../ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Separator } from '../ui/separator';
-import { toast } from 'sonner';
+import { Textarea } from '../ui/textarea';
 
 export function StoreSettings() {
   const [activeTab, setActiveTab] = useState('basic');
@@ -33,7 +43,7 @@ export function StoreSettings() {
       weekday: { open: '07:00', close: '22:00' },
       weekend: { open: '08:00', close: '23:00' }
     },
-    
+
     // 운영 설정
     orderSettings: {
       pickupEnabled: true,
@@ -43,7 +53,7 @@ export function StoreSettings() {
       orderTimeLimit: 30,
       advanceOrderDays: 7
     },
-    
+
     // 결제 설정
     paymentSettings: {
       cardEnabled: true,
@@ -52,7 +62,7 @@ export function StoreSettings() {
       loyaltyProgram: true,
       pointRate: 5 // 5%
     },
-    
+
     // 알림 설정
     notificationSettings: {
       newOrderAlert: true,
@@ -62,7 +72,7 @@ export function StoreSettings() {
       emailNotifications: true,
       smsNotifications: false
     },
-    
+
     // 브랜딩
     brandingSettings: {
       primaryColor: '#2563eb',
@@ -176,7 +186,7 @@ export function StoreSettings() {
         <TabsContent value="basic" className="space-y-6">
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">기본 정보</h2>
-            
+
             <div className="space-y-6">
               {/* 상점 로고 */}
               <div>
@@ -184,9 +194,9 @@ export function StoreSettings() {
                 <div className="flex items-center gap-4">
                   <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
                     {storeSettings.brandingSettings.logoUrl ? (
-                      <img 
-                        src={storeSettings.brandingSettings.logoUrl} 
-                        alt="Store Logo" 
+                      <img
+                        src={storeSettings.brandingSettings.logoUrl}
+                        alt="Store Logo"
                         className="w-full h-full object-cover rounded-lg"
                       />
                     ) : (
@@ -206,7 +216,7 @@ export function StoreSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="text-label text-gray-900 mb-2 block">상점명 *</label>
-                  <Input 
+                  <Input
                     value={storeSettings.storeName}
                     onChange={(e) => {
                       setStoreSettings(prev => ({ ...prev, storeName: e.target.value }));
@@ -215,10 +225,10 @@ export function StoreSettings() {
                     placeholder="상점명을 입력하세요"
                   />
                 </div>
-                
+
                 <div>
                   <label className="text-label text-gray-900 mb-2 block">연락처 *</label>
-                  <Input 
+                  <Input
                     value={storeSettings.phone}
                     onChange={(e) => {
                       setStoreSettings(prev => ({ ...prev, phone: e.target.value }));
@@ -231,7 +241,7 @@ export function StoreSettings() {
 
               <div>
                 <label className="text-label text-gray-900 mb-2 block">상점 소개</label>
-                <Textarea 
+                <Textarea
                   value={storeSettings.description}
                   onChange={(e) => {
                     setStoreSettings(prev => ({ ...prev, description: e.target.value }));
@@ -245,7 +255,7 @@ export function StoreSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="text-label text-gray-900 mb-2 block">이메일</label>
-                  <Input 
+                  <Input
                     type="email"
                     value={storeSettings.email}
                     onChange={(e) => {
@@ -255,10 +265,10 @@ export function StoreSettings() {
                     placeholder="store@example.com"
                   />
                 </div>
-                
+
                 <div>
                   <label className="text-label text-gray-900 mb-2 block">웹사이트</label>
-                  <Input 
+                  <Input
                     value={storeSettings.brandingSettings.customDomain}
                     onChange={(e) => updateSetting('brandingSettings', 'customDomain', e.target.value)}
                     placeholder="https://mystory.cafe"
@@ -269,7 +279,7 @@ export function StoreSettings() {
               <div>
                 <label className="text-label text-gray-900 mb-2 block">주소 *</label>
                 <div className="space-y-3">
-                  <Input 
+                  <Input
                     value={storeSettings.address}
                     onChange={(e) => {
                       setStoreSettings(prev => ({ ...prev, address: e.target.value }));
@@ -277,7 +287,7 @@ export function StoreSettings() {
                     }}
                     placeholder="기본 주소"
                   />
-                  <Input 
+                  <Input
                     value={storeSettings.detailAddress}
                     onChange={(e) => {
                       setStoreSettings(prev => ({ ...prev, detailAddress: e.target.value }));
@@ -293,14 +303,14 @@ export function StoreSettings() {
           {/* 운영 시간 */}
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">운영 시간</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <h3 className="text-body font-medium text-gray-900 mb-3">평일 (월-금)</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-label text-gray-900 mb-2 block">오픈 시간</label>
-                    <Input 
+                    <Input
                       type="time"
                       value={storeSettings.businessHours.weekday.open}
                       onChange={(e) => updateNestedSetting('businessHours', 'weekday', 'open', e.target.value)}
@@ -308,7 +318,7 @@ export function StoreSettings() {
                   </div>
                   <div>
                     <label className="text-label text-gray-900 mb-2 block">마감 시간</label>
-                    <Input 
+                    <Input
                       type="time"
                       value={storeSettings.businessHours.weekday.close}
                       onChange={(e) => updateNestedSetting('businessHours', 'weekday', 'close', e.target.value)}
@@ -322,7 +332,7 @@ export function StoreSettings() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-label text-gray-900 mb-2 block">오픈 시간</label>
-                    <Input 
+                    <Input
                       type="time"
                       value={storeSettings.businessHours.weekend.open}
                       onChange={(e) => updateNestedSetting('businessHours', 'weekend', 'open', e.target.value)}
@@ -330,7 +340,7 @@ export function StoreSettings() {
                   </div>
                   <div>
                     <label className="text-label text-gray-900 mb-2 block">마감 시간</label>
-                    <Input 
+                    <Input
                       type="time"
                       value={storeSettings.businessHours.weekend.close}
                       onChange={(e) => updateNestedSetting('businessHours', 'weekend', 'close', e.target.value)}
@@ -346,14 +356,14 @@ export function StoreSettings() {
         <TabsContent value="operation" className="space-y-6">
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">주문 설정</h2>
-            
+
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-body font-medium text-gray-900">매장 픽업</h3>
                   <p className="text-body-small text-gray-600">고객이 매장에서 직접 픽업할 수 있습니다</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.orderSettings.pickupEnabled}
                   onCheckedChange={(checked) => updateSetting('orderSettings', 'pickupEnabled', checked)}
                 />
@@ -366,7 +376,7 @@ export function StoreSettings() {
                   <h3 className="text-body font-medium text-gray-900">배달 서비스</h3>
                   <p className="text-body-small text-gray-600">고객에게 배달 서비스를 제공합니다</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.orderSettings.deliveryEnabled}
                   onCheckedChange={(checked) => updateSetting('orderSettings', 'deliveryEnabled', checked)}
                 />
@@ -377,7 +387,7 @@ export function StoreSettings() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-label text-gray-900 mb-2 block">배달비</label>
-                      <Input 
+                      <Input
                         type="number"
                         value={storeSettings.orderSettings.deliveryFee}
                         onChange={(e) => updateSetting('orderSettings', 'deliveryFee', parseInt(e.target.value))}
@@ -386,7 +396,7 @@ export function StoreSettings() {
                     </div>
                     <div>
                       <label className="text-label text-gray-900 mb-2 block">무료배달 최소주문금액</label>
-                      <Input 
+                      <Input
                         type="number"
                         value={storeSettings.orderSettings.freeDeliveryMinAmount}
                         onChange={(e) => updateSetting('orderSettings', 'freeDeliveryMinAmount', parseInt(e.target.value))}
@@ -402,7 +412,7 @@ export function StoreSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-label text-gray-900 mb-2 block">주문 처리 시간 (분)</label>
-                  <Input 
+                  <Input
                     type="number"
                     value={storeSettings.orderSettings.orderTimeLimit}
                     onChange={(e) => updateSetting('orderSettings', 'orderTimeLimit', parseInt(e.target.value))}
@@ -410,10 +420,10 @@ export function StoreSettings() {
                   />
                   <p className="text-caption text-gray-500 mt-1">평균적인 주문 준비 시간</p>
                 </div>
-                
+
                 <div>
                   <label className="text-label text-gray-900 mb-2 block">사전 주문 가능 일수</label>
-                  <Input 
+                  <Input
                     type="number"
                     value={storeSettings.orderSettings.advanceOrderDays}
                     onChange={(e) => updateSetting('orderSettings', 'advanceOrderDays', parseInt(e.target.value))}
@@ -428,9 +438,13 @@ export function StoreSettings() {
 
         {/* 결제 설정 탭 */}
         <TabsContent value="payment" className="space-y-6">
+          {/* TODO: 실제 storeId를 Context나 URL에서 가져와야 함 */}
+          <StorePaymentSettingsTab storeId="store_123" />
+
+          {/* OLD MOCK PAYMENT UI START
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">결제 방식</h2>
-            
+
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -440,7 +454,7 @@ export function StoreSettings() {
                     <p className="text-body-small text-gray-600">신용카드, 체크카드 결제</p>
                   </div>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.paymentSettings.cardEnabled}
                   onCheckedChange={(checked) => updateSetting('paymentSettings', 'cardEnabled', checked)}
                 />
@@ -454,7 +468,7 @@ export function StoreSettings() {
                     <p className="text-body-small text-gray-600">현금 결제 받기</p>
                   </div>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.paymentSettings.cashEnabled}
                   onCheckedChange={(checked) => updateSetting('paymentSettings', 'cashEnabled', checked)}
                 />
@@ -468,7 +482,7 @@ export function StoreSettings() {
                     <p className="text-body-small text-gray-600">카카오페이, 네이버페이 등</p>
                   </div>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.paymentSettings.digitalPayEnabled}
                   onCheckedChange={(checked) => updateSetting('paymentSettings', 'digitalPayEnabled', checked)}
                 />
@@ -478,14 +492,14 @@ export function StoreSettings() {
 
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">적립금 프로그램</h2>
-            
+
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-body font-medium text-gray-900">적립금 프로그램 활성화</h3>
                   <p className="text-body-small text-gray-600">구매 금액에 따라 적립금을 제공합니다</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.paymentSettings.loyaltyProgram}
                   onCheckedChange={(checked) => updateSetting('paymentSettings', 'loyaltyProgram', checked)}
                 />
@@ -495,7 +509,7 @@ export function StoreSettings() {
                 <div className="ml-4 border-l-2 border-gray-100 pl-4">
                   <div className="max-w-sm">
                     <label className="text-label text-gray-900 mb-2 block">적립률 (%)</label>
-                    <Input 
+                    <Input
                       type="number"
                       value={storeSettings.paymentSettings.pointRate}
                       onChange={(e) => updateSetting('paymentSettings', 'pointRate', parseInt(e.target.value))}
@@ -509,20 +523,21 @@ export function StoreSettings() {
               )}
             </div>
           </Card>
+          OLD MOCK PAYMENT UI END */}
         </TabsContent>
 
         {/* 알림 설정 탭 */}
         <TabsContent value="notifications" className="space-y-6">
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">알림 설정</h2>
-            
+
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-body font-medium text-gray-900">새 주문 알림</h3>
                   <p className="text-body-small text-gray-600">새로운 주문이 들어올 때 알림을 받습니다</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.notificationSettings.newOrderAlert}
                   onCheckedChange={(checked) => updateSetting('notificationSettings', 'newOrderAlert', checked)}
                 />
@@ -533,7 +548,7 @@ export function StoreSettings() {
                   <h3 className="text-body font-medium text-gray-900">재고 부족 알림</h3>
                   <p className="text-body-small text-gray-600">상품 재고가 부족할 때 알림을 받습니다</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.notificationSettings.lowStockAlert}
                   onCheckedChange={(checked) => updateSetting('notificationSettings', 'lowStockAlert', checked)}
                 />
@@ -544,7 +559,7 @@ export function StoreSettings() {
                   <h3 className="text-body font-medium text-gray-900">고객 리뷰 알림</h3>
                   <p className="text-body-small text-gray-600">새로운 고객 리뷰가 등록될 때 알림을 받습니다</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.notificationSettings.customerReview}
                   onCheckedChange={(checked) => updateSetting('notificationSettings', 'customerReview', checked)}
                 />
@@ -555,7 +570,7 @@ export function StoreSettings() {
                   <h3 className="text-body font-medium text-gray-900">일일 요약 알림</h3>
                   <p className="text-body-small text-gray-600">매일 매출 요약을 알림으로 받습니다</p>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.notificationSettings.dailySummary}
                   onCheckedChange={(checked) => updateSetting('notificationSettings', 'dailySummary', checked)}
                 />
@@ -565,7 +580,7 @@ export function StoreSettings() {
 
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">알림 방식</h2>
-            
+
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -575,7 +590,7 @@ export function StoreSettings() {
                     <p className="text-body-small text-gray-600">이메일로 알림을 받습니다</p>
                   </div>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.notificationSettings.emailNotifications}
                   onCheckedChange={(checked) => updateSetting('notificationSettings', 'emailNotifications', checked)}
                 />
@@ -589,7 +604,7 @@ export function StoreSettings() {
                     <p className="text-body-small text-gray-600">문자 메시지로 알림을 받습니다</p>
                   </div>
                 </div>
-                <Switch 
+                <Switch
                   checked={storeSettings.notificationSettings.smsNotifications}
                   onCheckedChange={(checked) => updateSetting('notificationSettings', 'smsNotifications', checked)}
                 />
@@ -602,35 +617,35 @@ export function StoreSettings() {
         <TabsContent value="branding" className="space-y-6">
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">브랜드 컬러</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="text-label text-gray-900 mb-2 block">주 색상</label>
                 <div className="flex items-center gap-3">
-                  <input 
+                  <input
                     type="color"
                     value={storeSettings.brandingSettings.primaryColor}
                     onChange={(e) => updateSetting('brandingSettings', 'primaryColor', e.target.value)}
                     className="w-12 h-12 rounded-lg border border-gray-200 cursor-pointer"
                   />
-                  <Input 
+                  <Input
                     value={storeSettings.brandingSettings.primaryColor}
                     onChange={(e) => updateSetting('brandingSettings', 'primaryColor', e.target.value)}
                     placeholder="#2563eb"
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label className="text-label text-gray-900 mb-2 block">보조 색상</label>
                 <div className="flex items-center gap-3">
-                  <input 
+                  <input
                     type="color"
                     value={storeSettings.brandingSettings.secondaryColor}
                     onChange={(e) => updateSetting('brandingSettings', 'secondaryColor', e.target.value)}
                     className="w-12 h-12 rounded-lg border border-gray-200 cursor-pointer"
                   />
-                  <Input 
+                  <Input
                     value={storeSettings.brandingSettings.secondaryColor}
                     onChange={(e) => updateSetting('brandingSettings', 'secondaryColor', e.target.value)}
                     placeholder="#64748b"
@@ -642,7 +657,7 @@ export function StoreSettings() {
 
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">이미지 설정</h2>
-            
+
             <div className="space-y-6">
               <div>
                 <label className="text-label text-gray-900 mb-3 block">커버 이미지</label>
@@ -661,7 +676,7 @@ export function StoreSettings() {
 
           <Card className="p-6">
             <h2 className="text-heading-3 text-gray-900 mb-6">QR 코드</h2>
-            
+
             <div className="flex items-center gap-6">
               <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
                 <QrCode className="w-16 h-16 text-gray-400" />
@@ -690,7 +705,7 @@ export function StoreSettings() {
       {/* 변경사항 저장 플로팅 버튼 */}
       {hasChanges && (
         <div className="fixed bottom-6 right-6 z-50">
-          <Button 
+          <Button
             onClick={handleSave}
             className="bg-primary-blue hover:bg-primary-blue-dark shadow-lg"
             size="lg"
