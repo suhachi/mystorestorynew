@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useCurrentStoreId } from '../../hooks/useCurrentStoreId';
 import StorePaymentSettingsTab from '../admin/settings/StorePaymentSettingsTab';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -439,7 +440,7 @@ export function StoreSettings() {
         {/* 결제 설정 탭 */}
         <TabsContent value="payment" className="space-y-6">
           {/* TODO: 실제 storeId를 Context나 URL에서 가져와야 함 */}
-          <StorePaymentSettingsTab storeId="store_123" />
+          <StorePaymentSettingsTab storeId={useCurrentStoreId()} />
 
           {/* OLD MOCK PAYMENT UI START
           <Card className="p-6">
